@@ -98,7 +98,6 @@ function movePaddle(evt)
     user.y = evt.clientY - rect.top - user.height / 2;
 }
 
-
 // collision detection
 function collision(b, p)
 {
@@ -179,4 +178,3 @@ function game(){
 // loop
 const framePerSecond = 50;
 setInterval(game, 1000 / framePerSecond);
-// setInterval(game, 1000);
