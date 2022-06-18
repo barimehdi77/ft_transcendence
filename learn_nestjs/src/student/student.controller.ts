@@ -1,33 +1,29 @@
-import { Controller, Get, Post, Put } from "@nestjs/common"
+import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common"
+import { createStudentDto, UpdateStudentDto, FindStudentResponseDto, StudentResponseDto } from "../student/dto/student.dto"
 
 @Controller('student')
 export class StudentController {
 	@Get()
-	getStudents(){
+	getStudents() : FindStudentResponseDto[]  {
 		return "All students!!";
 	}
 	@Get('/:StudentById')
-	getStudentById(){
-		return "Student by ID";
+	getStudentById(
+		@Param('StudentId') sId : string
+	) : FindStudentResponseDto{
+		return `Student by ID: ${sId}`;
 	}
 	@Post()
-	createStudent(){
-		return "create student";
+	createStudent(
+		@Body() body : createStudentDto
+	) : StudentResponseDto {
+		return `create student with the following ${JSON.stringify(body)}`;
 	}
 	@Put('/:studentById')
-	updateStudent(){
-		return "update student by ID";
-	}
-}
-
-@Controller('login')
-export class login{
-	@Get()
-	getMylogin(){
-		return "abdel-ke";
-	}
-	@Get('/:loginID')
-	getLoginId(){
-		return "login with ID"
+	updateStudent(
+		@Param('studentById') sId : string,
+		@Body('name') body : UpdateStudentDto
+	) : StudentResponseDto {
+		return `update student with ID of '${sId}' With data of '${JSON.stringify(body)}'`;
 	}
 }
