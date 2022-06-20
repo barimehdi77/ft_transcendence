@@ -1,10 +1,10 @@
-export class FindStudentsResponseDto {
+export class FindStudentResponseDto {
     id: string;
     name: string;
     teacher: string
 }
 
-export class CreateStudentDto {
+export class createStudentDto {
     name: string;
     teacher: string
 }

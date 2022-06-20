@@ -12,10 +12,9 @@ export class StudentController {
 	}
 	@Get('/:StudentById')
 	getStudentById(
-		@Param('StudentId') sId : string 
+		@Param('StudentById') sId : string 
 	) : FindStudentResponseDto{
 		return this.studentService.getStudentById(sId);
-		// return `Student by ID: ${sId}`; 
 	}
 	@Post()
 	createStudent(

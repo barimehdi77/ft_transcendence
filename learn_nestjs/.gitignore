@@ -38,3 +38,4 @@ lerna-debug.log*
 *.js
 *.json
 .prettierrc
+README.md
