@@ -1,4 +1,0 @@
-to create a controller
-	nest g controller NAMEFOLDER --no-spec (--no-spec mean do not create test files)
-
-JSON.stringify(name)
