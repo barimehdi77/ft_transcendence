@@ -8,7 +8,7 @@ export default function CanvasPage() {
     const canvHeight = 400;
 
     // create user paddle
-    const [user, changeUser] = useState({
+    const [user, setUser] = useState({
         x: 0,
         y: (canvHeight - 100) / 2,
         width: 10,
@@ -18,7 +18,7 @@ export default function CanvasPage() {
     })
 
     // create the computer paddle
-    const [com, chengeCom] = useState({
+    const [com, setCom] = useState({
         x: canvWidth - 10,
         y: (canvHeight - 100) / 2,
         width: 10,
@@ -28,10 +28,10 @@ export default function CanvasPage() {
     })
 
     // create the ball
-    const [ball, changeball] = useState({
+    const [ball, setball] = useState({
         x: canvWidth / 2,
         y: canvHeight / 2,
-        raduis: 10,
+        radius: 10,
         speed: 7,
         velocityX: 5,
         velocityY: 5,
@@ -39,7 +39,7 @@ export default function CanvasPage() {
     })
 
     // create the net
-    const [net, changeNet] = useState({
+    const [net, setNet] = useState({
         x: (canvWidth / 2) - 1,
         y: 0,
         width: 2,
@@ -82,19 +82,7 @@ export default function CanvasPage() {
         }
     }
 
-    type obj = {
-        top: number;
-        bottom: number;
-        width: number;
-        height: number;
-        left: number;
-        right: number;
-        x: number;
-        y: number;
-        radius: number;
-    }
-
-    function colliction(b: obj, p: obj) {
+    function collision(b: any, p: any) {
         p.top = p.y;
         p.bottom = p.y + p.height;
         p.left = p.x;
@@ -116,7 +104,16 @@ export default function CanvasPage() {
         ball.velocityX = -ball.velocityX;
     }
 
+    function keymovement(event : React.KeyboardEvent<HTMLInputElement>){
+        // console.log(event.key);
+        if (event.key === 'w' || event.key === 'W')
+            user.y++;
+            else if (event.key === 's' || event.key === 's')
+            user.y--;
+    }
+
     useEffect(() => {
+        const interval = setInterval(() => {
         if (canvasRef.current) {
             const canvas: HTMLCanvasElement = canvasRef.current;
             const ctx = canvas.getContext("2d");
@@ -131,8 +128,52 @@ export default function CanvasPage() {
             drawRect(ctx, user.x, user.y, user.width, user.height, user.color);
             drawRect(ctx, com.x, com.y, com.width, com.height, com.color);
             //draw the ball
-            drawCircle(ctx, ball.x, ball.y, ball.raduis, ball.color);
+            drawCircle(ctx, ball.x, ball.y, ball.radius, ball.color);
+
+            /*          UPDATE      */
+            if (ball.x - ball.radius < 0)
+            {
+                com.score++;
+                resetBall();
+            }
+            else if (ball.x + ball.radius > canvas.width)
+            {            
+                user.score++;
+                resetBall();
+            }
+            // the ball has a velocity
+            ball.x += ball.velocityX;
+            ball.y += ball.velocityY;
+            // computer plays for itself, and we must be able to beat it
+            // sample AI to control the com paddle
+            com.y += (ball.y - (com.y + com.height / 2 )) * 0.1;
+            // if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0)
+            if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height)
+                ball.velocityY = -ball.velocityY;
+            let player =  (ball.x + ball.radius < canvas.width / 2) ? user : com;
+            if (collision(ball, player))
+            {
+                // where the ball hit the player
+                let collidPoint = ball.y - (player.y + player.height / 2);
+                // normalisation
+                collidPoint /= player.height / 2;
+                // calculate angle in radian
+                let angleRad = collidPoint * (Math.PI / 4);
+                // X direction of the ball when it's hit
+                let direction = (ball.x + ball.radius < canvas.width / 2) ? 1 : -1;
+        
+                // change vel X and Y
+                ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+                ball.velocityY = ball.speed * Math.sin(angleRad);
+                // everytime the ball hit a paddle, we encrese its speed
+                ball.speed += 0.1;
+                // update the score;
+            }
+            keymovement;
         }
+    }, 1000 / 50);
+    console.log("Ana mchiit");
+    return () => clearInterval(interval);
     })
     return (
         <div>

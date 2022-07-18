@@ -5,7 +5,7 @@ var ctx = canvas.getContext("2d");
 // create user paddle
 const user = {
     x : 0,
-    y : (canvas.height * 100) / 2,
+    y : (canvas.height - 100) / 2,
     width : 10,
     height : 100,
     color : "WHITE",
