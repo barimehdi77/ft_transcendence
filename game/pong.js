@@ -33,13 +33,6 @@ const ball = {
     color : "WHITE"
 }
 
-// draw rect
-function drawRect(x, y, w, h, color)
-{
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, w, h);
-}
-
 // create the net
 const net = {
     x : canvas.width / 2 - 1,
@@ -48,6 +41,14 @@ const net = {
     height : 10,
     color : "WHITE"
 }
+
+// draw rect
+function drawRect(x, y, w, h, color)
+{
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, w, h);
+}
+
 // draw the net
 function drawNet(){
     for(var i = 0; i <= canvas.height; i += 15)
@@ -110,7 +111,6 @@ function collision(b, p)
     b.bottom = b.y + b.radius;
     b.left = b.x - b.radius;
     b.right = b.x + b.radius;
-
 
     return (b.right > p.left && b.bottom > p.top && b.left < p.right && b.top < p.bottom);
 }
