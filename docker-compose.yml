@@ -9,13 +9,13 @@ services:
             NODE_ENV: development
             PORT: 3000
         ports:
-            - "8080:3000"
+            - "3000:3000" # the port number is for dev only prud port is == 8080
         restart: on-failure
 
     postgres:
         image: postgres:10.4
         ports:
-            - "5432:5432"
+            - "8077:5432"
         environment:
             POSTGRES_USER: user
             POSTGRES_PASSWORD: password
