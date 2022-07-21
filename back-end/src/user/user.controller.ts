@@ -18,6 +18,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Post('/setup')
+  accountSetup(@Body() data: Prisma.UserUncheckedUpdateInput) {
+    return this.userService.accountSetup(data);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne({id: +id});

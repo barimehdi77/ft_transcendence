@@ -61,6 +61,25 @@ export class UserService {
     return (token);
   }
 
+  async accountSetup(data: Prisma.UserUncheckedUpdateInput) {
+    console.log(data);
+
+    // const User = await this.FindUser(data.id as number);
+    // console.log(User);
+
+    // const id: Prisma.UserWhereUniqueInput = data.id as Prisma.UserWhereUniqueInput;
+
+    return (this.prisma.user.update({
+      where: {
+        intra_id: data.intra_id as number,
+      },
+      data: {
+        ProfileDone: true,
+        ...data
+      },
+    }))
+  }
+
   findAll() {
     return this.prisma.user.findMany({
       select: {
@@ -75,7 +94,6 @@ export class UserService {
   }
 
   findOne(where: Prisma.UserWhereUniqueInput) {
-    console.log(where);
     return this.prisma.user.findUnique({
       where,
       select: {
