@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+    api:
+        build: back-end/
+        depends_on:
+            - postgres
+        environment:
+            DATABASE_URL: postgres://user:password@postgres:5432/db
+            NODE_ENV: development
+            PORT: 3000
+        ports:
+            - "8080:3000"
+        restart: on-failure
+
+    postgres:
+        image: postgres:10.4
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: db
