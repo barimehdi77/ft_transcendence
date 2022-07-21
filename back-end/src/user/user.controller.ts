@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -14,11 +15,13 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.userService.findAll();
   }
 
   @Post('/setup')
+  @UseGuards(AuthGuard('jwt'))
   accountSetup(@Body() data: Prisma.UserUncheckedUpdateInput) {
     return this.userService.accountSetup(data);
   }
