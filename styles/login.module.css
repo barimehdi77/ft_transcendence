@@ -1,0 +1,50 @@
+.main {
+	background-image: url('/bg-pattern.png');
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.hero {
+	text-align: center;
+}
+
+.hero h1 {
+	text-transform: uppercase;
+	font-weight: 900;
+	font-size: 3rem;
+}
+
+.hero img {
+	margin: auto;
+	width: 70%;
+}
+
+.signup h3 {
+	font-weight: 700;
+	font-size: 2.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.signup a {
+	background-color: #196687;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	padding: .5rem 1.5rem;
+	color: white;
+	text-transform: uppercase;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.signup img {
+	width: 3rem;
+	margin-right: 1rem;
+}
