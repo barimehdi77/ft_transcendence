@@ -10,16 +10,22 @@ import styles from '../styles/login.module.css';
 
 const Home: NextPage = () => {
 	return (
-		<main className={styles.main}>
-			<div className={styles.hero}>
+		<main
+			className='bg-hero-pattern bg-cover bg-center h-screen flex justify-center items-center'
+			style={{ minWidth: '900px' }}
+		>
+			<div className='w-3/5 text-center text-6xl font-extrabold uppercase'>
 				<h1>king pong</h1>
-				<img src='/Gorilla.png' alt='Gorilla Logo' />
+				<img src='/Gorilla.png' alt='Gorilla Logo' className='m-auto w-1/2' />
 			</div>
-			<div className={styles.signup}>
-				<h3>Sign up to play</h3>
+			<div className='w-2/5'>
+				<h3 className='font-bold text-4xl mb-6'>Sign up to play</h3>
 				<button>
-					<a href='http://localhost:8080/api/auth/login'>
-						<img src='/42-logo.png' alt='42 Logo' />
+					<a
+						href='http://localhost:8080/api/auth/login'
+						className='bg-sky-800 rounded-full flex items-center justify-center py-2 px-6 text-white uppercase font-semibold cursor-pointer'
+					>
+						<img src='/42-logo.png' alt='42 Logo' className='w-12 mr-4' />
 						login with intra
 					</a>
 				</button>
