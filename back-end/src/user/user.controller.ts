@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
+import { jwtInfo } from './dto/jwt.dto';
 
 @Controller('user')
 export class UserController {
@@ -16,19 +18,20 @@ export class UserController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  findAll() {
-    return this.userService.findAll();
+  async findUser(@Req() req: Request, @Res() res: Response) {
+    // console.log(req.user);
+    const user = await this.userService.FindUser(req.user as jwtInfo);
+    if (user.ProfileDone)
+      res.send(user);
+    else
+      res.redirect('http://localhost:3000/setup');
+
   }
 
   @Post('/setup')
   @UseGuards(AuthGuard('jwt'))
   accountSetup(@Body() data: Prisma.UserUncheckedUpdateInput) {
     return this.userService.accountSetup(data);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne({id: +id});
   }
 
   @Patch(':id')

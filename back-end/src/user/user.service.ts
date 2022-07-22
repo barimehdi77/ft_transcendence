@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { jwtInfo } from './dto/jwt.dto';
 
 @Injectable()
 export class UserService {
@@ -21,13 +22,7 @@ export class UserService {
       email: user.email,
       login: user.login
     }
-
-    let req: Request;
-
-    console.log("thisis ", req);
-
     const secret = this.config.get('JWT_SECRET');
-
     return (this.jwt.signAsync(payload, {
       expiresIn: '15m',
       secret: secret,
@@ -36,33 +31,42 @@ export class UserService {
   };
 
   async validateUser(data: Prisma.UserUncheckedCreateInput): Promise<Prisma.UserUncheckedCreateInput> {
-    // const { login } = data;
     const user = await this.prisma.user.findUnique({
       where: {
         intra_id: data.intra_id,
       },
     });
 
-    if (user) {
-      // const token = await this.signToken(user.intra_id, user.email, user.login);
-      return (user);
-    }
+    if (user) return (user);
     return this.create(data);
   }
 
   async FindUser(
-    where: number,
+    data: jwtInfo,
   ): Promise<Prisma.UserUncheckedCreateInput | undefined> {
-    return this.findOne({ intra_id: +where });
+    console.log("hello");
+    const user = await this.prisma.user.findUnique({
+      where: {
+        intra_id: data.sub,
+      },
+      select: {
+        first_name: true,
+        last_name: true,
+        user_name: true,
+        email: true,
+        login: true,
+        image_url: true,
+      },
+    });
+    console.log("heiii haa", user);
+    return (user);
+
   }
 
   async create(data: Prisma.UserUncheckedCreateInput): Promise<Prisma.UserUncheckedCreateInput> {
-    console.log('The Create function is called');
     const user = await this.prisma.user.create({
       data,
     });
-
-    // const token = await this.signToken(user.intra_id, user.email, user.login);
     return (user);
   }
 
@@ -78,9 +82,6 @@ export class UserService {
     console.log(data);
 
     const User = await this.findUserName(data.user_name as string);
-    // console.log(User);
-
-    // const id: Prisma.UserWhereUniqueInput = data.id as Prisma.UserWhereUniqueInput;
 
     if (User) return ("user already exists");
 
@@ -97,20 +98,6 @@ export class UserService {
 
   findAll() {
     return this.prisma.user.findMany({
-      select: {
-        first_name: true,
-        last_name: true,
-        user_name: true,
-        email: true,
-        login: true,
-        image_url: true,
-      },
-    });
-  }
-
-  findOne(where: Prisma.UserWhereUniqueInput) {
-    return this.prisma.user.findUnique({
-      where,
       select: {
         first_name: true,
         last_name: true,
