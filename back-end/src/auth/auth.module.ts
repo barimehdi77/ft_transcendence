@@ -6,14 +6,20 @@ import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/app/prisma.service';
 // import { SessionSerializer } from './auth.serializer';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { ConfigService } from '@nestjs/config'
+import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [
-    JwtModule.register({})
-],
+  imports: [JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, FortyTwoStrategy, JwtStrategy, UserService, PrismaService, ConfigService],
+  providers: [
+    AuthService,
+    FortyTwoStrategy,
+    JwtStrategy,
+    UserService,
+    ConfigService,
+    PrismaService,
+  ],
 })
 export class AuthModule {}

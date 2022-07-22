@@ -16,7 +16,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 				return (token);
 			}]),
 			secretOrKey: config.get('JWT_SECRET'),
-			// sec: config.get('JWT_SECRET'),
 		});
 	}
 

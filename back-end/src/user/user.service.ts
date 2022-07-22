@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
+import { Request } from 'express';
 
 @Injectable()
 export class UserService {
@@ -14,13 +15,16 @@ export class UserService {
     private readonly config: ConfigService,
   ) {}
 
-
-  signToken(userId: number, email: string, login: string) : Promise<string> {
+  signToken(user: Prisma.UserUncheckedCreateInput) : Promise<string> {
     const payload = {
-      sub: userId,
-      email,
-      login
+      sub: user.intra_id,
+      email: user.email,
+      login: user.login
     }
+
+    let req: Request;
+
+    console.log("thisis ", req);
 
     const secret = this.config.get('JWT_SECRET');
 
@@ -31,16 +35,17 @@ export class UserService {
 
   };
 
-  async validateUser(data: Prisma.UserUncheckedCreateInput) {
+  async validateUser(data: Prisma.UserUncheckedCreateInput): Promise<Prisma.UserUncheckedCreateInput> {
     // const { login } = data;
     const user = await this.prisma.user.findUnique({
       where: {
         intra_id: data.intra_id,
       },
     });
+
     if (user) {
-      const token = await this.signToken(user.intra_id, user.email, user.login);
-      return (token);
+      // const token = await this.signToken(user.intra_id, user.email, user.login);
+      return (user);
     }
     return this.create(data);
   }
@@ -51,23 +56,33 @@ export class UserService {
     return this.findOne({ intra_id: +where });
   }
 
-  async create(data: Prisma.UserUncheckedCreateInput): Promise<string> {
+  async create(data: Prisma.UserUncheckedCreateInput): Promise<Prisma.UserUncheckedCreateInput> {
     console.log('The Create function is called');
     const user = await this.prisma.user.create({
       data,
     });
 
-    const token = await this.signToken(user.intra_id, user.email, user.login);
-    return (token);
+    // const token = await this.signToken(user.intra_id, user.email, user.login);
+    return (user);
+  }
+
+  async findUserName(user_name: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        user_name
+      }
+    });
   }
 
   async accountSetup(data: Prisma.UserUncheckedUpdateInput) {
     console.log(data);
 
-    // const User = await this.FindUser(data.id as number);
+    const User = await this.findUserName(data.user_name as string);
     // console.log(User);
 
     // const id: Prisma.UserWhereUniqueInput = data.id as Prisma.UserWhereUniqueInput;
+
+    if (User) return ("user already exists");
 
     return (this.prisma.user.update({
       where: {

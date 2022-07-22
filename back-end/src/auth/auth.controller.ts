@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-// import { AuthenticatedGuard } from './auth.guards';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from 'src/user/user.service';
 
@@ -29,9 +28,10 @@ export class AuthController {
 
   @Get('redirect')
   @UseGuards(AuthGuard('42'))
-  redirect(@Req() req: any ,@Res() res: Response) {
-    console.log(req);
-    res.redirect('http://localhost:3000/setup');
+  redirect(@Req() req: Request ,@Res() res: Response) {
+    // console.log("this is redirect");
+    return this.authService.GenirateJWT(req, res);
+    // res.redirect('http://localhost:3000/setup');
   }
 
   /**
