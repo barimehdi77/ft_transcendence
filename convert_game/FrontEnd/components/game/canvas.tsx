@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { isErrored } from "stream";
 
 export default function CanvasPage() {
 	const canvasRef = useRef(null);
@@ -70,7 +71,6 @@ export default function CanvasPage() {
 		}
 	}
 
-
 	// draw Text
 	function drawText(ctx: CanvasRenderingContext2D | null, text: string, x: number, y: number, color: string) {
 		if (ctx) {
@@ -103,8 +103,9 @@ export default function CanvasPage() {
 
 	// Render && update
 	useEffect(() => {
+		let inter: NodeJS.Timer | undefined;
 		const interval = setInterval(() => {
-			console.log("interval");
+			// console.log("interval");
 			if (canvasRef.current) {
 				const canvas: HTMLCanvasElement = canvasRef.current;
 				const ctx = canvas.getContext("2d");
@@ -162,23 +163,49 @@ export default function CanvasPage() {
 		}, 1000 / 50);
 
 		document.addEventListener("keydown", (event) => {
-			console.log("keyDown");
+			let toadd = 0;
 			if (event.key === 'w' || event.key === 'W') {
 				if (user.y <= 0)
-					user.y = 0;
+					toadd = 0;
 				else
-					user.y -= 5;
-					// console.log("w => x: ", user.x, " y: ", user.y);
+					toadd -= 5;
 			}
 			else if (event.key === 's' || event.key === 's') {
-				if (user.y + 100 >= canvHeight)
-					user.y = canvHeight - 100;
+				if (toadd + 100 >= canvHeight)
+					toadd = canvHeight - 100;
 				else
-					user.y += 5;
-				// console.log("s => x: ", user.x, " y: ", user.y);
+					toadd += 5;
 			}
+			startMoving(toadd);
 		});
 
+		function startMoving(toadd: any) {
+			if (inter === undefined) {      
+			  loop(toadd);
+			}
+		 }
+
+		 function loop(toadd: any) {
+			move(toadd);
+			inter = setTimeout(loop, 1000 / 60, toadd);
+		  }
+
+		  function move(toadd: any) {
+			user.y += toadd;
+			if (user.y <= 0)
+					user.y = 0;
+			else if (user.y + 100 >= canvHeight)
+				user.y = canvHeight - 100;
+		  }
+
+		  function stopMoving() {
+			clearTimeout(inter);
+			inter = undefined;
+		  }
+		  
+		  document.addEventListener("keyup", (event) => {
+			stopMoving();
+		  });
 		console.log("Ana mchiit");
 		return () => clearInterval(interval);
 	}, [])
