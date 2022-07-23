@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+    front-end:
+        build: front-end/
+        ports:
+            - "80:3000"
+        restart: on-failure
+
