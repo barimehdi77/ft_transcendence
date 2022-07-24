@@ -19,12 +19,15 @@ export class UserController {
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async findUser(@Req() req: Request, @Res() res: Response) {
-    // console.log(req.user);
+    console.log("something");
     const user = await this.userService.FindUser(req.user as jwtInfo);
+    // res.write(user);
+    res.send(user);
+    return ;
     if (user.ProfileDone)
       res.send(user);
     else
-      res.redirect('http://localhost:3000/setup');
+      res.redirect('http://localhost/setup');
 
   }
 

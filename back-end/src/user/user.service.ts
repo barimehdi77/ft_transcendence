@@ -44,7 +44,6 @@ export class UserService {
   async FindUser(
     data: jwtInfo,
   ): Promise<Prisma.UserUncheckedCreateInput | undefined> {
-    console.log("hello");
     const user = await this.prisma.user.findUnique({
       where: {
         intra_id: data.sub,

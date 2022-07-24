@@ -13,7 +13,7 @@ export class AuthService {
 
   async GenirateJWT(@Req() req: Request, @Res() res: Response) {
     const token = await this.userService.signToken(req.user as Prisma.UserUncheckedCreateInput);
-    res.cookie("access_token", token);
+    console.log(token);
     res.redirect('http://localhost/setup');
   }
 
