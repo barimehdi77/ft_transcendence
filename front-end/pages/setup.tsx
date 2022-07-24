@@ -1,17 +1,27 @@
 import cookie from 'js-cookie';
 import Label from '../components/label';
 import Input from '../components/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Setup = () => {
 	const token = cookie.get('access_token') as string;
 
-	const [file, setFile] = useState();
+	useEffect(() => {
+		async function test() {
+			console.log(token);
+			let header = new Headers();
+			const res = await fetch('http://localhost:8080/api/user', {
+				mode: 'no-cors',
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			// header.append("Authorization", `Bearer ${token}`);
+			console.log(await res.json());
+		}
 
-	// function filehandle(e: Event) {
+		test();
+	});
 
-	// 	setFile(e.target.value[0]);
-	// }
+	const [file, setFile] = useState('no file selected');
 
 	return (
 		<div className='bg-hero-pattern bg-cover bg-center h-screen flex flex-col justify-center'>
@@ -32,16 +42,15 @@ const Setup = () => {
 					>
 						Choose
 					</label>
-					{file ? file : "no file selected"}
+					{file}
 				</div>
 				<input
 					type='file'
-					// value={file}
 					id='avatar'
 					name='avatar'
 					className='hidden'
 					onChange={(e) => {
-							setFile(e.target.files[0].name);
+						setFile(e.target.files[0].name);
 					}}
 				/>
 			</form>
