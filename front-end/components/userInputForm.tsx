@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 const UserInputForm = (props: any) => {
 	const [username, setUsername] = useState();
-	// const [data, setData] = useState({});
+	const [data, setData] = useState({});
 
 	return (
 		<>
