@@ -69,7 +69,7 @@ export class UserService {
   ): Promise<Prisma.UserUncheckedCreateInput | undefined> {
     const user = await this.prisma.user.findUnique({
       where: {
-        intra_id: await this.decode(auth),
+        intra_id: this.decode(auth),
       },
       select: {
         first_name: true,
