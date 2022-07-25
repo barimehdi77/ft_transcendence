@@ -2,12 +2,11 @@ import { Injectable, Req } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { jwtInfo } from './dto/jwt.dto';
 import { CreateJwt, SetupUser } from 'src/auth/dto/User.dto';
+import { UpdateUserInfo } from './dto/User.dto';
 
 @Injectable()
 export class UserService {
@@ -20,7 +19,7 @@ export class UserService {
   signToken(user: CreateJwt): Promise<string> {
     const secret = this.config.get('JWT_SECRET');
     return this.jwt.signAsync(user, {
-      expiresIn: '15m',
+      expiresIn: '1d',
       secret: secret,
     });
   }
@@ -40,13 +39,8 @@ export class UserService {
       },
     });
 
-    // const token = await this.signToken(user);
-
     if (user)
       return {
-        // intra_id: user.intra_id,
-        // login: user.login,
-        // user_name: user.user_name,
         ...user,
         token: await this.signToken(user),
       };
@@ -64,9 +58,9 @@ export class UserService {
     };
   }
 
-  async decode(auth: string) {
+  decode(auth: string): number {
     const jwt = auth.replace('Bearer ', '');
-    const decode = await this.jwt.decode(jwt, { json: true }) as { intra_id: number};
+    const decode = this.jwt.decode(jwt, { json: true }) as { intra_id: number};
     return (decode.intra_id);
   }
 
@@ -106,16 +100,24 @@ export class UserService {
     });
   }
 
-  async accountSetup(data: Prisma.UserUncheckedUpdateInput) {
+  async accountSetup(data: UpdateUserInfo, auth: string) {
     console.log(data);
+
+    const Userexsist = await this.prisma.user.findUnique({
+      where: {
+        intra_id: this.decode(auth),
+      }
+    });
+
+    if (!Userexsist) return ('user Does not exist');
 
     const User = await this.findUserName(data.user_name as string);
 
-    if (User) return 'user already exists';
+    if (User) return 'User Name is Taken';
 
     return this.prisma.user.update({
       where: {
-        intra_id: data.intra_id as number,
+        intra_id: this.decode(auth),
       },
       data: {
         ProfileDone: true,

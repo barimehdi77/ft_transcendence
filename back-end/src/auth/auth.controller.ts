@@ -28,12 +28,7 @@ export class AuthController {
   @Get('redirect')
   @UseGuards(AuthGuard('42'))
   async redirect(@Req() req: Request ,@Res() res: Response) {
-    // console.log("this is redirect");
     const user = await this.authService.GenirateJWT(req, res);
-    // res.status(200);
-    // console.log(res);
-    // console.log("testt");
-    // res.status(HttpStatus.OK).json(user);
     res.cookie('token', user.token);
     res.redirect(301,'http://localhost/setup');
   }
