@@ -7,6 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { jwtInfo } from './dto/jwt.dto';
+import { CreateJwt, SetupUser } from 'src/auth/dto/User.dto';
 
 @Injectable()
 export class UserService {
@@ -16,29 +17,51 @@ export class UserService {
     private readonly config: ConfigService,
   ) {}
 
-  signToken(user: Prisma.UserUncheckedCreateInput) : Promise<string> {
-    const payload = {
-      sub: user.intra_id,
-      email: user.email,
-      login: user.login
-    }
+  signToken(user: CreateJwt): Promise<string> {
     const secret = this.config.get('JWT_SECRET');
-    return (this.jwt.signAsync(payload, {
+    return this.jwt.signAsync(user, {
       expiresIn: '15m',
       secret: secret,
-    }))
+    });
+  }
 
-  };
-
-  async validateUser(data: Prisma.UserUncheckedCreateInput): Promise<Prisma.UserUncheckedCreateInput> {
+  async validateUser(
+    data: Prisma.UserUncheckedCreateInput,
+  ): Promise<SetupUser> {
     const user = await this.prisma.user.findUnique({
       where: {
         intra_id: data.intra_id,
       },
+      select: {
+        intra_id: true,
+        login: true,
+        user_name: true,
+        email: true,
+      },
     });
 
-    if (user) return (user);
-    return this.create(data);
+    const token = await this.signToken(user);
+
+    if (user)
+      return {
+        // intra_id: user.intra_id,
+        // login: user.login,
+        // user_name: user.user_name,
+        ...user,
+        token: await this.signToken(user),
+      };
+
+    const NewUser = await this.create(data);
+    return {
+      intra_id: NewUser.intra_id,
+      login: NewUser.login,
+      user_name: NewUser.user_name,
+      token: await this.signToken({
+        intra_id: NewUser.intra_id,
+        login: NewUser.login,
+        email: NewUser.email,
+      }),
+    };
   }
 
   async FindUser(
@@ -57,23 +80,23 @@ export class UserService {
         image_url: true,
       },
     });
-    console.log("heiii haa", user);
-    return (user);
-
+    return user;
   }
 
-  async create(data: Prisma.UserUncheckedCreateInput): Promise<Prisma.UserUncheckedCreateInput> {
+  async create(
+    data: Prisma.UserUncheckedCreateInput,
+  ): Promise<Prisma.UserUncheckedCreateInput> {
     const user = await this.prisma.user.create({
       data,
     });
-    return (user);
+    return user;
   }
 
   async findUserName(user_name: string) {
     return this.prisma.user.findUnique({
       where: {
-        user_name
-      }
+        user_name,
+      },
     });
   }
 
@@ -82,17 +105,17 @@ export class UserService {
 
     const User = await this.findUserName(data.user_name as string);
 
-    if (User) return ("user already exists");
+    if (User) return 'user already exists';
 
-    return (this.prisma.user.update({
+    return this.prisma.user.update({
       where: {
         intra_id: data.intra_id as number,
       },
       data: {
         ProfileDone: true,
-        ...data
+        ...data,
       },
-    }))
+    });
   }
 
   findAll() {

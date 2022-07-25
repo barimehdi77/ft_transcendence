@@ -1,10 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from 'src/user/user.service';
+import { SetupUser } from './dto/User.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,10 +27,14 @@ export class AuthController {
 
   @Get('redirect')
   @UseGuards(AuthGuard('42'))
-  redirect(@Req() req: Request ,@Res() res: Response) {
+  async redirect(@Req() req: Request ,@Res() res: Response) {
     // console.log("this is redirect");
-    return this.authService.GenirateJWT(req, res);
-    // res.redirect('http://localhost:3000/setup');
+    const user = await this.authService.GenirateJWT(req, res);
+    // res.status(200);
+    console.log(res);
+    res.redirect(301,'http://localhost/setup');
+    // console.log("testt");
+    // res.send(user);
   }
 
   /**
