@@ -40,7 +40,7 @@ export class UserService {
       },
     });
 
-    const token = await this.signToken(user);
+    // const token = await this.signToken(user);
 
     if (user)
       return {
