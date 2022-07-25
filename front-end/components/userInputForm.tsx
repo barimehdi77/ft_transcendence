@@ -14,11 +14,6 @@ const UserInputForm = (props: any) => {
 		file === 'no file selected'
 			? data.append('avatar', '')
 			: data.append('avatar', file);
-
-		for (var value of data.values()) {
-			console.log(value);
-		}
-
 		const res = await axios.post(url, data);
 	};
 
