@@ -12,7 +12,7 @@ export class AuthService {
 
   async GenirateJWT(@Req() req: Request, @Res() res: Response): Promise<SetupUser> {
     const user = await this.userService.validateUser(req.user as Prisma.UserUncheckedCreateInput);
-    console.log("from GenerateJWT", user);
+    // console.log("from GenerateJWT", user);
     return (user);
     // res.redirect('http://localhost/setup');
   }

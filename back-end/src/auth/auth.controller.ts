@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseGuards, Req, Redirect, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
@@ -31,10 +31,11 @@ export class AuthController {
     // console.log("this is redirect");
     const user = await this.authService.GenirateJWT(req, res);
     // res.status(200);
-    console.log(res);
-    res.redirect(301,'http://localhost/setup');
+    // console.log(res);
     // console.log("testt");
-    // res.send(user);
+    // res.status(HttpStatus.OK).json(user);
+    res.cookie('token', user.token);
+    res.redirect(301,'http://localhost/setup');
   }
 
   /**
