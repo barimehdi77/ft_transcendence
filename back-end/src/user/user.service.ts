@@ -64,12 +64,18 @@ export class UserService {
     };
   }
 
+  async decode(auth: string) {
+    const jwt = auth.replace('Bearer ', '');
+    const decode = await this.jwt.decode(jwt, { json: true }) as { intra_id: number};
+    return (decode.intra_id);
+  }
+
   async FindUser(
-    data: jwtInfo,
+    auth: string,
   ): Promise<Prisma.UserUncheckedCreateInput | undefined> {
     const user = await this.prisma.user.findUnique({
       where: {
-        intra_id: data.sub,
+        intra_id: await this.decode(auth),
       },
       select: {
         first_name: true,

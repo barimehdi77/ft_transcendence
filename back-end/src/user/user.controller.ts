@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res, Headers } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,9 +18,9 @@ export class UserController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  async findUser(@Req() req: Request, @Res() res: Response) {
+  async findUser(@Req() req: Request, @Res() res: Response, @Headers('Authorization') auth: string) {
     console.log("something");
-    const user = await this.userService.FindUser(req.user as jwtInfo);
+    const user = await this.userService.FindUser(auth);
     // res.write(user);
     res.send(user);
     return ;
