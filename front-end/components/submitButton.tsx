@@ -1,9 +1,12 @@
-const SubmitButton = () => {
+const SubmitButton = (props) => {
+	const sendData = (e: any) => {
+		console.log(e.target);
+	};
+
 	return (
 		<div className='flex justify-center'>
 			<button
-				type='submit'
-				form='user-info'
+				onClick={sendData}
 				className='bg-sky-800 px-12 py-4 text-xl text-white font-semibold uppercase rounded-full'
 			>
 				Start
