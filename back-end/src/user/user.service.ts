@@ -78,6 +78,7 @@ export class UserService {
         email: true,
         login: true,
         image_url: true,
+        ProfileDone: true,
       },
     });
     return user;

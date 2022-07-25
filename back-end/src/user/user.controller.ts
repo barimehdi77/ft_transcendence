@@ -25,7 +25,7 @@ export class UserController {
 
   @Post('/setup')
   @UseGuards(AuthGuard('jwt'))
-  accountSetup(@Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
+  accountSetup(@Req() req: Request, @Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
     return this.userService.accountSetup(data, auth);
   }
 
