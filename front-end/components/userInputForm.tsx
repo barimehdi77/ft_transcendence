@@ -5,9 +5,9 @@ import SubmitButton from '../components/submitButton';
 
 import { useState } from 'react';
 
-const UserInputForm = (props) => {
-	const [username, setUsername] = useState('no file selected');
-	const [data, setData] = useState({});
+const UserInputForm = (props: any) => {
+	const [username, setUsername] = useState();
+	// const [data, setData] = useState({});
 
 	return (
 		<>

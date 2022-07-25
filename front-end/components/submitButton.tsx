@@ -1,4 +1,4 @@
-const SubmitButton = (props) => {
+const SubmitButton = (props: any) => {
 	const sendData = (e: any) => {
 		console.log(e.target);
 	};

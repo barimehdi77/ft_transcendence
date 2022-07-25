@@ -30,6 +30,7 @@ const Setup = () => {
 			// console.log(res);
 			const res = await Axios.get(url, config);
 			setUserInfo(res.data);
+			console.log(userInfo);
 		}
 		test();
 	});	
