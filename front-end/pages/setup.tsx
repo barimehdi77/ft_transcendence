@@ -1,5 +1,3 @@
-import Label from '../components/label';
-import Input from '../components/input';
 import UserInputFrom from '../components/userInputForm';
 
 import { useEffect, useState } from 'react';
@@ -18,22 +16,12 @@ const Setup = () => {
 
 
 	useEffect(() => {
-		async function test() {
-			// let header = new Headers();
-			// const res = await fetch('http://localhost:8080/api/user', {
-			// mode: 'no-cors',
-			// headers: {
-			// 	Authorization: `Bearer ${token}`,
-			// },
-			// });
-			// header.append('Authorization', `Bearer ${token}`);
-			// console.log(res);
+		async function getUserData() {
 			const res = await Axios.get(url, config);
 			setUserInfo(res.data);
-			console.log(userInfo);
 		}
-		test();
-	});	
+		getUserData();
+	}, []);	
 
 	return (
 		<div className='bg-hero-pattern bg-cover bg-center h-screen flex flex-col justify-center'>
