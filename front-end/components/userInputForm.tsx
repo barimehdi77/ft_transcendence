@@ -9,12 +9,17 @@ const UserInputForm = (props: any) => {
 	const [file, setFile] = useState('no file selected');
 
 	const sendData = async (e: any) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			},
+		};
 		const data = new FormData();
 		data.append('user_name', username ? username : props.userInfo.login);
 		file === 'no file selected'
 			? data.append('avatar', '')
 			: data.append('avatar', file);
-		const res = await axios.post(url, data);
+		const res = await axios.post(url, data, config);
 	};
 
 	return (
