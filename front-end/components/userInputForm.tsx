@@ -5,7 +5,8 @@ import axios from 'axios';
 
 const UserInputForm = (props: any) => {
 	const url = 'http://localhost:8080/api/user/setup';
-	const [username, setUsername] = useState(props.userInfo.login);
+	const login = props.userInfo.login;
+	const [username, setUsername] = useState(login);
 	const [file, setFile] = useState('no file selected');
 
 	const sendData = async (e: any) => {
@@ -14,12 +15,15 @@ const UserInputForm = (props: any) => {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
 		};
-		const data = new FormData();
-		data.append('user_name', username ? username : props.userInfo.login);
-		file === 'no file selected'
-			? data.append('avatar', '')
-			: data.append('avatar', file);
-		const res = await axios.post(url, data, config);
+		try {
+			const res = await axios.post(
+				url,
+				{ user_name: username ? username : login, image_url: file },
+				config
+			);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -32,7 +36,7 @@ const UserInputForm = (props: any) => {
 				<input
 					type='text'
 					id='username'
-					placeholder={props.userInfo.login}
+					placeholder={login}
 					onChange={(e) => {
 						const { value } = e.target;
 						setUsername(value);
