@@ -26,7 +26,9 @@ const Setup = () => {
 	return (
 		<div className='bg-hero-pattern bg-cover bg-center h-screen flex flex-col justify-center'>
 			<h1 className='text-center text-5xl font-bold'>Setup your profile</h1>
-			<UserInputFrom userInfo={userInfo} />
+			<UserInputFrom
+				userInfo={userInfo}
+			/>
 		</div>
 	);
 };

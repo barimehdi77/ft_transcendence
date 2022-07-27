@@ -30,7 +30,7 @@ const UserInputForm = (props: any) => {
 		<>
 			<form
 				action='#'
-				className='w-2/3 max-w-xl m-auto rounded-3xl bg-white flex flex-col p-8 my-12'
+				className='w-2/3 max-w-xl m-auto rounded-3xl bg-white flex flex-col p-8 my-12 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'
 			>
 				<Label name='username' />
 				<input
@@ -68,7 +68,7 @@ const UserInputForm = (props: any) => {
 			<div className='flex justify-center'>
 				<button
 					onClick={sendData}
-					className='bg-sky-800 px-12 py-4 text-xl text-white font-semibold uppercase rounded-full'
+					className='bg-sky-800 px-12 py-4 text-xl text-white font-semibold uppercase rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'
 				>
 					Start
 				</button>
