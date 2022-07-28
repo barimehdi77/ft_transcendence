@@ -17,7 +17,7 @@ const Home: NextPage = () => {
 					<button className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
 						<a
 							href='http://localhost:8080/api/auth/login'
-							className='bg-sky-800 rounded-full flex items-center justify-center py-2 px-6 text-white uppercase font-semibold cursor-pointer'
+							className='bg-sky-800 rounded-full flex items-center justify-center py-2 px-6 text-white uppercase font-semibold cursor-pointer hover:bg-sky-700'
 						>
 							<img src='/42-logo.png' alt='42 Logo' className='w-12 mr-4' />
 							login with intra

@@ -47,7 +47,7 @@ const UserInputForm = (props: any) => {
 				<div className='bg-gray-100 px-4 py-3 rounded-full mb-5 text-gray-400'>
 					<label
 						htmlFor='avatar'
-						className='bg-sky-800 text-white px-3 py-1 rounded-full mr-2 cursor-pointer'
+						className='bg-sky-800 text-white px-3 py-1 rounded-full mr-2 cursor-pointer hover:bg-sky-700'
 					>
 						Choose
 					</label>
@@ -68,7 +68,7 @@ const UserInputForm = (props: any) => {
 			<div className='flex justify-center'>
 				<button
 					onClick={sendData}
-					className='bg-sky-800 px-12 py-4 text-xl text-white font-semibold uppercase rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'
+					className='bg-sky-800 px-12 py-4 text-xl text-white font-semibold uppercase rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-sky-700'
 				>
 					Start
 				</button>
