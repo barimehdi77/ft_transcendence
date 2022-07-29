@@ -14,10 +14,10 @@ const Home: NextPage = () => {
 				</h1>
 				<img src='/Gorilla.png' alt='Gorilla Logo' className='m-auto w-1/3' />
 				<div className='flex justify-center'>
-					<button className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
+					<button className='bg-sky-800 rounded-full  py-2 px-6 text-white uppercase font-semibold cursor-pointer hover:bg-sky-700 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:scale-105'>
 						<a
 							href='http://localhost:8080/api/auth/login'
-							className='bg-sky-800 rounded-full flex items-center justify-center py-2 px-6 text-white uppercase font-semibold cursor-pointer hover:bg-sky-700'
+							className='flex items-center justify-center'
 						>
 							<img src='/42-logo.png' alt='42 Logo' className='w-12 mr-4' />
 							login with intra
