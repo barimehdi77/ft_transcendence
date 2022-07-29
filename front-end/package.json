@@ -11,6 +11,7 @@
   "dependencies": {
     "@types/js-cookie": "^3.0.2",
     "axios": "^0.27.2",
+    "font-awesome": "^4.7.0",
     "js-cookie": "^3.0.1",
     "next": "12.2.2",
     "react": "18.2.0",
