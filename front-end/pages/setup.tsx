@@ -1,4 +1,5 @@
 import UserInputFrom from '../components/userInputForm';
+import { getUserData } from '../components/getUserData';
 
 import { useEffect, useState } from 'react';
 import cookie from 'js-cookie';
@@ -7,22 +8,13 @@ import axios from 'axios';
 const Setup = () => {
 	const token = cookie.get('token') as string;
 	const [userInfo, setUserInfo] = useState({});
-
+	
 	useEffect(() => {
-		async function getUserData() {
-			const url = 'http://localhost:8080/api/user';
-			localStorage.setItem('token', token);
-			const config = {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
-			};
-			const res = await axios.get(url, config);
-			console.log(res.data);
-			
-			setUserInfo(res.data);
+		localStorage.setItem('token', token);
+		async function fillUserData() {
+			setUserInfo(await getUserData())
 		}
-		getUserData();
+		fillUserData();
 	}, []);
 
 	return (

@@ -14,20 +14,21 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 const Profile = () => {
-	const [userInfo, setUserInfo] = useState({});
+	const [userInfo, setUserInfo]: any = useState({});
+	
 	useEffect(() => {
 		async function fillUserData() {
-			const data = await getUserData();			
-			setUserInfo(data);
+			setUserInfo(await getUserData())
 		}
 		fillUserData();
 	}, []);
 
-
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
-			<div className='profile drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
-				<div className='header bg-sky-800 flex items-center px-10 py-4 rounded-t-3xl	'>
+
+			<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
+
+				<div className='bg-sky-800 flex items-center px-10 py-4 rounded-t-3xl	'>
 					<div className='header-info text-neutral-100'>
 						<h2 className='text-xl font-semibold inline'>
 							{userInfo.user_name}
@@ -35,7 +36,7 @@ const Profile = () => {
 						<FontAwesomeIcon icon={faMedal} className='text-teal-500' />
 						<p>{userInfo.email}</p>
 					</div>
-					<div className='avatar w-16 ml-5'>
+					<div className='w-16 ml-5'>
 						<img
 							src='/download.jpeg'
 							alt='User avatar'
@@ -44,7 +45,7 @@ const Profile = () => {
 					</div>
 				</div>
 
-				<div className='main-info bg-white px-10 py-4 rounded-b-3xl'>
+				<div className='bg-white px-10 py-4 rounded-b-3xl'>
 					<ProfileInfoItem
 						icon={faUser}
 						field='Full Name'
