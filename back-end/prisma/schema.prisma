@@ -11,15 +11,37 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  intra_id   Int      @unique @default(0)
-  first_name String
-  last_name  String
-  login      String   @unique
-  user_name  String?  @unique
-  email      String   @unique
-  image_url  String
-  ProfileDone Boolean @default(false)
+  id          Int           @id @default(autoincrement())
+  profile     Profile?
+  intra_id    Int           @unique @default(0)
+  first_name  String
+  last_name   String
+  login       String        @unique
+  user_name   String?       @unique
+  email       String        @unique
+  image_url   String
+  ProfileDone Boolean       @default(false)
+  Matches     MatchMaking[]
 
   @@map(name: "user")
+}
+
+model Profile {
+  id          Int    @id @default(autoincrement())
+  user        User   @relation(fields: [user_id], references: [id])
+  status      String
+  user_id     Int    @unique
+  UserPoints  Int    @default(0)
+  PlayedGames Int    @default(0)
+  Wins        Int    @default(0)
+  Losses      Int    @default(0)
+
+  @@map(name: "profile")
+}
+
+model MatchMaking {
+  id             Int @id @default(autoincrement())
+  players        User[]
+  home_player_id Int    @unique
+  away_player_id Int    @unique
 }
