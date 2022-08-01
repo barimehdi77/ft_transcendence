@@ -2,7 +2,7 @@ import UserInputFrom from '../components/userInputForm';
 
 import { useEffect, useState } from 'react';
 import cookie from 'js-cookie';
-import Axios from 'axios';
+import axios from 'axios';
 
 const Setup = () => {
 	const token = cookie.get('token') as string;
@@ -17,7 +17,9 @@ const Setup = () => {
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
 				},
 			};
-			const res = await Axios.get(url, config);
+			const res = await axios.get(url, config);
+			console.log(res.data);
+			
 			setUserInfo(res.data);
 		}
 		getUserData();
