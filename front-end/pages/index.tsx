@@ -1,6 +1,10 @@
 import type { NextPage } from 'next';
 import React from 'react';
 import styles from '../styles/login.module.css';
+import { useEffect, useState } from 'react';
+// import Router from 'next/router';
+import Setup from './setup';
+import { getUserData } from '../components/getUserData';
 
 const Home: NextPage = () => {
 	return (

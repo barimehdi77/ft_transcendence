@@ -16,7 +16,9 @@ const Setup = () => {
 		}
 		fillUserData();
 	}, []);
+	console.log('hello', userInfo);
 
+	
 	return (
 		<main className='min-h-screen flex flex-col justify-center'>
 			<h1 className='text-center text-5xl font-bold'>Setup your profile</h1>
