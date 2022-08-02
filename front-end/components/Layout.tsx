@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Navbar from './navbar';
+// import Navbar from './navbar';
 
 const Layout = ({ children }: any) => {
 	// const [isLogged, setIsLogged] = useState(false);
