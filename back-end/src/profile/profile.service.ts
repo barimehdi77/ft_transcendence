@@ -11,6 +11,32 @@ export class ProfileService {
     private readonly userService: UserService ) {}
 
 
+  async me(user_name: string): Promise<UserProfile> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        user_name: user_name,
+      },
+      select: {
+        user_name: true,
+        first_name: true,
+        last_name: true,
+        login: true,
+        image_url: true,
+        email: true,
+        profile: {
+          select: {
+            status: true,
+            PlayedGames: true,
+            Wins: true,
+            Losses: true,
+          }
+        }
+      }
+    });
+    return (user);
+  };
+
+
   async findOne(user_name: string): Promise<UserProfile> {
     const user = this.prisma.user.findUnique({
       where: {

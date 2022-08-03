@@ -1,11 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { ReadProfileLayout } from './dto/read-profile.dto';
 import { UserProfile } from 'src/auth/dto/User.dto';
+import { Request, Response } from 'express';
 
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
+
+
+  @Get('me')
+  me(@Req() req: Request): Promise<UserProfile> {
+    return this.profileService.me(req.body.user.user_name);
+  }
 
   @Get(':user_name')
   findOne(@Param('user_name') user_name: string): Promise<UserProfile> {

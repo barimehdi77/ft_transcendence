@@ -18,6 +18,7 @@ export class UserController {
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async findUser(@Req() req: Request, @Res() res: Response, @Headers('Authorization') auth: string) {
+    console.log("from midd", req.body);
     const user = await this.userService.FindUser(auth);
     return res.send(user);
 

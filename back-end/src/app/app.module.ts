@@ -1,10 +1,15 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from 'src/user/user.module';
 import { AuthModule } from '../auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config';
 import { validateUserMiddleware } from 'src/comman/middleware/ValidateUser.middleware';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from './prisma.service';
@@ -22,10 +27,13 @@ import { ProfileModule } from 'src/profile/profile.module';
     PassportModule.register({ session: true }),
   ],
   controllers: [AppController],
-  providers: [AppService, UserService, PrismaService, JwtService]
+  providers: [AppService, UserService, PrismaService, JwtService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // consumer.apply(validateUserMiddleware).forRoutes({ path: "/user", method: RequestMethod.ALL });
+    consumer
+      .apply(validateUserMiddleware)
+      .exclude('/auth')
+      .forRoutes('*');
   }
 }
