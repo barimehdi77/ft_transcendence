@@ -1,4 +1,4 @@
-import { Header, HttpException, Injectable, NestMiddleware } from "@nestjs/common";
+import { Header, HttpException, Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "src/user/user.service";
 
@@ -11,7 +11,7 @@ export class validateUserMiddleware implements NestMiddleware {
 		const user = await this.userService.FindUser(req.headers.authorization)
 		console.log(user);
 		if (!user) {
-			throw new HttpException("unauthorized", 401);
+			throw new UnauthorizedException();
 		}
 		next();
 	}

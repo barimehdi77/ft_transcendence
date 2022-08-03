@@ -30,7 +30,10 @@ export class AuthController {
   async redirect(@Req() req: Request ,@Res() res: Response) {
     const user = await this.authService.GenirateJWT(req, res);
     res.cookie('token', user.token);
-    res.redirect(301,'http://localhost/setup');
+    if (user.ProfileDone)
+      return res.redirect(301, 'http://localhost/home');
+    else
+      return res.redirect(301,'http://localhost/setup');
   }
 
   /**

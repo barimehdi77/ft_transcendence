@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res, Headers, UseFilters } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Prisma } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
@@ -25,8 +25,9 @@ export class UserController {
 
   @Post('/setup')
   @UseGuards(AuthGuard('jwt'))
-  accountSetup(@Req() req: Request, @Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
-    return this.userService.accountSetup(data, auth);
+  async accountSetup(@Req() req: Request,@Res() res: Response, @Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
+    const user = await this.userService.accountSetup(data, auth);
+    res.redirect(301, 'http://localhost/home');
   }
 
   @Patch(':id')

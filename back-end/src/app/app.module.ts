@@ -9,6 +9,7 @@ import { validateUserMiddleware } from 'src/comman/middleware/ValidateUser.middl
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from './prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { ProfileModule } from 'src/profile/profile.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { JwtService } from '@nestjs/jwt';
     }),
     UserModule,
     AuthModule,
+    ProfileModule,
     PassportModule.register({ session: true }),
   ],
   controllers: [AppController],
@@ -24,6 +26,6 @@ import { JwtService } from '@nestjs/jwt';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(validateUserMiddleware).forRoutes({ path: "/user", method: RequestMethod.ALL });
+    // consumer.apply(validateUserMiddleware).forRoutes({ path: "/user", method: RequestMethod.ALL });
   }
 }
