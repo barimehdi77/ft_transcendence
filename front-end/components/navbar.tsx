@@ -2,7 +2,7 @@ import MenuItem from './menuItem';
 
 const Navbar = () => {
 	return (
-		<nav className='bg-sky-800 flex justify-between items-center w-screen px-32 fixed'>
+		<nav className='bg-sky-800 flex justify-between items-center w-screen px-32 fixed z-10'>
 			<h1 className='text-3xl text-white uppercase font-bold'>king pong</h1>
 			<div className='items'>
 				<ul className='flex items-center'>

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { getUserData } from '../components/getUserData';
+import { useContext } from 'react';
+import { UserContext } from '../contexts/userContext';
 
 import ProfileInfoItem from '../components/profileInfoItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,27 +14,17 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 const Profile = () => {
-	const [userInfo, setUserInfo]: any = useState({});
-	
-	useEffect(() => {
-		async function fillUserData() {
-			setUserInfo(await getUserData())
-		}
-		fillUserData();
-	}, []);
+	const { userInfo } = useContext(UserContext);
 
-	
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
-
 			<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
-
 				<div className='bg-sky-800 flex items-center px-10 py-4 rounded-t-3xl	'>
 					<div className='header-info text-neutral-100'>
 						<h2 className='text-xl font-semibold inline'>
 							{userInfo.user_name}
 						</h2>
-						<FontAwesomeIcon icon={faMedal} className='text-teal-500' />
+						<FontAwesomeIcon icon={faMedal} className='text-teal-500 ml-2' />
 						<p>{userInfo.email}</p>
 					</div>
 					<div className='w-16 ml-5'>

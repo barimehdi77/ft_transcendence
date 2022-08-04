@@ -1,11 +1,13 @@
 import Label from '../components/label';
-
+import { useContext } from 'react';
+import { UserContext } from '../contexts/userContext';
 import { useState } from 'react';
 import axios from 'axios';
 
-const UserInputForm = (props: any) => {
+const UserInputForm = () => {
+	const { userInfo, setUserInfo } = useContext(UserContext);
 	const url = 'http://localhost:8080/api/user/setup';
-	const login = props.userInfo.login;
+	const login = userInfo.login;
 	const [username, setUsername] = useState(login);
 	const [file, setFile] = useState('no file selected');
 

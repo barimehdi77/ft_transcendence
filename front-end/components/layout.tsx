@@ -1,21 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../contexts/userContext';
+
 import Navbar from './navbar';
 
 const Layout = ({ children }: any) => {
-	const [isLogged, setIsLogged] = useState(false);
-	useEffect(() => {
-		const isLoggedIn = () => {
-			console.log(localStorage.getItem('token'));
-			if (localStorage.getItem('token')) {
-				console.log('ksnfdons');
-				setIsLogged(true);
-			} else setIsLogged(false);
-		};
-		isLoggedIn();
-	}, [isLogged]);
+	const { userInfo } = useContext(UserContext);
+
 	return (
 		<div className='bg-hero-pattern bg-cover bg-center'>
-			{isLogged ? <Navbar /> : null}
+			{userInfo ? userInfo.ProfileDone ? <Navbar /> : null : null}
 			<>{children}</>
 		</div>
 	);

@@ -1,35 +1,25 @@
-import type { NextPage } from 'next';
-import React from 'react';
-import styles from '../styles/login.module.css';
-import { useEffect, useState } from 'react';
-// import Router from 'next/router';
-import Setup from './setup';
-import { getUserData } from '../components/getUserData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+	faTableTennisPaddleBall,
+	faCommentDots,
+} from '@fortawesome/free-solid-svg-icons';
 
-const Home: NextPage = () => {
-	return (
-		<main
-			className='min-h-screen flex flex-col items-center justify-center'
-			style={{ minWidth: '900px' }}
-		>
-			<div>
-				<h1 className='text-center text-6xl font-extrabold uppercase'>
-					king pong
-				</h1>
-				<img src='/Gorilla.png' alt='Gorilla Logo' className='m-auto w-1/2' />
-				<div className='flex justify-center'>
-					<button className='bg-sky-800 rounded-full  py-2 px-6 text-white uppercase font-semibold cursor-pointer hover:bg-sky-700 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:scale-105'>
-						<a
-							href='http://localhost:8080/api/auth/login'
-							className='flex items-center justify-center'
-						>
-							<img src='/42-logo.png' alt='42 Logo' className='w-12 mr-4' />
-							login with intra
-						</a>
-					</button>
-				</div>
-			</div>
-		</main>
+
+const Home = () => {
+
+		return (
+		<>
+			<main className='min-h-screen flex flex-col items-center justify-center'>
+				<button className='bg-sky-800 text-7xl text-white uppercase font-bold rounded-full py-10 px-20 mb-10 hover:bg-sky-700 hover:scale-105'>
+					<FontAwesomeIcon icon={faTableTennisPaddleBall} className='mr-5' />
+					<a href='/play'>play</a>
+				</button>
+				<button className='bg-sky-800 text-5xl text-white uppercase font-semibold rounded-full py-6 px-16 hover:bg-sky-700 hover:scale-105'>
+					<FontAwesomeIcon icon={faCommentDots} className='mr-5' />
+					<a href='/chat'>chat</a>
+				</button>
+			</main>
+		</>
 	);
 };
 

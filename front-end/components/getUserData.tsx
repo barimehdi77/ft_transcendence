@@ -1,5 +1,4 @@
-import axios from "axios";
-import cookie from 'js-cookie';
+import axios from 'axios';
 
 export const getUserData = async () => {
 	const url = 'http://localhost:8080/api/user';
@@ -8,6 +7,12 @@ export const getUserData = async () => {
 			Authorization: `Bearer ${localStorage.getItem('token')}`,
 		},
 	};
-	const res = await axios.get(url, config);
-	return res.data;
-}
+	try {
+		const res = await axios.get(url, config);
+		console.log(res.data);
+
+		return res.data;
+	} catch (error) {
+		console.log(error);
+	}
+};
