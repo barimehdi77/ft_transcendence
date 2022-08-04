@@ -4,10 +4,8 @@ import {
 	faCommentDots,
 } from '@fortawesome/free-solid-svg-icons';
 
-
 const Home = () => {
-
-		return (
+	return (
 		<>
 			<main className='min-h-screen flex flex-col items-center justify-center'>
 				<button className='bg-sky-800 text-7xl text-white uppercase font-bold rounded-full py-10 px-20 mb-10 hover:bg-sky-700 hover:scale-105'>

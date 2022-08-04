@@ -13,10 +13,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 	useEffect(() => {
 		localStorage.setItem('token', token);
-		async function fillUserData() {
-			setUserInfo(await getUserData());
-		}
-		fillUserData();
+		// async function fillUserData() {
+		// 	setUserInfo(await getUserData());
+		// }
+		// fillUserData();
 	}, []);
 
 	return (
