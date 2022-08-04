@@ -91,7 +91,12 @@ export class UserService {
     data: Prisma.UserUncheckedCreateInput,
   ): Promise<Prisma.UserUncheckedCreateInput> {
     const user = await this.prisma.user.create({
-      data,
+      data: {
+        ...data,
+        profile: {
+          create: {}
+        }
+      },
     });
     return user;
   }
@@ -99,13 +104,13 @@ export class UserService {
   async findUserName(user_name: string) {
     return this.prisma.user.findUnique({
       where: {
-        user_name,
+        user_name: user_name,
       },
     });
   }
 
   async accountSetup(data: UpdateUserInfo, auth: string) {
-    console.log(data);
+    console.log("this is the data", data, "auth", auth);
 
     const Userexsist = await this.prisma.user.findUnique({
       where: {
@@ -127,9 +132,6 @@ export class UserService {
         profile_done: true,
         user_name: data.user_name.toLowerCase(),
         image_url: data.avatar,
-        profile: {
-          create: {}
-        }
       },
     });
   }

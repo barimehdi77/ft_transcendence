@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 import { jwtInfo } from './dto/jwt.dto';
 import { UpdateUserInfo } from './dto/User.dto';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -16,7 +17,6 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   async findUser(@Req() req: Request, @Res() res: Response, @Headers('Authorization') auth: string) {
     console.log("from midd", req.body);
     const user = await this.userService.FindUser(auth);
@@ -25,10 +25,10 @@ export class UserController {
   }
 
   @Post('/setup')
-  @UseGuards(AuthGuard('jwt'))
   async accountSetup(@Req() req: Request,@Res() res: Response, @Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
+    console.log("inside", req.body);
     const user = await this.userService.accountSetup(data, auth);
-    res.redirect(301, 'http://localhost/home');
+    return (user);
   }
 
   @Patch(':id')

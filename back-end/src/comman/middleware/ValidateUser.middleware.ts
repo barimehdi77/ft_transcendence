@@ -10,7 +10,7 @@ export class validateUserMiddleware implements NestMiddleware {
 		console.log("middleware called")
 		if (!req.headers.authorization) throw new HttpException("unauthorized", 401);
 		const user = await this.userService.FindUser(req.headers.authorization)
-		req.body = {"user": user};
+		req.user = user;
 		if (!user) {
 			throw new UnauthorizedException();
 		}

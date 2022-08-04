@@ -11,7 +11,8 @@ export class ProfileController {
 
   @Get('me')
   me(@Req() req: Request): Promise<UserProfile> {
-    return this.profileService.me(req.body.user.user_name);
+    const user = req.user as UserProfile;
+    return this.profileService.me(user.user_name);
   }
 
   @Get(':user_name')
