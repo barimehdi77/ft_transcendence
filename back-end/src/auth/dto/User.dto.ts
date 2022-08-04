@@ -7,7 +7,7 @@ export class SetupUser {
 	login: string;
 	user_name: string;
 	// email: string;
-	ProfileDone: boolean;
+	profile_done: boolean;
 	token: string;
 }
 
@@ -25,5 +25,5 @@ export class CreateJwt {
 	intra_id: number;
 	email: string;
 	login: string;
-	ProfileDone: boolean;
+	profile_done: boolean;
 }

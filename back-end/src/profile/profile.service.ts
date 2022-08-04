@@ -26,9 +26,9 @@ export class ProfileService {
         profile: {
           select: {
             status: true,
-            PlayedGames: true,
-            Wins: true,
-            Losses: true,
+            played_games: true,
+            wins: true,
+            losses: true,
           }
         }
       }
@@ -52,9 +52,9 @@ export class ProfileService {
         profile: {
           select: {
             status: true,
-            PlayedGames: true,
-            Wins: true,
-            Losses: true,
+            played_games: true,
+            wins: true,
+            losses: true,
           }
         }
       }

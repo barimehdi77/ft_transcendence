@@ -36,7 +36,7 @@ export class UserService {
         login: true,
         user_name: true,
         email: true,
-        ProfileDone: true,
+        profile_done: true,
       },
     });
 
@@ -51,12 +51,12 @@ export class UserService {
       intra_id: NewUser.intra_id,
       login: NewUser.login,
       user_name: NewUser.user_name,
-      ProfileDone: NewUser.ProfileDone,
+      profile_done: NewUser.profile_done,
       token: await this.signToken({
         intra_id: NewUser.intra_id,
         login: NewUser.login,
         email: NewUser.email,
-        ProfileDone: NewUser.ProfileDone,
+        profile_done: NewUser.profile_done,
       }),
     };
   }
@@ -81,7 +81,7 @@ export class UserService {
         email: true,
         login: true,
         image_url: true,
-        ProfileDone: true,
+        profile_done: true,
       },
     });
     return user;
@@ -124,7 +124,7 @@ export class UserService {
         intra_id: this.decode(auth),
       },
       data: {
-        ProfileDone: true,
+        profile_done: true,
         user_name: data.user_name.toLowerCase(),
         image_url: data.avatar,
         profile: {

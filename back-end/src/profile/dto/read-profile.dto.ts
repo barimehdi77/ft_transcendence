@@ -1,9 +1,9 @@
 
 export class ReadProfile {
 	status: string;
-	PlayedGames: number;
-	Wins: number;
-	Losses: number;
+	played_games: number;
+	wins: number;
+	losses: number;
 }
 
 

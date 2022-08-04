@@ -8,7 +8,7 @@ CREATE TABLE "user" (
     "user_name" TEXT,
     "email" TEXT NOT NULL,
     "image_url" TEXT NOT NULL,
-    "ProfileDone" BOOLEAN NOT NULL DEFAULT false,
+    "profile_done" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -19,9 +19,9 @@ CREATE TABLE "profile" (
     "status" TEXT NOT NULL,
     "user_id" INTEGER NOT NULL,
     "UserPoints" INTEGER NOT NULL DEFAULT 0,
-    "PlayedGames" INTEGER NOT NULL DEFAULT 0,
-    "Wins" INTEGER NOT NULL DEFAULT 0,
-    "Losses" INTEGER NOT NULL DEFAULT 0,
+    "played_games" INTEGER NOT NULL DEFAULT 0,
+    "wins" INTEGER NOT NULL DEFAULT 0,
+    "losses" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "profile_pkey" PRIMARY KEY ("id")
 );

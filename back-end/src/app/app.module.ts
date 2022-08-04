@@ -33,7 +33,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(validateUserMiddleware)
-      .exclude('/auth/*')
+      .exclude('api/auth/login', 'api/auth/redirect')
       .forRoutes('*');
   }
 }
