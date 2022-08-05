@@ -12,14 +12,15 @@ function MyApp({ Component, pageProps }: AppProps) {
 	const token = cookie.get('token') as string;
 	const [userInfo, setUserInfo] = useState({});
 
-	useEffect( () => {
-		localStorage.setItem('token', token);
+	useEffect(() => {
+		if (token) localStorage.setItem('token', token);
 		async function fillUserData() {
 			if (Router.pathname !== '/login') {
 				const user = await getUserData();
 				if (user.statusCode! === 401) Router.push('/login');
-				if (user.statusCode! === 477) Router.push('/setup');
-				// if (!user.profile_done) Router.push('/setup');
+				if (user.statusCode! === 477 && Router.pathname !== '/setup')
+					Router.push('/setup');
+				if (!user.profile_done) Router.push('/setup');
 				setUserInfo(user);
 			}
 		}

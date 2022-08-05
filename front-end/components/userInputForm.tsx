@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext';
 import { useState } from 'react';
 import axios from 'axios';
+import Router from 'next/router';
 
 const UserInputForm = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext);
@@ -10,6 +11,7 @@ const UserInputForm = () => {
 	const login = userInfo.login;
 	const [username, setUsername] = useState(login);
 	const [file, setFile] = useState('no file selected');
+	const [errorMessage, setErrorMessage] = useState();
 
 	const sendData = async (e: any) => {
 		const config = {
@@ -23,8 +25,11 @@ const UserInputForm = () => {
 				{ user_name: username ? username : login, image_url: file },
 				config
 			);
-		} catch (error) {
+			if (res.status === 200)
+				Router.push('/');
+		} catch (error: any) {
 			console.log(error);
+			setErrorMessage(error.response.data.message);
 		}
 	};
 
@@ -66,6 +71,11 @@ const UserInputForm = () => {
 						setFile(file.name);
 					}}
 				/>
+				{errorMessage ? (
+					<p className='bg-red-200 text-red-700 py-2 rounded-full pl-4 border border-red-700'>
+						{errorMessage}
+					</p>
+				) : null}
 			</form>
 			<div className='flex justify-center'>
 				<button
