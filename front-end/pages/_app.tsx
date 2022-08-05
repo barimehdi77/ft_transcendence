@@ -15,13 +15,15 @@ function MyApp({ Component, pageProps }: AppProps) {
 	useEffect( () => {
 		localStorage.setItem('token', token);
 		async function fillUserData() {
-			const user = await getUserData();
-			if (!user) Router.push('/login');
-			if (!user.profile_done) Router.push('/setup');
-			setUserInfo(user);
+			if (Router.pathname !== '/login') {
+				const user = await getUserData();
+				if (user.statusCode! === 401) Router.push('/login');
+				if (user.statusCode! === 477) Router.push('/setup');
+				// if (!user.profile_done) Router.push('/setup');
+				setUserInfo(user);
+			}
 		}
 		fillUserData();
-		
 	}, []);
 
 	return (

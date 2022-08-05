@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const getUserData = async () => {
 	const url = 'http://localhost:8080/api/user';
@@ -14,7 +14,9 @@ export const getUserData = async () => {
 		console.log('data', res.data);
 		
 		return res.data;
-	} catch (error) {
+	} catch (error: any) {
 		console.log(error);
+		if (error.response)
+				return error.response.data;
 	}
 };
