@@ -6,15 +6,16 @@ import { getUserData } from '../components/getUserData';
 const Setup = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext);
 
-	useEffect(() => {
-		async function fillUserData() {
-			console.log('setting data');
-			setUserInfo(await getUserData());
-		}
-		fillUserData();
-	}, []);
+	// useEffect(() => {
+	// 	async function fillUserData() {
+	// 		const user = await getUserData();
+	// 		// if (user.profile_done)
+	// 		setUserInfo(user);
+	// 	}
+	// 	fillUserData();
+	// }, []);
 
-	console.log(userInfo);
+	// console.log(userInfo);
 	
 	return (
 		<main className='min-h-screen flex flex-col justify-center'>

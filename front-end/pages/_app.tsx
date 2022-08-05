@@ -6,17 +6,22 @@ import cookie from 'js-cookie';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Layout from '../components/layout';
+import Router from 'next/router';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const token = cookie.get('token') as string;
 	const [userInfo, setUserInfo] = useState({});
 
-	useEffect(() => {
+	useEffect( () => {
 		localStorage.setItem('token', token);
-		// async function fillUserData() {
-		// 	setUserInfo(await getUserData());
-		// }
-		// fillUserData();
+		async function fillUserData() {
+			const user = await getUserData();
+			if (!user) Router.push('/login');
+			if (!user.profile_done) Router.push('/setup');
+			setUserInfo(user);
+		}
+		fillUserData();
+		
 	}, []);
 
 	return (
