@@ -38,7 +38,7 @@ export class AppModule implements NestModule {
       .forRoutes('*');
     consumer
       .apply(ValidateComplateProfileMiddleware)
-      .exclude('api/auth/login', 'api/auth/redirect', 'api/user')
+      .exclude('api/auth/login', 'api/auth/redirect', 'api/user', 'api/user/setup')
       .forRoutes('*');
   }
 
