@@ -12,6 +12,7 @@ export class validateUserMiddleware implements NestMiddleware {
 		console.log(token);
 		if (token === "") throw new HttpException("unauthorized", 401);
 		const user = await this.userService.FindUser(req.headers.authorization)
+		if (user.profile_done === false) throw new HttpException("uncompleted", 477);
 		req.user = user;
 		if (!user) {
 			throw new UnauthorizedException();
