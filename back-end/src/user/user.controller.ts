@@ -45,8 +45,9 @@ export class UserController {
     try {
       const user = await this.userService.accountSetup(data, auth);
 
+      console.log("user ===>", user);
       if(user === null) {
-        return res.status(HttpStatus.CONFLICT).json({
+        return res.status(409).json({
           status: 'faild',
           message: "Username already taken",
         });
@@ -59,6 +60,7 @@ export class UserController {
       }
 
     } catch (error) {
+      console.log("error ===>", error);
       return res.status(500).json({
 				status: 'error',
 				message: 'Error updating user data',
