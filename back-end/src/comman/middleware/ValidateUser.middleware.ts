@@ -7,8 +7,10 @@ import { UserService } from "src/user/user.service";
 export class validateUserMiddleware implements NestMiddleware {
 	constructor(private readonly userService: UserService) {}
 	async use(req: Request, res: Response, next: NextFunction) {
+		const token = req.headers.authorization.replace("Bearer undefined","") as string;
 		console.log("middleware called")
-		if (!req.headers.authorization) throw new HttpException("unauthorized", 401);
+		console.log(token);
+		if (token === "") throw new HttpException("unauthorized", 401);
 		const user = await this.userService.FindUser(req.headers.authorization)
 		req.user = user;
 		if (!user) {
