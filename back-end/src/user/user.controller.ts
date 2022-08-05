@@ -21,11 +21,11 @@ export class UserController {
   //         message: "Can not Create User",
   //       });
   //     }
-  //     return res.status(200).json({
-  //       status: 'success',
-  //       message: "User Register Successfully",
-  //       data: user,
-  //     });
+      // return res.status(200).json({
+      //   status: 'success',
+      //   message: "User Register Successfully",
+      //   data: user,
+      // });
   //   } catch (error) {
 
   //   }
@@ -42,8 +42,29 @@ export class UserController {
   @Post('/setup')
   async accountSetup(@Req() req: Request,@Res() res: Response, @Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
     console.log("inside", req.body);
-    const user = await this.userService.accountSetup(data, auth);
-    return (user);
+    try {
+      const user = await this.userService.accountSetup(data, auth);
+
+      if(user === null) {
+        return res.status(HttpStatus.CONFLICT).json({
+          status: 'faild',
+          message: "Username already taken",
+        });
+      }
+      else {
+        return res.status(200).json({
+          status: 'success',
+          message: "User profile updated",
+        });
+      }
+
+    } catch (error) {
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error updating user data',
+				error: error.message ? error.message : error
+			});
+    }
   }
 
   @Patch(':id')

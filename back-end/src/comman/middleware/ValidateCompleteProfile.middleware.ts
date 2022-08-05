@@ -4,7 +4,7 @@ import { UserService } from "src/user/user.service";
 
 
 @Injectable()
-export class validateUserMiddleware implements NestMiddleware {
+export class ValidateComplateProfileMiddleware implements NestMiddleware {
 	constructor(private readonly userService: UserService) {}
 	async use(req: Request, res: Response, next: NextFunction) {
 		const token = req.headers.authorization.replace("Bearer undefined","") as string;
@@ -14,6 +14,7 @@ export class validateUserMiddleware implements NestMiddleware {
 			throw new UnauthorizedException();
 		}
 		req.user = user;
+		if (user.profile_done === false) throw new HttpException("uncompleted", 477);
 		next();
 	}
 }

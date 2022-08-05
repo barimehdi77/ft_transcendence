@@ -111,18 +111,9 @@ export class UserService {
 
   async accountSetup(data: UpdateUserInfo, auth: string) {
     console.log("this is the data", data, "auth", auth);
-
-    const Userexsist = await this.prisma.user.findUnique({
-      where: {
-        intra_id: this.decode(auth),
-      }
-    });
-
-    if (!Userexsist) return ('user Does not exist');
-
     const User = await this.findUserName(data.user_name as string);
 
-    if (User) return 'User Name is Taken';
+    if (User) return null;
 
     return this.prisma.user.update({
       where: {

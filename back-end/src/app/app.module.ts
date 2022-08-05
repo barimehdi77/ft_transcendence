@@ -15,6 +15,7 @@ import { UserService } from 'src/user/user.service';
 import { PrismaService } from './prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ProfileModule } from 'src/profile/profile.module';
+import { ValidateComplateProfileMiddleware } from 'src/comman/middleware/ValidateCompleteProfile.middleware';
 
 @Module({
   imports: [
@@ -35,5 +36,10 @@ export class AppModule implements NestModule {
       .apply(validateUserMiddleware)
       .exclude('api/auth/login', 'api/auth/redirect')
       .forRoutes('*');
+    consumer
+      .apply(ValidateComplateProfileMiddleware)
+      .exclude('api/auth/login', 'api/auth/redirect', 'api/user')
+      .forRoutes('*');
   }
+
 }
