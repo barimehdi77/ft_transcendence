@@ -113,7 +113,7 @@ export class UserService {
     console.log("this is the data", data, "auth", auth);
     const User = await this.findUserName(data.user_name as string);
 
-    if (!User) return null;
+    if (User) return null;
 
     return this.prisma.user.update({
       where: {
