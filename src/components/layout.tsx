@@ -8,7 +8,7 @@ const Layout = ({ children }: any) => {
 
 	return (
 		<div className='bg-hero-pattern bg-cover bg-center'>
-			{userInfo ? userInfo.ProfileDone ? <Navbar /> : null : null}
+			{userInfo ? userInfo.profile_done ? <Navbar /> : null : null}
 			<>{children}</>
 		</div>
 	);
