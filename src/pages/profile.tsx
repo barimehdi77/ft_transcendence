@@ -18,7 +18,7 @@ const Profile = () => {
 
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
-			<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
+			<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] mt-20'>
 				<div className='bg-sky-800 flex items-center px-10 py-4 rounded-t-3xl	'>
 					<div className='header-info text-neutral-100'>
 						<h2 className='text-xl font-semibold inline'>
