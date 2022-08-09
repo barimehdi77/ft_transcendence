@@ -10,6 +10,8 @@ export const getUserData = async () => {
 	};
 	try {
 		const res = await axios.get(url, config);
+		console.log(res.data);
+		
 		return res.data;
 	} catch (error: any) {
 		console.log(error);

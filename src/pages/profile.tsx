@@ -12,6 +12,7 @@ import {
 	faCircleCheck,
 	faCircleXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import UserImage from '../components/userImage';
 
 const Profile = () => {
 	const { userInfo } = useContext(UserContext);
@@ -27,13 +28,7 @@ const Profile = () => {
 						<FontAwesomeIcon icon={faMedal} className='text-teal-500 ml-2' />
 						<p>{userInfo.email}</p>
 					</div>
-					<div className='w-16 ml-5'>
-						<img
-							src='/download.jpeg'
-							alt='User avatar'
-							className='rounded-full'
-						/>
-					</div>
+					<UserImage />
 				</div>
 
 				<div className='bg-white px-10 py-4 rounded-b-3xl'>
