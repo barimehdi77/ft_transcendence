@@ -3,12 +3,14 @@ import {
 	faTableTennisPaddleBall,
 	faCommentDots,
 } from '@fortawesome/free-solid-svg-icons';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const Home = () => {
 	return (
 		<>
 			<main className='min-h-screen flex flex-col items-center justify-center'>
-				<button className='bg-sky-800 text-7xl text-white uppercase font-bold rounded-full py-10 px-20 mb-10 hover:bg-sky-700 hover:scale-105'>
+				<button className='bg-sky-800 text-7xl text-white uppercase font-bold rounded-full py-10 px-20 mt-20 mb-10 hover:bg-sky-700 hover:scale-105'>
 					<FontAwesomeIcon icon={faTableTennisPaddleBall} className='mr-5' />
 					<a href='/play'>play</a>
 				</button>
