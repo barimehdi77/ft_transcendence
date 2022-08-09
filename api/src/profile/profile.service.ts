@@ -27,6 +27,7 @@ export class ProfileService {
           select: {
             status: true,
             played_games: true,
+            user_points: true,
             wins: true,
             losses: true,
           }
@@ -53,6 +54,7 @@ export class ProfileService {
           select: {
             status: true,
             played_games: true,
+            user_points: true,
             wins: true,
             losses: true,
           }
