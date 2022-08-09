@@ -1,4 +1,4 @@
-HOME=/home/mbari
+# HOME=/home/mbari
 
 # Colors variables
 RED = \033[1;31m
