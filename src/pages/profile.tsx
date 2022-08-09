@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../contexts/userContext';
 
 import ProfileInfoItem from '../components/profileInfoItem';
@@ -13,9 +13,18 @@ import {
 	faCircleXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import UserImage from '../components/userImage';
+import { getProfileData } from '../components/getProfileData';
 
 const Profile = () => {
 	const { userInfo } = useContext(UserContext);
+	const [profileData, setProfileData]: any = useState({});
+
+	useEffect(() => {
+		async function fillProfileData() {
+			setProfileData(await getProfileData());
+		}
+		fillProfileData();
+	}, []);
 
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
@@ -38,14 +47,26 @@ const Profile = () => {
 						info={userInfo.first_name + ' ' + userInfo.last_name}
 					/>
 					<ProfileInfoItem icon={faTag} field='Login' info={userInfo.login} />
-					<ProfileInfoItem icon={faCoins} field='Points' info='42 Pts' />
-					<ProfileInfoItem
-						icon={faTableTennisPaddleBall}
-						field='Games Played'
-						info='33'
-					/>
-					<ProfileInfoItem icon={faCircleCheck} field='Wins' info='25' />
-					<ProfileInfoItem icon={faCircleXmark} field='Losses' info='8' />
+					{profileData.profile ? (
+						<>
+							<ProfileInfoItem icon={faCoins} field='Points' info='42 Pts' />
+							<ProfileInfoItem
+								icon={faTableTennisPaddleBall}
+								field='Games Played'
+								info={profileData.profile.played_games}
+							/>
+							<ProfileInfoItem
+								icon={faCircleCheck}
+								field='Wins'
+								info={profileData.profile.wins}
+							/>
+							<ProfileInfoItem
+								icon={faCircleXmark}
+								field='Losses'
+								info={profileData.profile.losses}
+							/>
+						</>
+					) : null}
 				</div>
 			</div>
 		</main>
