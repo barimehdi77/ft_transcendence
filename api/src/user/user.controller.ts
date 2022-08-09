@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res, Headers, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res, Headers, UseFilters, HttpCode, HttpStatus } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Prisma } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
@@ -11,10 +11,25 @@ import { UpdateUserInfo } from './dto/User.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() data: Prisma.UserUncheckedCreateInput) {
-    return this.userService.create(data);
-  }
+  // @Post()
+  // async create(@Body() data: Prisma.UserUncheckedCreateInput, @Res() res: Response) {
+  //   try {
+  //     const user = await this.userService.create(data);
+  //     if (!user) {
+  //       return res.status(HttpStatus.BAD_REQUEST).json({
+  //         status: 'faild',
+  //         message: "Can not Create User",
+  //       });
+  //     }
+      // return res.status(200).json({
+      //   status: 'success',
+      //   message: "User Register Successfully",
+      //   data: user,
+      // });
+  //   } catch (error) {
+
+  //   }
+  // }
 
   @Get()
   async findUser(@Req() req: Request, @Res() res: Response, @Headers('Authorization') auth: string) {
@@ -27,8 +42,31 @@ export class UserController {
   @Post('/setup')
   async accountSetup(@Req() req: Request,@Res() res: Response, @Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
     console.log("inside", req.body);
-    const user = await this.userService.accountSetup(data, auth);
-    return (user);
+    try {
+      const user = await this.userService.accountSetup(data, auth);
+
+      console.log("user ===>", user);
+      if(user === null) {
+        return res.status(409).json({
+          status: 'faild',
+          message: "Username already taken",
+        });
+      }
+      else {
+        return res.status(200).json({
+          status: 'success',
+          message: "User profile updated",
+        });
+      }
+
+    } catch (error) {
+      console.log("error ===>", error);
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error updating user data',
+				error: error.message ? error.message : error
+			});
+    }
   }
 
   @Patch(':id')
