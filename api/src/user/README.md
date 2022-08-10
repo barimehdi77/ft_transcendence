@@ -1,6 +1,6 @@
 
 # GET User Info
-`localhost:8080/api/user`
+URL: `localhost:8080/api/user`
 
 This endpoint request the user data form API.
 This is GET request user to retrieve user info from the data base.
@@ -32,4 +32,52 @@ JSON
 ## JWT Token
 
 Authorization Bearer Token
+
+`Token        Bearer <token>`
+
+
+# POST Complate Profile
+
+URL: `localhost:8080/api/user/setup`
+
+
+This endpoint used to complete user profile.
+This endpoint need JWT and Body to be valid.
+
+## Body Example:
+```
+{
+    "user_name": "DarkSide77",
+    "avatar": "https://cdn.intra.42.fr/users/mbari.jpg"
+}
+```
+
+## Response Example on success:
+```
+{
+    "status": "success",
+    "message": "User profile updated"
+}
+```
+
+## Response Example if Username Already Taken:
+```
+{
+    "status": "failure",
+    "message": "Username already taken"
+}
+```
+
+## Response Example on error:
+```
+{
+    "status": "error",
+    "message": "Error updating user data",
+    "error": error.message ? error.message : error
+}
+```
+
+## JWT Token
+Authorization Bearer Token
+
 `Token        Bearer <token>`
