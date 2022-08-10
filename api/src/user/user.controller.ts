@@ -33,7 +33,6 @@ export class UserController {
 
   @Get()
   async findUser(@Req() req: Request, @Res() res: Response, @Headers('Authorization') auth: string) {
-    console.log("from midd", req.body);
     const user = await this.userService.FindUser(auth);
     return res.send(user);
 
@@ -41,14 +40,13 @@ export class UserController {
 
   @Post('/setup')
   async accountSetup(@Req() req: Request,@Res() res: Response, @Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
-    console.log("inside", req.body);
     try {
       const user = await this.userService.accountSetup(data, auth);
 
       console.log("user ===>", user);
       if(user === null) {
         return res.status(409).json({
-          status: 'faild',
+          status: 'failure',
           message: "Username already taken",
         });
       }
@@ -60,7 +58,6 @@ export class UserController {
       }
 
     } catch (error) {
-      console.log("error ===>", error);
       return res.status(500).json({
 				status: 'error',
 				message: 'Error updating user data',
@@ -69,13 +66,13 @@ export class UserController {
     }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() data: Prisma.UserUpdateInput) {
-    return this.userService.update({id: +id}, data);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() data: Prisma.UserUpdateInput) {
+  //   return this.userService.update({id: +id}, data);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove({id: +id});
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.userService.remove({id: +id});
+  // }
 }

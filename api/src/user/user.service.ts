@@ -140,16 +140,16 @@ export class UserService {
     });
   }
 
-  update(where: Prisma.UserWhereUniqueInput, data: Prisma.UserUpdateInput) {
-    return this.prisma.user.update({
-      where,
-      data,
-    });
-  }
+  // update(where: Prisma.UserWhereUniqueInput, data: Prisma.UserUpdateInput) {
+  //   return this.prisma.user.update({
+  //     where,
+  //     data,
+  //   });
+  // }
 
-  remove(where: Prisma.UserWhereUniqueInput) {
-    return this.prisma.user.delete({
-      where,
-    });
-  }
+  // remove(where: Prisma.UserWhereUniqueInput) {
+  //   return this.prisma.user.delete({
+  //     where,
+  //   });
+  // }
 }

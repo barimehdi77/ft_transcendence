@@ -1,19 +1,19 @@
 version: '3.8'
 services:
-    api:
-        build: api/
-        depends_on:
-            - postgres
-            - front-end
-        environment:
-            DATABASE_URL: postgresql://user:password@postgres:5432/db?schema=public
-            NODE_ENV: development
-            PORT: 8080
-        ports:
-            - "8080:8080" # the port number is for dev only prud port is == 8080
-        restart: on-failure
-        networks:
-            - transcendence
+    # api:
+    #     build: api/
+    #     depends_on:
+    #         - postgres
+    #         - front-end
+    #     environment:
+    #         DATABASE_URL: postgresql://user:password@postgres:5432/db?schema=public
+    #         NODE_ENV: development
+    #         PORT: 8080
+    #     ports:
+    #         - "8080:8080" # the port number is for dev only prud port is == 8080
+    #     restart: on-failure
+    #     networks:
+    #         - transcendence
 
     front-end:
         build: src/
