@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 export const getUserData = async () => {
 	const url = 'http://localhost:8080/api/user';
