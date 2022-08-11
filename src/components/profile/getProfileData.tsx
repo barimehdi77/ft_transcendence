@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 export const getProfileData = async () => {
 	const url = 'http://localhost:8080/api/profile/me';
@@ -9,7 +9,6 @@ export const getProfileData = async () => {
 	};
 	try {
 		const res = await axios.get(url, config);
-		console.log(res.data);
 		return res.data;
 	} catch (error: any) {
 		console.log(error);

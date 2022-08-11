@@ -1,16 +1,17 @@
-import Label from '../components/label';
-import { useContext } from 'react';
-import { UserContext } from '../contexts/userContext';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserContext } from '../../contexts/userContext';
 import axios from 'axios';
 import Router from 'next/router';
+
+import UsernameField from './usernameField';
+import AvatarField from './avatarField';
 
 const UserInputForm = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext);
 	const url = 'http://localhost:8080/api/user/setup';
 	const login = userInfo.login;
 	const [username, setUsername] = useState(login);
-	const [file, setFile] = useState('no file selected');
+	const [file, setFile]: any = useState();
 	const [errorMessage, setErrorMessage] = useState();
 
 	const sendData = async (e: any) => {
@@ -25,8 +26,7 @@ const UserInputForm = () => {
 				{ user_name: username ? username : login, image_url: file },
 				config
 			);
-			if (res.status === 200)
-				Router.push('/');
+			if (res.status === 200) Router.push('/');
 		} catch (error: any) {
 			console.log(error);
 			setErrorMessage(error.response.data.message);
@@ -39,38 +39,8 @@ const UserInputForm = () => {
 				action='#'
 				className='w-2/3 max-w-xl m-auto rounded-3xl bg-white flex flex-col p-8 my-12 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'
 			>
-				<Label name='username' />
-				<input
-					type='text'
-					id='username'
-					placeholder={login}
-					onChange={(e) => {
-						const { value } = e.target;
-						setUsername(value);
-					}}
-					className='bg-gray-100 px-4 py-2 rounded-full mb-5'
-				/>
-				<Label name='avatar' />
-				<div className='bg-gray-100 px-4 py-3 rounded-full mb-5 text-gray-400'>
-					<label
-						htmlFor='avatar'
-						className='bg-sky-800 text-white px-3 py-1 rounded-full mr-2 cursor-pointer hover:bg-sky-700'
-					>
-						Choose
-					</label>
-					{file}
-				</div>
-				<input
-					type='file'
-					id='avatar'
-					className='hidden'
-					accept='image/png, image/jpeg, image/jpg'
-					onChange={(e) => {
-						if (!e.target.files) return;
-						const file = e.target.files[0];
-						setFile(file.name);
-					}}
-				/>
+				<UsernameField login={login} setUsername={setUsername} />
+				<AvatarField file={file} setFile={setFile} />
 				{errorMessage ? (
 					<p className='bg-red-200 text-red-700 py-2 rounded-full pl-4 border border-red-700'>
 						{errorMessage}

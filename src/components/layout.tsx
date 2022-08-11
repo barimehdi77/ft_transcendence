@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext';
 
-import Navbar from './navbar';
+import Navbar from './navbar/navbar';
 
 const Layout = ({ children }: any) => {
 	const { userInfo } = useContext(UserContext);
