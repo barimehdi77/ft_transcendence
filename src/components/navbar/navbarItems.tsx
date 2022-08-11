@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { UserContext } from '../contexts/userContext';
+import { UserContext } from '../../contexts/userContext';
 
 import MenuItem from './menuItem';
-import UserImage from './userImage';
+import UserImage from '../userImage';
 
 const NavbarItems = () => {
 	const { userInfo } = useContext(UserContext);
