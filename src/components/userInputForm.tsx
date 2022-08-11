@@ -25,9 +25,7 @@ const UserInputForm = () => {
 				{ user_name: username ? username : login, image_url: file },
 				config
 			);
-			if (res.status === 200) {
-				Router.push('/');
-			}
+			if (res.status === 200) Router.push('/');
 		} catch (error: any) {
 			console.log(error);
 			setErrorMessage(error.response.data.message);
