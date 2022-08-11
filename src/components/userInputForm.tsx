@@ -1,9 +1,9 @@
-import Label from '../components/label';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { UserContext } from '../contexts/userContext';
-import { useState } from 'react';
 import axios from 'axios';
 import Router from 'next/router';
+
+import Label from '../components/label';
 
 const UserInputForm = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext);
@@ -25,8 +25,9 @@ const UserInputForm = () => {
 				{ user_name: username ? username : login, image_url: file },
 				config
 			);
-			if (res.status === 200)
+			if (res.status === 200) {
 				Router.push('/');
+			}
 		} catch (error: any) {
 			console.log(error);
 			setErrorMessage(error.response.data.message);

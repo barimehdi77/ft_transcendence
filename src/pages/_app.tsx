@@ -15,14 +15,21 @@ function MyApp({ Component, pageProps }: AppProps) {
 	useEffect(() => {
 		if (token) localStorage.setItem('token', token);
 		async function fillUserData() {
-			if (Router.pathname !== '/login') {
-				const user = await getUserData();
-				if (user.statusCode! === 401) Router.push('/login');
-				if (user.statusCode! === 477 && Router.pathname !== '/setup')
-					Router.push('/setup');
-				if (!user.profile_done) Router.push('/setup');
-				setUserInfo(user);
-			}
+			const user = await getUserData();
+			if (user.statusCode! === 401) Router.push('/login');
+			else if (
+				!user.profile_done ||
+				(user.statusCode! === 477 && Router.pathname !== '/setup')
+			)
+				Router.push('/setup');
+			if (
+				(user.statusCode! !== 401 &&
+					Router.pathname === '/login' &&
+					user.profile_done) ||
+				(user.profile_done && Router.pathname === '/setup')
+			)
+				Router.push('/');
+			setUserInfo(user);
 		}
 		fillUserData();
 	}, []);

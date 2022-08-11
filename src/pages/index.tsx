@@ -3,8 +3,6 @@ import {
 	faTableTennisPaddleBall,
 	faCommentDots,
 } from '@fortawesome/free-solid-svg-icons';
-import { useEffect } from 'react';
-import axios from 'axios';
 
 const Home = () => {
 	return (
