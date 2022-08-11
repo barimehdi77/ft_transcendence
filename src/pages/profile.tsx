@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../contexts/userContext';
 import { faUser, faTag } from '@fortawesome/free-solid-svg-icons';
 
-import { getProfileData } from '../components/getProfileData';
+import { getProfileData } from '../components/profile/getProfileData';
 import ProfileInfoItem from '../components/profile/profileInfoItem';
 import ProfileHeader from '../components/profile/profileHeader';
 import ProfileStats from '../components/profile/profileStats';

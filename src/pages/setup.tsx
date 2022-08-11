@@ -1,4 +1,4 @@
-import UserInputFrom from '../components/userInputForm';
+import UserInputFrom from '../components/inputForm/userInputForm';
 
 const Setup = () => {
 	return (
