@@ -43,7 +43,6 @@ export class UserController {
     try {
       const user = await this.userService.accountSetup(data, auth);
 
-      console.log("user ===>", user);
       if(user === null) {
         return res.status(409).json({
           status: 'failure',
