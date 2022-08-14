@@ -1,15 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Headers } from '@nestjs/common';
 import { FriendsService } from './friends.service';
-import { CreateFriendDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
+import { CreateFriendRequestDto } from './dto/create-friend.dto';
+import { Request, Response } from 'express';
 
 @Controller('friends')
 export class FriendsController {
   constructor(private readonly friendsService: FriendsService) {}
 
   @Post()
-  create(@Body() createFriendDto: CreateFriendDto) {
-    return this.friendsService.create(createFriendDto);
+  async create(@Req() req: Request, @Res() res: Response, @Headers('Authorization') auth: string, @Body() createFriendRequestDto: CreateFriendRequestDto) {
+    try {
+      const NewFriendRequest = this.friendsService.create(auth, createFriendRequestDto);
+      if (NewFriendRequest) {
+        return res.status(200).json({
+          status: 'success',
+          message: "Friend Request sent Successfully",
+        });
+      }
+    } catch (error: any) {
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error Sending Friend Request',
+				error: error.message ? error.message : error
+			});
+    }
   }
 
   @Get()

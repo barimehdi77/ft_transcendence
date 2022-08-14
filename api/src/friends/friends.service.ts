@@ -1,11 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFriendDto } from './dto/create-friend.dto';
+import { PrismaService } from 'src/app/prisma.service';
+import { UserService } from 'src/user/user.service';
+import { CreateFriendRequestDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
 
 @Injectable()
 export class FriendsService {
-  create(createFriendDto: CreateFriendDto) {
-    return 'This action adds a new friend';
+
+  constructor (private readonly userService: UserService,
+              private readonly prisme: PrismaService) {}
+
+  async create(auth: string, createFriendRequestDto: CreateFriendRequestDto) {
+    const intra_id = this.userService.decode(auth).intra_id;
+    const FriendRequest = await this.prisme.friendsList.create({
+      data: {
+        from: intra_id,
+        to: createFriendRequestDto.to,
+      }
+    });
+    return FriendRequest;
   }
 
   findAll() {
@@ -23,4 +36,5 @@ export class FriendsService {
   remove(id: number) {
     return `This action removes a #${id} friend`;
   }
+
 }
