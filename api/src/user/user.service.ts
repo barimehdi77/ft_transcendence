@@ -5,7 +5,7 @@ import { PrismaService } from '../app/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { jwtInfo } from './dto/jwt.dto';
-import { CreateJwt, SetupUser } from 'src/auth/dto/User.dto';
+import { CreateJwt, SetupUser, UserAuth, UserDecoder } from 'src/auth/dto/User.dto';
 import { UpdateUserInfo } from './dto/User.dto';
 
 @Injectable()
@@ -15,6 +15,29 @@ export class UserService {
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
   ) {}
+
+
+  async setTwoFactorAuthenticationSecret(secret: string, login: string) {
+    return this.prisma.user.update({
+      where: {
+        login: login,
+      },
+      data: {
+        twoFactorAuthenticationSecret: secret,
+      }
+    });
+  }
+
+  async turnOnTwoFactorAuthentication(login: string) {
+    return this.prisma.user.update({
+      where: {
+        login: login,
+      },
+      data: {
+        isTwoFactorAuthenticationEnabled: true,
+      }
+    });
+  }
 
   signToken(user: CreateJwt): Promise<string> {
     const secret = this.config.get('JWT_SECRET');
@@ -61,15 +84,15 @@ export class UserService {
     };
   }
 
-  decode(auth: string): { intra_id: number, login: string} {
+  decode(auth: string): UserDecoder {
     const jwt = auth.replace('Bearer ', '');
-    const decode = this.jwt.decode(jwt, { json: true }) as { intra_id: number, login: string};
+    const decode = this.jwt.decode(jwt, { json: true }) as UserDecoder;
     return (decode);
   }
 
   async FindUser(
     auth: string,
-  ): Promise<Prisma.UserUncheckedCreateInput | undefined> {
+  ): Promise<UserAuth> {
     const user = await this.prisma.user.findUnique({
       where: {
         intra_id: this.decode(auth).intra_id,
@@ -82,6 +105,8 @@ export class UserService {
         login: true,
         image_url: true,
         profile_done: true,
+        isTwoFactorAuthenticationEnabled: true,
+        twoFactorAuthenticationSecret: true,
       },
     });
     return user;

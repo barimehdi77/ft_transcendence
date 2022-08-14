@@ -27,3 +27,21 @@ export class CreateJwt {
 	login: string;
 	profile_done: boolean;
 }
+
+export class UserDecoder {
+	intra_id: number;
+	login: string;
+	email: string;
+}
+
+export class UserAuth {
+	first_name: string;
+	last_name: string;
+	user_name: string;
+	email: string;
+	login: string;
+	image_url: string;
+	profile_done: boolean;
+	isTwoFactorAuthenticationEnabled: boolean;
+	twoFactorAuthenticationSecret: string;
+}

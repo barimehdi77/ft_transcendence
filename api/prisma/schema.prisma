@@ -11,17 +11,19 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  profile     Profile?
-  intra_id    Int           @unique @default(0)
-  first_name  String
-  last_name   String
-  login       String        @unique
-  user_name   String?       @unique
-  email       String        @unique
-  image_url   String
-  profile_done Boolean       @default(false)
-  Matches     MatchMaking[]
+  id                              Int           @id @default(autoincrement())
+  profile                         Profile?
+  intra_id                        Int           @unique @default(0)
+  first_name                      String
+  last_name                       String
+  login                           String        @unique
+  user_name                       String?       @unique
+  email                           String        @unique
+  image_url                       String
+  twoFactorAuthenticationSecret   String?       @unique
+  isTwoFactorAuthenticationEnabled Boolean      @default(false)
+  profile_done                    Boolean       @default(false)
+  Matches                         MatchMaking[]
 
   @@map(name: "user")
 }
