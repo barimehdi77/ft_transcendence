@@ -53,6 +53,8 @@ model FriendsList {
   from          Int
   to            Int
   status        FriendStatus @default(PENDING)
+
+  @@map(name : "friendsList")
 }
 
 
