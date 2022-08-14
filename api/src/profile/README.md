@@ -7,8 +7,9 @@ This is GET request user to retrieve Profile info from the database.
 NOTE: This operation need JWT token in authentication Header sent in request headers.
 
 ## response Example On success:
-JSON
 URL Example: `localhost:8080/api/profile/barimehdi77`
+
+JSON
 ```
 {
     "status": "success",
