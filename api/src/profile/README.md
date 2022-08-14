@@ -36,7 +36,7 @@ JSON
 URL Example: `localhost:8080/api/profile/some_fake_user_name`
 
 ```
-
+{
     "status": "failure",
     "message": "Can not find this User"
 }
