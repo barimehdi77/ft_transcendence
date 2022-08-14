@@ -31,7 +31,7 @@ model User {
 model Profile {
   id          Int    @id @default(autoincrement())
   user        User   @relation(fields: [user_id], references: [id])
-  status      String @default("online")
+  status      ProfileStatus @default(ONLINE)
   user_id     Int    @unique
   user_points  Int    @default(0)
   played_games Int    @default(0)
@@ -46,4 +46,27 @@ model MatchMaking {
   players        User[]
   home_player_id Int    @unique
   away_player_id Int    @unique
+}
+
+model FriendsList {
+  id            Int @id @default(autoincrement())
+  from          Int
+  to            Int
+  status        FriendStatus @default(PENDING)
+}
+
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  REMOVED
+  BANNED
+}
+
+
+enum ProfileStatus {
+  ONLINE
+  INGAME
+  OFLINE
 }
