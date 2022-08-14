@@ -49,6 +49,7 @@ export class AuthController {
     const user = await this.authService.GenirateJWT(req, res);
     res.cookie('token', user.token);
     if (user.profile_done) return res.redirect(301, 'http://localhost/');
+    else if (user.isTwoFactorAuthenticationEnabled) return res.redirect(301, 'http:localhost/authenticate');
     else return res.redirect(301, 'http://localhost/setup');
   }
 

@@ -8,6 +8,7 @@ export class SetupUser {
 	user_name: string;
 	// email: string;
 	profile_done: boolean;
+	isTwoFactorAuthenticationEnabled: boolean;
 	token: string;
 }
 

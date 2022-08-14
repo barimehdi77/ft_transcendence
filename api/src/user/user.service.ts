@@ -60,6 +60,7 @@ export class UserService {
         user_name: true,
         email: true,
         profile_done: true,
+        isTwoFactorAuthenticationEnabled: true,
       },
     });
 
@@ -75,6 +76,7 @@ export class UserService {
       login: NewUser.login,
       user_name: NewUser.user_name,
       profile_done: NewUser.profile_done,
+      isTwoFactorAuthenticationEnabled: NewUser.isTwoFactorAuthenticationEnabled,
       token: await this.signToken({
         intra_id: NewUser.intra_id,
         login: NewUser.login,
