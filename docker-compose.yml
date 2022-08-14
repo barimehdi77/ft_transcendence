@@ -3,31 +3,31 @@ services:
     # api:
     #     build: api/
     #     depends_on:
-    #         - postgres
+    #         - database
     #         - front-end
     #     environment:
-    #         DATABASE_URL: postgresql://user:password@postgres:5432/db?schema=public
+    #         DATABASE_URL: postgresql://user:password@localhost:5432/db
     #         NODE_ENV: development
     #         PORT: 8080
     #     ports:
     #         - "8080:8080" # the port number is for dev only prud port is == 8080
     #     restart: on-failure
     #     networks:
-    #         - transcendence
+    #         - network
 
     front-end:
         build: src/
         depends_on:
-            - postgres
+            - database
         ports:
             - "80:80" # the port number is for dev only prud port is == 8080
         restart: on-failure
         networks:
-            - transcendence
+            - network
 
 
-    postgres:
-        image: postgres:10.4
+    database:
+        image: postgres
         ports:
             - "5432:5432"
         environment:
@@ -35,9 +35,9 @@ services:
             POSTGRES_PASSWORD: password
             POSTGRES_DB: db
         networks:
-            - transcendence
+            - network
 
 
 networks:
-  transcendence:
+  network:
     driver: bridge

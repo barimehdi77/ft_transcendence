@@ -61,10 +61,10 @@ export class UserService {
     };
   }
 
-  decode(auth: string): number {
+  decode(auth: string): { intra_id: number, login: string} {
     const jwt = auth.replace('Bearer ', '');
-    const decode = this.jwt.decode(jwt, { json: true }) as { intra_id: number};
-    return (decode.intra_id);
+    const decode = this.jwt.decode(jwt, { json: true }) as { intra_id: number, login: string};
+    return (decode);
   }
 
   async FindUser(
@@ -72,7 +72,7 @@ export class UserService {
   ): Promise<Prisma.UserUncheckedCreateInput | undefined> {
     const user = await this.prisma.user.findUnique({
       where: {
-        intra_id: this.decode(auth),
+        intra_id: this.decode(auth).intra_id,
       },
       select: {
         first_name: true,
@@ -117,7 +117,7 @@ export class UserService {
 
     return this.prisma.user.update({
       where: {
-        intra_id: this.decode(auth),
+        intra_id: this.decode(auth).intra_id,
       },
       data: {
         profile_done: true,
