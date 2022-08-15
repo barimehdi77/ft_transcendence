@@ -29,8 +29,8 @@ const Profile = () => {
 						info={userInfo.first_name + ' ' + userInfo.last_name}
 					/>
 					<ProfileInfoItem icon={faTag} field='Login' info={userInfo.login} />
-					{profileData.profile ? (
-						<ProfileStats profileData={profileData} />
+					{profileData.status === 'success' ? (
+						<ProfileStats profileStats={profileData.data.profile} />
 					) : null}
 				</div>
 			</div>
