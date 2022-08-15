@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import UserImage from '../userImage';
-
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+
+import UserImage from '../userImage';
 
 const Dropdown = () => {
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -25,7 +25,7 @@ const Dropdown = () => {
 				aria-expanded={open ? 'true' : undefined}
 				onClick={handleClick}
 			>
-				<UserImage/>
+				<UserImage />
 			</Button>
 			<Menu
 				id='basic-menu'

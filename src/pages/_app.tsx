@@ -1,12 +1,12 @@
+import '../styles/globals.css';
 import { useEffect, useState } from 'react';
 import { UserContext } from '../contexts/userContext';
 import { getUserData } from '../components/getUserData';
-import cookie from 'js-cookie';
-
-import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import Layout from '../components/layout';
 import Router from 'next/router';
+
+import cookie from 'js-cookie';
+import Layout from '../components/layout';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const token = cookie.get('token') as string;

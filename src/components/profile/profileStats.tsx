@@ -10,7 +10,11 @@ import ProfileInfoItem from './profileInfoItem';
 const ProfileStats = ({ profileStats }: any) => {
 	return (
 		<>
-			<ProfileInfoItem icon={faCoins} field='Points' info={profileStats.user_points} />
+			<ProfileInfoItem
+				icon={faCoins}
+				field='Points'
+				info={profileStats.user_points}
+			/>
 			<ProfileInfoItem
 				icon={faTableTennisPaddleBall}
 				field='Games Played'
