@@ -7,24 +7,28 @@ import {
 
 import ProfileInfoItem from './profileInfoItem';
 
-const ProfileStats = ({ profileData }:any) => {
+const ProfileStats = ({ profileStats }: any) => {
 	return (
 		<>
-			<ProfileInfoItem icon={faCoins} field='Points' info='42 Pts' />
+			<ProfileInfoItem
+				icon={faCoins}
+				field='Points'
+				info={profileStats.user_points}
+			/>
 			<ProfileInfoItem
 				icon={faTableTennisPaddleBall}
 				field='Games Played'
-				info={profileData.profile.played_games}
+				info={profileStats.played_games}
 			/>
 			<ProfileInfoItem
 				icon={faCircleCheck}
 				field='Wins'
-				info={profileData.profile.wins}
+				info={profileStats.wins}
 			/>
 			<ProfileInfoItem
 				icon={faCircleXmark}
 				field='Losses'
-				info={profileData.profile.losses}
+				info={profileStats.losses}
 			/>
 		</>
 	);

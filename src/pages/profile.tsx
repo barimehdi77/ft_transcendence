@@ -6,6 +6,7 @@ import { getProfileData } from '../components/profile/getProfileData';
 import ProfileInfoItem from '../components/profile/profileInfoItem';
 import ProfileHeader from '../components/profile/profileHeader';
 import ProfileStats from '../components/profile/profileStats';
+import MatchHistoryButton from '../components/profile/matchHistoryButton';
 
 const Profile = () => {
 	const { userInfo } = useContext(UserContext);
@@ -21,7 +22,7 @@ const Profile = () => {
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
 			<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] mt-20'>
-				<ProfileHeader />
+				<ProfileHeader points={profileData.data?.profile?.user_points} />
 				<div className='bg-white px-10 py-4 rounded-b-3xl'>
 					<ProfileInfoItem
 						icon={faUser}
@@ -29,9 +30,10 @@ const Profile = () => {
 						info={userInfo.first_name + ' ' + userInfo.last_name}
 					/>
 					<ProfileInfoItem icon={faTag} field='Login' info={userInfo.login} />
-					{profileData.profile ? (
-						<ProfileStats profileData={profileData} />
+					{profileData.status === 'success' ? (
+						<ProfileStats profileStats={profileData.data.profile} />
 					) : null}
+					<MatchHistoryButton />
 				</div>
 			</div>
 		</main>
