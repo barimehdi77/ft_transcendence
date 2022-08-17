@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Headers } from '@nestjs/common';
 import { FriendsService } from './friends.service';
-import { UpdateFriendDto } from './dto/update-friend.dto';
 import { CreateFriendRequestDto } from './dto/create-friend.dto';
 import { Request, Response } from 'express';
 
@@ -37,13 +36,13 @@ export class FriendsController {
     return this.friendsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFriendDto: UpdateFriendDto) {
-    return this.friendsService.update(+id, updateFriendDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateFriendDto: UpdateFriendDto) {
+  //   return this.friendsService.update(+id, updateFriendDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.friendsService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.friendsService.remove(+id);
+  // }
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/app/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { CreateFriendRequestDto } from './dto/create-friend.dto';
-import { UpdateFriendDto } from './dto/update-friend.dto';
 
 @Injectable()
 export class FriendsService {
@@ -29,12 +28,12 @@ export class FriendsService {
     return `This action returns a #${id} friend`;
   }
 
-  update(id: number, updateFriendDto: UpdateFriendDto) {
-    return `This action updates a #${id} friend`;
-  }
+  // update(id: number, updateFriendDto: UpdateFriendDto) {
+  //   return `This action updates a #${id} friend`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} friend`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} friend`;
+  // }
 
 }

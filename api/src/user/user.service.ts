@@ -1,4 +1,4 @@
-import { Injectable, Req } from '@nestjs/common';
+import { BadRequestException, Injectable, Req } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
@@ -7,6 +7,7 @@ import { Request } from 'express';
 import { jwtInfo } from './dto/jwt.dto';
 import { CreateJwt, SetupUser, UserAuth, UserDecoder } from 'src/auth/dto/User.dto';
 import { UpdateUserInfo } from './dto/User.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
@@ -14,8 +15,17 @@ export class UserService {
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
+    private readonly cloudinary: CloudinaryService,
+
   ) {}
 
+
+  async uploadImageToCloudinary(file: Express.Multer.File): Promise<string> {
+    const image =  await this.cloudinary.uploadImage(file).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
+    return image.url
+  }
 
   async setTwoFactorAuthenticationSecret(secret: string, login: string) {
     return this.prisma.user.update({
@@ -149,7 +159,7 @@ export class UserService {
       data: {
         profile_done: true,
         user_name: data.user_name.toLowerCase(),
-        image_url: data.avatar,
+        image_url: await this.uploadImageToCloudinary(data.avatar),
       },
     });
   }

@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res, Headers, UseFilters, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res, Headers, UseFilters, HttpCode, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Prisma } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { jwtInfo } from './dto/jwt.dto';
 import { UpdateUserInfo } from './dto/User.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('user')
@@ -39,7 +40,10 @@ export class UserController {
   }
 
   @Post('/setup')
-  async accountSetup(@Req() req: Request,@Res() res: Response, @Body() data: UpdateUserInfo, @Headers('Authorization') auth: string) {
+  @UseInterceptors(FileInterceptor('avatar'))
+  async accountSetup(@Req() req: Request,@Res() res: Response, @Headers('Authorization') auth: string, @UploadedFile() file: Express.Multer.File, @Body() data: UpdateUserInfo) {
+    data.avatar = file;
+    console.log("Data :", data);
     try {
       const user = await this.userService.accountSetup(data, auth);
 

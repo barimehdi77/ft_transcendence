@@ -54,6 +54,7 @@ model FriendsList {
   to            Int
   status        FriendStatus @default(PENDING)
 
+  @@unique([from, to])
   @@map(name : "friendsList")
 }
 

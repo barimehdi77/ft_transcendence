@@ -9,6 +9,9 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { UserModule } from 'src/user/user.module';
+import { AppModule } from 'src/app/app.module';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -20,6 +23,7 @@ import { PassportModule } from '@nestjs/passport';
     UserService,
     ConfigService,
     PrismaService,
+    CloudinaryService,
   ],
 })
 export class AuthModule {}
