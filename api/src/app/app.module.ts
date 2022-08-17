@@ -15,6 +15,8 @@ import { UserService } from 'src/user/user.service';
 import { PrismaService } from './prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ProfileModule } from 'src/profile/profile.module';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 // import { ValidateComplateProfileMiddleware } from 'src/comman/middleware/ValidateCompleteProfile.middleware';
 
 @Module({
@@ -25,10 +27,11 @@ import { ProfileModule } from 'src/profile/profile.module';
     UserModule,
     AuthModule,
     ProfileModule,
+    CloudinaryModule,
     PassportModule.register({ session: true }),
   ],
   controllers: [AppController],
-  providers: [AppService, UserService, PrismaService, JwtService],
+  providers: [AppService, UserService, PrismaService, JwtService, CloudinaryService],
 })
 export class AppModule {}//implements NestModule {
   // configure(consumer: MiddlewareConsumer) {
