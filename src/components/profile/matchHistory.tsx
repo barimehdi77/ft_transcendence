@@ -1,4 +1,4 @@
-const MatchHistory = () => {
+const MatchHistory = ({ profileStats }: any) => {
 	return (
 		<section className='m-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 '>
 			<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] mt-20'>
@@ -9,8 +9,8 @@ const MatchHistory = () => {
 				</div>
 				<div className='bg-white px-10 py-4 rounded-b-3xl'>
 					<h2 className='text-center font-semibold capitalize'>
-						<span className='text-green-600'>6 Wins</span> -
-						<span className='text-red-500'> 3 Losses</span>
+						<span className='text-green-600'>{profileStats.wins} Wins</span> -
+						<span className='text-red-500'> {profileStats.losses} Losses</span>
 					</h2>
 				</div>
 			</div>

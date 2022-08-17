@@ -31,9 +31,11 @@ const Profile = () => {
 					/>
 					<ProfileInfoItem icon={faTag} field='Login' info={userInfo.login} />
 					{profileData.status === 'success' ? (
-						<ProfileStats profileStats={profileData.data.profile} />
+						<>
+							<ProfileStats profileStats={profileData.data.profile} />
+							<MatchHistoryButton profileStats={profileData.data.profile} />
+						</>
 					) : null}
-					<MatchHistoryButton />
 				</div>
 			</div>
 		</main>

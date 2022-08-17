@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import NavbarItems from './navbarItems';
 
 const Navbar = () => {
@@ -7,7 +8,7 @@ const Navbar = () => {
 			style={{ minWidth: '700px' }}
 		>
 			<h1 className='text-3xl text-white uppercase font-bold'>
-				<a href='/'>king pong</a>
+				<Link href='/'>king pong</Link>
 			</h1>
 			<div className='items'>
 				<NavbarItems />

@@ -1,10 +1,9 @@
 import { useState } from 'react';
-
 import Modal from '@mui/material/Modal';
 
 import MatchHistory from './matchHistory';
 
-const MatchHistoryButton = () => {
+const MatchHistoryButton = ({ profileStats }: any) => {
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -23,7 +22,7 @@ const MatchHistoryButton = () => {
 				aria-labelledby='modal-modal-title'
 				aria-describedby='modal-modal-description'
 			>
-				<MatchHistory />
+				<MatchHistory profileStats={profileStats} />
 			</Modal>
 		</div>
 	);
