@@ -6,6 +6,8 @@ import Router from 'next/router';
 import UsernameField from './usernameField';
 import AvatarField from './avatarField';
 
+import { getUserData } from '../getUserData';
+
 const UserInputForm = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext);
 	const url = 'http://localhost:8080/api/user/setup';
@@ -26,7 +28,14 @@ const UserInputForm = () => {
 				{ user_name: username ? username : login, image_url: file },
 				config
 			);
-			if (res.status === 200) Router.push('/');
+			if (res.status === 200) {
+				async function fillUserData() {
+					const user = await getUserData();
+					setUserInfo(user);
+				}
+				fillUserData();
+				Router.push('/');
+			}
 		} catch (error: any) {
 			console.log(error);
 			setErrorMessage(error.response.data.message);
