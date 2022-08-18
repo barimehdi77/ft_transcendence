@@ -8,16 +8,17 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 import UserImage from '../userImage';
+import EditUserInfo from './editUserInfo';
 
 const Dropdown = () => {
 	const { userInfo } = useContext(UserContext);
 
 	const [anchorEl, setAnchorEl] = useState(null);
-	const open = Boolean(anchorEl);
+	const openDropdown = Boolean(anchorEl);
 	const handleClick = (e: any) => {
 		setAnchorEl(e.currentTarget);
 	};
-	const handleClose = () => {
+	const handleCloseDropdown = () => {
 		setAnchorEl(null);
 	};
 
@@ -25,9 +26,9 @@ const Dropdown = () => {
 		<>
 			<Button
 				id='basic-button'
-				aria-controls={open ? 'basic-menu' : undefined}
+				aria-controls={openDropdown ? 'basic-menu' : undefined}
 				aria-haspopup='true'
-				aria-expanded={open ? 'true' : undefined}
+				aria-expanded={openDropdown ? 'true' : undefined}
 				onClick={handleClick}
 			>
 				<li className='flex items-center lowercase text-white text-xl font-semibold ml-12 hover:text-[#D3FAD6]'>
@@ -46,18 +47,33 @@ const Dropdown = () => {
 					vertical: 'top',
 					horizontal: 'right',
 				}}
-				open={open}
-				onClose={handleClose}
+				open={openDropdown}
+				onClose={handleCloseDropdown}
 				MenuListProps={{
 					'aria-labelledby': 'basic-button',
 				}}
 			>
-				<MenuItem onClick={handleClose}>
-					<Link href='/profile'>View My Profile</Link>
+				<MenuItem
+					onKeyDown={(e) => e.stopPropagation()}
+					onClick={handleCloseDropdown}
+				>
+					<Link href='/profile'>View Profile</Link>
 				</MenuItem>
-				<MenuItem onClick={handleClose}>Edit Profile</MenuItem>
-				<MenuItem onClick={handleClose}>2 Factor-Auth</MenuItem>
-				<MenuItem onClick={handleClose}>Logout</MenuItem>
+				<MenuItem onKeyDown={(e) => e.stopPropagation()}>
+					<EditUserInfo />
+				</MenuItem>
+				<MenuItem
+					onKeyDown={(e) => e.stopPropagation()}
+					onClick={handleCloseDropdown}
+				>
+					2 Factor-Auth
+				</MenuItem>
+				<MenuItem
+					onKeyDown={(e) => e.stopPropagation()}
+					onClick={handleCloseDropdown}
+				>
+					Logout
+				</MenuItem>
 			</Menu>
 		</>
 	);
