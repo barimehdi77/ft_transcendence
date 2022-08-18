@@ -8,7 +8,7 @@ const UserImage = () => {
 		<img
 			src={userInfo.image_url}
 			alt='User Avatar'
-			className='w-12 h-12 rounded-full ml-4'
+			className='w-12 h-12 object-cover rounded-full ml-4'
 		/>
 	);
 };
