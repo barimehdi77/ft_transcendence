@@ -23,11 +23,10 @@ const UserInputForm = () => {
 			},
 		};
 		try {
-			const res = await axios.post(
-				url,
-				{ user_name: username ? username : login, image_url: file },
-				config
-			);
+			const data = new FormData();
+			data.append('user_name', username ? username : login);
+			data.append('avatar', file);
+			const res = await axios.post(url, data, config);
 			if (res.status === 200) {
 				async function fillUserData() {
 					const user = await getUserData();
