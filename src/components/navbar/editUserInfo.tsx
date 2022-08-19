@@ -16,7 +16,9 @@ const EditUserInfo = () => {
 				aria-labelledby='modal-modal-title'
 				aria-describedby='modal-modal-description'
 			>
-				<EditForm handleCloseModal={handleCloseModal} />
+				<>
+					<EditForm handleCloseModal={handleCloseModal} />
+				</>
 			</Modal>
 		</>
 	);

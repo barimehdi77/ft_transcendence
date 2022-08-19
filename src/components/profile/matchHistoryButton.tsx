@@ -22,7 +22,9 @@ const MatchHistoryButton = ({ profileStats }: any) => {
 				aria-labelledby='modal-modal-title'
 				aria-describedby='modal-modal-description'
 			>
-				<MatchHistory profileStats={profileStats} />
+				<>
+					<MatchHistory profileStats={profileStats} />
+				</>
 			</Modal>
 		</div>
 	);
