@@ -17,6 +17,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ProfileModule } from 'src/profile/profile.module';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { FriendsModule } from 'src/friends/friends.module';
 // import { ValidateComplateProfileMiddleware } from 'src/comman/middleware/ValidateCompleteProfile.middleware';
 
 @Module({
@@ -27,6 +28,7 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
     UserModule,
     AuthModule,
     ProfileModule,
+    FriendsModule,
     CloudinaryModule,
     PassportModule.register({ session: true }),
   ],

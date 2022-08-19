@@ -152,16 +152,28 @@ export class UserService {
     console.log(`after fetch with username ${data.user_name}:`,User);
     if (User !== null) return null;
 
-    return this.prisma.user.update({
-      where: {
-        intra_id: this.decode(auth).intra_id,
-      },
-      data: {
-        profile_done: true,
-        user_name: data.user_name.toLowerCase(),
-        image_url: await this.uploadImageToCloudinary(data.avatar),
-      },
-    });
+    if (data.avatar === undefined) {
+      return await this.prisma.user.update({
+        where: {
+          intra_id: this.decode(auth).intra_id,
+        },
+        data: {
+          profile_done: true,
+          user_name: data.user_name.toLowerCase(),
+        },
+      });
+    } else {
+      return this.prisma.user.update({
+        where: {
+          intra_id: this.decode(auth).intra_id,
+        },
+        data: {
+          profile_done: true,
+          user_name: data.user_name.toLowerCase(),
+          image_url: await this.uploadImageToCloudinary(data.avatar),
+        },
+      });
+    }
   }
 
   findAll() {
