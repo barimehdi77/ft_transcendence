@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 import UserImage from '../userImage';
 import EditUserInfo from './editUserInfo';
-import TwoFactorAuth from './2FactorAuth';
+import TwoFactorAuth from '../2FA/2FactorAuth';
 
 const Dropdown = () => {
 	const { userInfo } = useContext(UserContext);
