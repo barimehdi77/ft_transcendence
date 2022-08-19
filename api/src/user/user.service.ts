@@ -49,6 +49,18 @@ export class UserService {
     });
   }
 
+  async turnOffTwoFactorAuthentication(login: string) {
+    return this.prisma.user.update({
+      where: {
+        login: login,
+      },
+      data: {
+        isTwoFactorAuthenticationEnabled: false,
+        twoFactorAuthenticationSecret: null,
+      }
+    });
+  }
+
   signToken(user: CreateJwt): Promise<string> {
     const secret = this.config.get('JWT_SECRET');
     return this.jwt.signAsync(user, {
