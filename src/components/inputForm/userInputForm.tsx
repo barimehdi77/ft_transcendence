@@ -16,7 +16,7 @@ const UserInputForm = () => {
 	const [file, setFile]: any = useState();
 	const [errorMessage, setErrorMessage] = useState();
 
-	const sendData = async (e: any) => {
+	const sendData = async () => {
 		const config = {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,

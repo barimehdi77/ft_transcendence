@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 import UserImage from '../userImage';
 import EditUserInfo from './editUserInfo';
+import TwoFactorAuth from './2FactorAuth';
 
 const Dropdown = () => {
 	const { userInfo } = useContext(UserContext);
@@ -62,11 +63,8 @@ const Dropdown = () => {
 				<MenuItem onKeyDown={(e) => e.stopPropagation()}>
 					<EditUserInfo />
 				</MenuItem>
-				<MenuItem
-					onKeyDown={(e) => e.stopPropagation()}
-					onClick={handleCloseDropdown}
-				>
-					2 Factor-Auth
+				<MenuItem onKeyDown={(e) => e.stopPropagation()}>
+					<TwoFactorAuth />
 				</MenuItem>
 				<MenuItem
 					onKeyDown={(e) => e.stopPropagation()}
