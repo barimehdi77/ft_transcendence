@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../contexts/userContext';
+import { UserContext } from '../../contexts/userContext';
 import { faUser, faTag } from '@fortawesome/free-solid-svg-icons';
 
-import { getProfileData } from '../components/profile/getProfileData';
-import ProfileInfoItem from '../components/profile/profileInfoItem';
-import ProfileHeader from '../components/profile/profileHeader';
-import ProfileStats from '../components/profile/profileStats';
-import MatchHistoryButton from '../components/profile/matchHistoryButton';
+import { getProfileData } from '../../components/profile/getProfileData';
+import ProfileInfoItem from '../../components/profile/profileInfoItem';
+import ProfileHeader from '../../components/profile/profileHeader';
+import ProfileStats from '../../components/profile/profileStats';
+import MatchHistoryButton from '../../components/profile/matchHistoryButton';
 
 const Profile = () => {
 	const { userInfo } = useContext(UserContext);
