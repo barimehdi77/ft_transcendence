@@ -46,11 +46,30 @@ export class AuthController {
   @Get('redirect')
   @UseGuards(AuthGuard('42'))
   async redirect(@Req() req: Request, @Res() res: Response) {
-    const user = await this.authService.GenirateJWT(req, res);
-    res.cookie('token', user.token);
-    if (user.isTwoFactorAuthenticationEnabled) return res.redirect(301, 'http://localhost/authenticate');
-    else if (user.profile_done) return res.redirect(301, 'http://localhost/');
-    else return res.redirect(301, 'http://localhost/setup');
+
+    try {
+      const user = await this.authService.GenirateJWT(req, res);
+
+      if(user === null) {
+        return res.status(409).json({
+          status: 'failure',
+          message: "Can not Generate JWT Token",
+        });
+      }
+      else {
+        res.cookie('token', user.token);
+        if (user.isTwoFactorAuthenticationEnabled) return res.redirect(301, 'http://localhost/authenticate');
+        else if (user.profile_done) return res.redirect(301, 'http://localhost/');
+        else return res.redirect(301, 'http://localhost/setup');
+      }
+
+    } catch (error) {
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error updating user data',
+				error: error.message ? error.message : error
+			});
+    }
   }
 
   @Get('generate2fa')
@@ -60,35 +79,103 @@ export class AuthController {
     @Res() res: Response,
     @Headers('Authorization') auth: string,
   ) {
-    const user = (await this.userService.decode(auth)) as UserDecoder;
-    const otp = await this.authService.generateTwoFactorAuthenticationSecret(
-      user,
-    );
-    return this.authService.pipeQrCodeStream(res, otp.otpauthUrl);
+    try {
+      const user = this.userService.decode(auth) as UserDecoder;
+      const otp = await this.authService.generateTwoFactorAuthenticationSecret(user);
+      const QRcode = await this.authService.pipeQrCodeStream(res, otp.otpauthUrl);
+
+      if(QRcode === null) {
+        return res.status(409).json({
+          status: 'failure',
+          message: "Can not Generate QR code",
+        });
+      }
+      else {
+        return res.status(200).json({
+          status: 'success',
+          message: "QR Code Generated successfully",
+          data: QRcode
+        });
+      }
+
+    } catch (error) {
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error updating user data',
+				error: error.message ? error.message : error
+			});
+    }
   }
 
   @Post('turn-on')
-  @HttpCode(200)
   @UseGuards(AuthGuard('jwt'))
   async turnOnTwoFactorAuthentication(
     @Req() request: Request,
+    @Res() res: Response,
     @Body() twoFactorAuthenticationCode: string,
     @Headers('Authorization') auth: string,
   ) {
-    const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(
-      twoFactorAuthenticationCode,
-      auth,
-    );
-    if (!isCodeValid) {
-      throw new UnauthorizedException('Wrong authentication code');
+
+    try {
+      const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, auth);
+
+      if(isCodeValid === null) {
+        return res.status(409).json({
+          status: 'failure',
+          message: "Wrong authentication code",
+        });
+      }
+      else {
+        const user = await this.userService.turnOnTwoFactorAuthentication(this.userService.decode(auth).login);
+        return res.status(200).json({
+          status: 'success',
+          message: "2FA Activated Successfully",
+        });
+      }
+
+    } catch (error) {
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error updating user data',
+				error: error.message ? error.message : error
+			});
     }
-    await this.userService.turnOnTwoFactorAuthentication(
-      this.userService.decode(auth).login,
-    );
+  }
+
+  @Get('turn-off')
+  @UseGuards(AuthGuard('jwt'))
+  async turnOffTwoFactorAuthentication(
+    @Req() request: Request,
+    @Res() res: Response,
+    @Headers('Authorization') auth: string,
+  ) {
+
+    try {
+      const user = await this.userService.turnOffTwoFactorAuthentication(this.userService.decode(auth).login);
+
+      if(user === null) {
+        return res.status(409).json({
+          status: 'failure',
+          message: "An Error Happend while turning 2FA off",
+        });
+      }
+      else {
+        return res.status(200).json({
+          status: 'success',
+          message: "2FA Disactivated Successfully",
+        });
+      }
+
+    } catch (error) {
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error updating user data',
+				error: error.message ? error.message : error
+			});
+    }
   }
 
   @Post('authenticate')
-  @HttpCode(200)
   @UseGuards(AuthGuard('jwt'))
   async authenticate(
     @Req() req: Request,
@@ -96,22 +183,31 @@ export class AuthController {
     @Body() twoFactorAuthenticationCode : string,
     @Headers('Authorization') auth: string,
   ) {
-    const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(
-      twoFactorAuthenticationCode, auth
-    );
-    if (!isCodeValid) {
-      throw new UnauthorizedException('Wrong authentication code');
+
+
+    try {
+      const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, auth);
+
+      if(isCodeValid === null) {
+        return res.status(409).json({
+          status: 'failure',
+          message: "Wrong authentication code",
+        });
+      }
+      else {
+        return res.status(200).json({
+          status: 'success',
+          message: "2FA Code is valid",
+        });
+      }
+
+    } catch (error) {
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error updating user data',
+				error: error.message ? error.message : error
+			});
     }
-
-    const user = await this.authService.GenirateJWT(req, res);
-
-    res.cookie('token', user.token);
-    if (user.profile_done) return res.redirect(301, 'http://localhost/');
-    else return res.redirect(301, 'http://localhost/setup');
-
-    // request.res.setHeader('Set-Cookie', [accessTokenCookie]);
-
-    // return request.user;
   }
 
   /**
