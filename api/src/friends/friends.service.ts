@@ -62,8 +62,16 @@ export class FriendsService {
     const intra_id = this.userService.decode(auth).intra_id;
     const getAllFriendsFromDB = await this.prisme.friendsList.findMany({
       where: {
+        OR : [
+          {
             to: intra_id,
             status: "ACCEPTED",
+          },
+          {
+            from: intra_id,
+            status: "ACCEPTED",
+          }
+        ]
       },
       select: {
         from: true,
