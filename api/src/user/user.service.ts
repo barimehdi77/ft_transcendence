@@ -159,9 +159,7 @@ export class UserService {
   }
 
   async accountSetup(data: UpdateUserInfo, auth: string) {
-    console.log("this is the data", data, "auth", auth);
     const User = await this.findUserName(data.user_name as string);
-    console.log(`after fetch with username ${data.user_name}:`,User);
     if (User !== null) return null;
 
     if (data.avatar === undefined) {
