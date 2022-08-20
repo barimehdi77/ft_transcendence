@@ -4,11 +4,10 @@ import AvatarField from '../inputForm/avatarField';
 import UsernameField from '../inputForm/usernameField';
 import axios from 'axios';
 
-import { getUserData } from '../getUserData';
+import { getData } from '../getData';
 
 const EditForm = ({ handleCloseModal }: any) => {
 	const { userInfo, setUserInfo } = useContext(UserContext);
-	const url = 'http://localhost:8080/api/user/setup';
 	const [username, setUsername] = useState(userInfo.user_name);
 	const [file, setFile]: any = useState();
 	const [errorMessage, setErrorMessage] = useState();
@@ -22,7 +21,7 @@ const EditForm = ({ handleCloseModal }: any) => {
 		};
 		try {
 			const res = await axios.post(
-				url,
+				'http://localhost:8080/api/user/setup',
 				{
 					user_name: username ? username : userInfo.user_name,
 					image_url: file,
@@ -31,7 +30,7 @@ const EditForm = ({ handleCloseModal }: any) => {
 			);
 			if (res.status === 200) {
 				async function fillUserData() {
-					const user = await getUserData();
+					const user = await getData('http://localhost:8080/api/user');
 					setUserInfo(user);
 				}
 				fillUserData();
