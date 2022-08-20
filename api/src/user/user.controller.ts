@@ -42,7 +42,10 @@ export class UserController {
   @Post('/setup')
   @UseInterceptors(FileInterceptor('avatar'))
   async accountSetup(@Req() req: Request,@Res() res: Response, @Headers('Authorization') auth: string, @UploadedFile() file: Express.Multer.File, @Body() data: UpdateUserInfo) {
+    console.log("File: ", file);
+    console.log("Data: ", data);
     try {
+      data.avatar = file;
       const user = await this.userService.accountSetup(data, auth);
 
       if(user === null) {
