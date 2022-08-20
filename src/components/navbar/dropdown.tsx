@@ -32,10 +32,12 @@ const Dropdown = () => {
 				aria-expanded={openDropdown ? 'true' : undefined}
 				onClick={handleClick}
 			>
-				<li className='flex items-center lowercase text-white text-xl font-semibold ml-12 hover:text-[#D3FAD6]'>
-					{userInfo.user_name}
-				</li>
-				<UserImage />
+				<div className='text-white flex items-center hover:text-[#D3FAD6]'>
+					<li className='lowercase text-xl font-semibold ml-10'>
+						{userInfo.user_name}
+					</li>
+					<UserImage />
+				</div>
 			</Button>
 			<Menu
 				id='basic-menu'

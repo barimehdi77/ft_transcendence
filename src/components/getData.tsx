@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-export const getUserData = async () => {
-	const url = 'http://localhost:8080/api/user';
+export const getData = async (url: any) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem('token')}`,

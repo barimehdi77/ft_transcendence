@@ -1,12 +1,12 @@
 import '../styles/globals.css';
 import { useEffect, useState } from 'react';
 import { UserContext } from '../contexts/userContext';
-import { getUserData } from '../components/getUserData';
 import type { AppProps } from 'next/app';
 import Router from 'next/router';
 
 import cookie from 'js-cookie';
 import Layout from '../components/layout';
+import { getData } from '../components/getData';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const token = cookie.get('token') as string;
@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 	useEffect(() => {
 		if (token) localStorage.setItem('token', token);
 		async function fillUserData() {
-			const user = await getUserData();
+			const user = await getData('http://localhost:8080/api/user');
 			if (user.statusCode! === 401) Router.push('/login');
 			else if (
 				!user.profile_done ||
