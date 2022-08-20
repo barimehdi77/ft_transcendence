@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import { faUser, faTag } from '@fortawesome/free-solid-svg-icons';
 
-import { getProfileData } from '../../components/profile/getProfileData';
 import ProfileInfoItem from '../../components/profile/profileInfoItem';
 import ProfileHeader from '../../components/profile/profileHeader';
 import ProfileStats from '../../components/profile/profileStats';
 import MatchHistoryButton from '../../components/profile/matchHistoryButton';
+import { getData } from '../../components/getData';
 
 const Profile = () => {
 	const [profileData, setProfileData]: any = useState({});
 
 	useEffect(() => {
 		async function fillProfileData() {
-			setProfileData(await getProfileData());
+			setProfileData(await getData('http://localhost:8080/api/profile/me'));
 		}
 		fillProfileData();
 	}, []);

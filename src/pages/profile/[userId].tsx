@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getOtherUser } from '../../components/getOtherUser';
 import { faUser, faTag } from '@fortawesome/free-solid-svg-icons';
 
 import ProfileInfoItem from '../../components/profile/profileInfoItem';
 import ProfileHeader from '../../components/profile/profileHeader';
 import ProfileStats from '../../components/profile/profileStats';
 import MatchHistoryButton from '../../components/profile/matchHistoryButton';
+import { getData } from '../../components/getData';
 
 const Profile = () => {
 	const username: any = useRouter().query.userId;
@@ -14,7 +14,7 @@ const Profile = () => {
 
 	useEffect(() => {
 		async function fillUserData() {
-			const user = await getOtherUser(username);
+			const user = await getData(`http://localhost:8080/api/profile/${username}`);
 			setprofileData(user);
 		}
 		if (username) fillUserData();

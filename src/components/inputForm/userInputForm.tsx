@@ -6,7 +6,7 @@ import Router from 'next/router';
 import UsernameField from './usernameField';
 import AvatarField from './avatarField';
 
-import { getUserData } from '../getUserData';
+import { getData } from '../getData';
 
 const UserInputForm = () => {
 	const { userInfo, setUserInfo } = useContext(UserContext);
@@ -29,7 +29,7 @@ const UserInputForm = () => {
 			const res = await axios.post(url, data, config);
 			if (res.status === 200) {
 				async function fillUserData() {
-					const user = await getUserData();
+					const user = await getData('http://localhost:8080/api/user');
 					setUserInfo(user);
 				}
 				fillUserData();

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-export const getOtherUser = async (username: any) => {
-	const url = `http://localhost:8080/api/profile/${username}`;
+export const getData = async (url: any) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem('token')}`,
