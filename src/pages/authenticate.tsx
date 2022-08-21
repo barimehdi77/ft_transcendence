@@ -9,10 +9,7 @@ const Authenticate = () => {
 	async function sendCode() {
 		try {
 			const res = await sendPassCode(passcode);
-			console.log(res);
-			if (res?.statusText === 'OK') {
-				Router.push('/');
-			}
+			if (res.data.status === 'success') Router.push('/');
 		} catch (error: any) {
 			setErrorMessage(error.response.data.message);
 		}

@@ -19,9 +19,9 @@ const TwoFactorAuthModal = ({ handleCloseModal }: any) => {
 	async function sendCode() {
 		try {
 			const res = await sendPassCode(passcode);
-			console.log(res);
-			if (res?.statusText === 'OK') handleCloseModal();
+			if (res.data.status === 'success') handleCloseModal();
 		} catch (error: any) {
+			console.log(error);
 			setErrorMessage(error.response.data.message);
 		}
 	}
