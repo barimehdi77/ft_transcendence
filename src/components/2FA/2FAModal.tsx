@@ -1,9 +1,14 @@
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../../contexts/userContext';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+
+
 import { getQRCode } from './getQRCode';
 import { sendPassCode } from './sendPassCode';
+import { getData } from '../getData';
 
 const TwoFactorAuthModal = ({ handleCloseModal }: any) => {
+	const { userInfo, setUserInfo } = useContext(UserContext);
 	const [qrCode, setQrCode]: any = useState();
 	const [passcode, setPasscode] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
@@ -19,7 +24,14 @@ const TwoFactorAuthModal = ({ handleCloseModal }: any) => {
 	async function sendCode() {
 		try {
 			const res = await sendPassCode(passcode);
-			if (res.data.status === 'success') handleCloseModal();
+			if (res.data.status === 'success') {
+				async function fillUserData() {
+					const user = await getData('http://localhost:8080/api/user');
+					setUserInfo(user);
+				}
+				fillUserData();
+				handleCloseModal();
+			}
 		} catch (error: any) {
 			console.log(error);
 			setErrorMessage(error.response.data.message);
