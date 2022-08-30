@@ -91,11 +91,7 @@ export class AuthController {
         });
       }
       else {
-        return res.status(200).json({
-          status: 'success',
-          message: "QR Code Generated successfully",
-          data: QRcode
-        });
+        return QRcode
       }
 
     } catch (error) {
