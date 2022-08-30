@@ -16,7 +16,8 @@ const UserInputForm = () => {
 	const [file, setFile]: any = useState();
 	const [errorMessage, setErrorMessage] = useState();
 
-	const sendData = async () => {
+	const sendData = async (e: any) => {
+		e.preventDefault();
 		const config = {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -54,15 +55,14 @@ const UserInputForm = () => {
 						{errorMessage}
 					</p>
 				) : null}
-			</form>
-			<div className='flex justify-center'>
 				<button
 					onClick={sendData}
-					className='bg-sky-800 px-12 py-4 text-xl text-white font-semibold uppercase rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-sky-700 hover:scale-105'
+					className='bg-sky-800 w-min m-auto px-12 py-2 text-xl text-white font-semibold uppercase rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-sky-700 hover:scale-105'
 				>
 					Start
 				</button>
-			</div>
+			</form>
+			<div className='flex justify-center'></div>
 		</>
 	);
 };

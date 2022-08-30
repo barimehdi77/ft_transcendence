@@ -7,16 +7,12 @@ export const sendPassCode = async (passcode: string) => {
 			Authorization: `Bearer ${localStorage.getItem('token')}`,
 		},
 	};
-	try {
-		const res = await axios.post(
-			url,
-			{
-				twoFactorAuthenticationCode: passcode,
-			},
-			config
-		);
-		return res;
-	} catch (error: any) {
-		console.log(error);
-	}
+	const res = await axios.post(
+		url,
+		{
+			twoFactorAuthenticationCode: passcode,
+		},
+		config
+	);
+	return res;
 };
