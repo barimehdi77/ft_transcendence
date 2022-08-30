@@ -108,14 +108,14 @@ export class AuthController {
   async turnOnTwoFactorAuthentication(
     @Req() request: Request,
     @Res() res: Response,
-    @Body() twoFactorAuthenticationCode: string,
+    @Body("twoFactorAuthenticationCode") twoFactorAuthenticationCode: string,
     @Headers('Authorization') auth: string,
   ) {
 
     try {
-      const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, auth);
+      const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, auth);
 
-      if(isCodeValid === null) {
+      if(isCodeValid === false) {
         return res.status(409).json({
           status: 'failure',
           message: "Wrong authentication code",
