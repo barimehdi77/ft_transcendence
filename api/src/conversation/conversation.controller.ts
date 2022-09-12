@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  Headers
 } from '@nestjs/common';
 import { ConversationService } from './conversation.service';
 import {
@@ -20,20 +21,22 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/decorator';
 import { BanMemberDto } from './dto/ban-member.dto';
+import { UserService } from 'src/user/user.service';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('conversations')
 export class ConversationController {
-  constructor(private readonly conversationService: ConversationService) {}
+  constructor(private readonly conversationService: ConversationService,
+    private readonly userService: UserService) {}
 
   @Post('/room')
   async createConversationRoom(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: CreateConversatioRoomnDto,
   ) {
     try {
       const conversation =
-        await this.conversationService.createConversationRoom(dto, intra_id);
+        await this.conversationService.createConversationRoom(dto, this.userService.decode(auth).intra_id);
       return {
         status: 'success',
         conversation,
@@ -52,13 +55,13 @@ export class ConversationController {
 
   @Post('/dm')
   async createConversationDm(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: CreateConversationDmDto,
   ) {
     try {
       const res = await this.conversationService.createConversationDm(
         dto,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -79,11 +82,11 @@ export class ConversationController {
 
   @Post('/checkPassword')
   async checkPassword(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: CheckPasswordDto,
   ) {
     try {
-      const res = await this.conversationService.checkPassword(dto, intra_id);
+      const res = await this.conversationService.checkPassword(dto, this.userService.decode(auth).intra_id);
       return {
         status: 'success',
         pass: res,
@@ -102,13 +105,13 @@ export class ConversationController {
 
   @Post('/room/members/add')
   async addNewMember(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: addNewMemberDto,
   ) {
     try {
       const response = await this.conversationService.addNewMember(
         dto,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -128,13 +131,13 @@ export class ConversationController {
 
   @Post('/room/members/remove')
   async removeMember(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: addNewMemberDto,
   ) {
     try {
       const response = await this.conversationService.removeMember(
         dto,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -154,13 +157,13 @@ export class ConversationController {
 
   @Post('/room/admins/add')
   async addNewAdmin(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: addNewMemberDto,
   ) {
     try {
       const response = await this.conversationService.addNewAdmin(
         dto,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -180,13 +183,13 @@ export class ConversationController {
 
   @Post('/room/admins/remove')
   async removeAdmin(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: addNewMemberDto,
   ) {
     try {
       const response = await this.conversationService.removeAdmin(
         dto,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -206,13 +209,13 @@ export class ConversationController {
 
   @Post('/room/members/join')
   async joinConversation(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: JoinConversationDto,
   ) {
     try {
       const response = await this.conversationService.joinConversation(
         dto,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -232,13 +235,13 @@ export class ConversationController {
 
   @Post('/room/members/leave')
   async leaveConversation(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: JoinConversationDto,
   ) {
     try {
       const response = await this.conversationService.leaveConversation(
         dto,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -258,7 +261,7 @@ export class ConversationController {
 
   @Patch('/room/edit/:id')
   async editConversation(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
     @Body() dto: EditRoomDto,
   ) {
@@ -266,7 +269,7 @@ export class ConversationController {
       const response = await this.conversationService.editConversation(
         dto,
         conversationId,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -285,10 +288,10 @@ export class ConversationController {
   }
 
   @Get('/room/find')
-  async findConversations(@GetUser('intra_id') intra_id: number) {
+  async findConversations(@Headers('Authorization') auth: string) {
     try {
       const conversations = await this.conversationService.findConversations(
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
@@ -307,10 +310,10 @@ export class ConversationController {
   }
 
   @Get('/room/me')
-  async getMyRoomConversations(@GetUser('intra_id') intra_id: number) {
+  async getMyRoomConversations(@Headers('Authorization') auth: string) {
     try {
       const conversations = await this.conversationService.getMyConversations(
-        intra_id,
+        this.userService.decode(auth).intra_id,
         'room',
       );
       return {
@@ -331,13 +334,13 @@ export class ConversationController {
 
   @Get('/room/:id')
   async getRoomConversationById(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
   ) {
     try {
       const conversation = await this.conversationService.getConversationById(
         conversationId,
-        intra_id,
+        this.userService.decode(auth).intra_id,
         'room',
       );
       return {
@@ -357,10 +360,10 @@ export class ConversationController {
   }
 
   @Get('/dm/me')
-  async getMyDmConversations(@GetUser('intra_id') intra_id: number) {
+  async getMyDmConversations(@Headers('Authorization') auth: string) {
     try {
       const conversations = await this.conversationService.getMyConversations(
-        intra_id,
+        this.userService.decode(auth).intra_id,
         'dm',
       );
       return {
@@ -381,13 +384,13 @@ export class ConversationController {
 
   @Get('/dm/:id')
   async getDmConversationById(
-    @GetUser('intra_id') intra_id: number,
+    @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
   ) {
     try {
       const conversation = await this.conversationService.getConversationById(
         conversationId,
-        intra_id,
+        this.userService.decode(auth).intra_id,
         'dm',
       );
       return {
@@ -407,13 +410,13 @@ export class ConversationController {
   }
   @Get('/messages/:id')
   async getConversationMessages(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
   ) {
     try {
       const messages = await this.conversationService.getConversationMessages(
         conversationId,
-        intra_id,
+        this.userService.decode(auth).intra_id,
         'room',
       );
       return {
@@ -434,13 +437,13 @@ export class ConversationController {
 
   @Get('/dm/messages/:id')
   async getConversationMessagesDms(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
   ) {
     try {
       const messages = await this.conversationService.getConversationMessages(
         conversationId,
-        intra_id,
+        this.userService.decode(auth).intra_id,
         'dm',
       );
       return {
@@ -461,13 +464,13 @@ export class ConversationController {
 
   @Post('/room/members/ban')
   async banMemberFromConversation(
-    @GetUser('intra_id') intra_id: number,
+     @Headers('Authorization') auth: string,
     @Body() dto: BanMemberDto,
   ) {
     try {
       const response = await this.conversationService.banMemberFromConversation(
         dto,
-        intra_id,
+        this.userService.decode(auth).intra_id,
       );
       return {
         status: 'success',
