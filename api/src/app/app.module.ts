@@ -18,6 +18,8 @@ import { ProfileModule } from 'src/profile/profile.module';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { FriendsModule } from 'src/friends/friends.module';
+import { ConversationModule } from 'src/conversation/conversation.module';
+import { MessagesModule } from 'src/messages/messages.module';
 // import { ValidateComplateProfileMiddleware } from 'src/comman/middleware/ValidateCompleteProfile.middleware';
 
 @Module({
@@ -30,6 +32,8 @@ import { FriendsModule } from 'src/friends/friends.module';
     ProfileModule,
     FriendsModule,
     CloudinaryModule,
+    ConversationModule,
+    MessagesModule,
     PassportModule.register({ session: true }),
   ],
   controllers: [AppController],
