@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import NavbarItems from './navbarItems';
+import NavbarItem from './navbarItem';
+import Dropdown from './dropdown';
 
 const Navbar = () => {
 	return (
@@ -11,7 +12,12 @@ const Navbar = () => {
 				<Link href='/'>king pong</Link>
 			</h1>
 			<div className='items'>
-				<NavbarItems />
+				<ul className='flex items-center'>
+					<NavbarItem path='game' pagename='play' />
+					<NavbarItem path='chat' pagename='chat' />
+					<NavbarItem path='friends' pagename='friends' />
+					<Dropdown />
+				</ul>
 			</div>
 		</nav>
 	);
