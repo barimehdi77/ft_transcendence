@@ -11,6 +11,7 @@ import UserImage from '../userImage';
 import EditUserInfo from './editUserInfo';
 import TwoFactorAuth from '../2FA/2FactorAuth';
 import TurnOff2FA from '../2FA/turnOff2FA';
+import Logout from './logout';
 
 const Dropdown = () => {
 	const { userInfo } = useContext(UserContext);
@@ -77,7 +78,7 @@ const Dropdown = () => {
 					onKeyDown={(e) => e.stopPropagation()}
 					onClick={handleCloseDropdown}
 				>
-					Logout
+					<Logout/>
 				</MenuItem>
 			</Menu>
 		</>

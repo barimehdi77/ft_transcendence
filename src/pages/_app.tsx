@@ -13,7 +13,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 	const [userInfo, setUserInfo] = useState({});
 
 	useEffect(() => {
-		if (token) localStorage.setItem('token', token);
+		if (token) {
+			localStorage.setItem('token', token);
+			cookie.remove('token');
+		}
 		async function fillUserData() {
 			const user = await getData('http://localhost:8080/api/user');
 			if (user.statusCode! === 401) Router.push('/login');
