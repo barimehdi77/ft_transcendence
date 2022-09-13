@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 export const sendPassCode = async (passcode: string) => {
 	const url = 'http://localhost:8080/api/auth/turn-on';
 	const config = {

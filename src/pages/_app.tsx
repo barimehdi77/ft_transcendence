@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 	const [userInfo, setUserInfo] = useState({});
 
 	useEffect(() => {
-		if (token) {
+		if (token && Router.pathname !== '/authenticate') {
 			localStorage.setItem('token', token);
 			cookie.remove('token');
 		}
