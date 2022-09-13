@@ -1,43 +1,68 @@
+# version: '3.8'
+# services:
+#     api:
+#         build: api/
+#         depends_on:
+#             - database
+#             - front-end
+#         environment:
+#             NODE_ENV: development
+#             PORT: 8080
+#         ports:
+#             - "8080:8080" # the port number is for dev only prud port is == 8080
+#         restart: on-failure
+#         # networks:
+#         #     - network
+
+#     front-end:
+#         build: src/
+#         depends_on:
+#             - database
+#         ports:
+#             - "80:80" # the port number is for dev only prud port is == 8080
+#         restart: on-failure
+#         # networks:
+#         #     - network
+
+
+#     database:
+#         image: postgres
+#         ports:
+#             - "5432:5432"
+#         environment:
+#             POSTGRES_USER: user
+#             POSTGRES_PASSWORD: password
+#             POSTGRES_DB: db
+#         # networks:
+#         #     - network
+
+
+# # networks:
+# #   network:
+# #     driver: bridge
+
+
 version: '3.8'
 services:
-    # api:
-    #     build: api/
-    #     depends_on:
-    #         - database
-    #         - front-end
-    #     environment:
-    #         DATABASE_URL: postgresql://user:password@localhost:5432/db
-    #         NODE_ENV: development
-    #         PORT: 8080
-    #     ports:
-    #         - "8080:8080" # the port number is for dev only prud port is == 8080
-    #     restart: on-failure
-    #     networks:
-    #         - network
-
-    front-end:
-        build: src/
+    api:
+        build: api/
         depends_on:
-            - database
-        ports:
-            - "80:80" # the port number is for dev only prud port is == 8080
-        restart: on-failure
-        networks:
-            - network
-
-
-    database:
-        image: postgres
-        ports:
-            - "5432:5432"
+            - postgres
         environment:
+            POSTGRES_HOST: postgres
+            DATABASE_URL: postgres://user:password@localhost:8077/db
+            NODE_ENV: development
+            PORT: 8080
+        ports:
+            - "8080:8080" # the port number is for dev only prud port is == 8080
+        restart: always
+
+    postgres:
+        image: postgres:10.4
+        ports:
+            - "8077:5432"
+        environment:
+            POSTGRES_HOST: postgres
             POSTGRES_USER: user
             POSTGRES_PASSWORD: password
             POSTGRES_DB: db
-        networks:
-            - network
-
-
-networks:
-  network:
-    driver: bridge

@@ -19,7 +19,7 @@ RUN npx prisma generate
 ADD ./ ./
 
 
-RUN npm run build
+# RUN npm run build
 
 EXPOSE 80
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "npm", "run", "start:dev" ]
