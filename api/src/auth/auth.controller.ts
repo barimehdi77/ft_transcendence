@@ -80,6 +80,7 @@ export class AuthController {
     @Headers('Authorization') auth: string,
   ) {
     try {
+      console.log("test");
       const user = this.userService.decode(auth) as UserDecoder;
       const otp = await this.authService.generateTwoFactorAuthenticationSecret(user);
       const QRcode = await this.authService.pipeQrCodeStream(res, otp.otpauthUrl);

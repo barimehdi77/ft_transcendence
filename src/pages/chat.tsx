@@ -5,12 +5,12 @@ import Button from "../components/chat/Button";
 const chat = () => {
   return (
     <div className="flex space-x-4 items-center justify-center align-middle h-screen">
-      <Link href="/rooms/room-id">
+      <Link href="/rooms">
         <a>
           <Button text="Rooms" />
         </a>
       </Link>
-      <Link href="/dms/dm-id">
+      <Link href="/dms">
         <a>
           <Button text="Direct messages" />
         </a>
