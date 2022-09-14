@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
+import React , { useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
-import ChatArea from "../../components/ChatArea";
+import ChatArea from "../../components/chat/ChatArea";
 import {
   createDmCOnversation,
   getConversationMessagesDm,
@@ -12,11 +12,11 @@ import {
   IMembers,
   IMessage,
 } from "../../typings";
-import SocketContext from "../../components/socket_context/context";
+import SocketContext from "../../components/chat/socket_context/context";
 import { socket } from "../../socket";
-import ConversationsListDms from "../../components/ConversationsListDms";
-import ChatAreaDm from "../../components/ChatAreaDm";
-import NewDm from "../../components/NewDm";
+import ConversationsListDms from "../../components/chat/ConversationsListDms";
+import ChatAreaDm from "../../components/chat/ChatAreaDm";
+import NewDm from "../../components/chat/NewDm";
 import { getAllUsers } from "../../services/users";
 import { joinConversation } from "../../socket/emit";
 

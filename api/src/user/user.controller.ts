@@ -1,9 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res, Headers, UseFilters, HttpCode, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  // Patch,
+  // Param,
+  // Delete,
+  UseGuards,
+  Req,
+  Res,
+  Headers,
+  // UseFilters,
+  // HttpCode,
+  // HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { Prisma } from '@prisma/client';
+// import { Prisma } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import { jwtInfo } from './dto/jwt.dto';
+// import { jwtInfo } from './dto/jwt.dto';
 import { UpdateUserInfo } from './dto/User.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -12,6 +29,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('find')
+  find() {
+    return 'ana findit chi haja'; // abdel-ke
+  }
   // @Post()
   // async create(@Body() data: Prisma.UserUncheckedCreateInput, @Res() res: Response) {
   //   try {
@@ -22,51 +43,58 @@ export class UserController {
   //         message: "Can not Create User",
   //       });
   //     }
-      // return res.status(200).json({
-      //   status: 'success',
-      //   message: "User Register Successfully",
-      //   data: user,
-      // });
+  // return res.status(200).json({
+  //   status: 'success',
+  //   message: "User Register Successfully",
+  //   data: user,
+  // });
   //   } catch (error) {
 
   //   }
   // }
 
   @Get()
-  async findUser(@Req() req: Request, @Res() res: Response, @Headers('Authorization') auth: string) {
+  async findUser(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Headers('Authorization') auth: string,
+  ) {
     const user = await this.userService.FindUser(auth);
     return res.send(user);
-
   }
 
   @Post('/setup')
   @UseInterceptors(FileInterceptor('avatar'))
-  async accountSetup(@Req() req: Request,@Res() res: Response, @Headers('Authorization') auth: string, @UploadedFile() file: Express.Multer.File, @Body() data: UpdateUserInfo) {
-    console.log("File: ", file);
-    console.log("Data: ", data);
+  async accountSetup(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Headers('Authorization') auth: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() data: UpdateUserInfo,
+  ) {
+    console.log('File: ', file);
+    console.log('Data: ', data);
     try {
       data.avatar = file;
       const user = await this.userService.accountSetup(data, auth);
 
-      if(user === null) {
+      if (user === null) {
         return res.status(409).json({
           status: 'failure',
-          message: "Username already taken",
+          message: 'Username already taken',
         });
-      }
-      else {
+      } else {
         return res.status(200).json({
           status: 'success',
-          message: "User profile updated",
+          message: 'User profile updated',
         });
       }
-
     } catch (error) {
       return res.status(500).json({
-				status: 'error',
-				message: 'Error updating user data',
-				error: error.message ? error.message : error
-			});
+        status: 'error',
+        message: 'Error updating user data',
+        error: error.message ? error.message : error,
+      });
     }
   }
 

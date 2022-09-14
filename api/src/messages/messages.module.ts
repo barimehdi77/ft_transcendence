@@ -6,6 +6,12 @@ import { JwtService } from '@nestjs/jwt';
 import { ConversationService } from 'src/conversation/conversation.service';
 
 @Module({
-  providers: [MessagesGateway, MessagesService, PrismaService, JwtService, ConversationService],
+  providers: [
+    MessagesGateway,
+    MessagesService,
+    PrismaService,
+    JwtService,
+    ConversationService,
+  ],
 })
 export class MessagesModule {}

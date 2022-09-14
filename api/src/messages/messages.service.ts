@@ -19,18 +19,17 @@ export class MessagesService {
         throw new Error('error: Message is empty');
       }
       let conversations = [];
-      if (dto.type === 'room')
-       {
+      if (dto.type === 'room') {
         conversations = await this.conversationService.getConversationByIdRoom(
           dto.conversationId,
         );
-       } else {
+      } else {
         conversations = await this.conversationService.getConversationById(
           dto.conversationId,
           intra_id,
-          dto.type
+          dto.type,
         );
-       }
+      }
 
       if (!conversations.length)
         throw new Error('error: Conversation not found!');

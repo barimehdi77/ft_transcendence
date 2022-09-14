@@ -1,14 +1,14 @@
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getMember } from "../helpers";
-import { getConversationMessagesDm } from "../services/conversations";
-import { joinConversation } from "../socket/emit";
+import { getMember } from "../../helpers";
+import { getConversationMessagesDm } from "../../services/conversations";
+import { joinConversation } from "../../socket/emit";
 import {
   ConversationsListDmsProps,
   IConversation,
   IConversationContext,
-} from "../typings";
+} from "../../typings";
 import SocketContext from "./socket_context/context";
 
 const ConversationsListDms = ({
