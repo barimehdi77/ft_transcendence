@@ -7,7 +7,6 @@ import { socket } from '../socket';
 
 //import SocketContext from "../../components/socket_context/context";
 
-
 const Game = () => {
   const canvasRef = useRef(null);
   let canvas: HTMLCanvasElement;
@@ -26,6 +25,7 @@ const Game = () => {
   }
 
   if (typeof window !== "undefined") {
+    console.log(window.innerWidth, " ", window.innerHeight);
     window.onresize = () => {
       if (gameActive) {
         if (canvasRef.current) {
@@ -44,7 +44,8 @@ const Game = () => {
         }
       }
     }
-  }
+  } else console.log("Walooo");
+  
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -68,12 +69,11 @@ const Game = () => {
 
   const playGame = () => {
     socket.emit('playGame');
-    console.log("Socket: ", socket);
   }
 
 
   useEffect(() => {
-    playGame();
+    playGame();    
   }, [])
 
   const spectateGame = () => {
