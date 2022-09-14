@@ -1,16 +1,16 @@
 import moment from "moment";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { sendMessage } from "../socket/emit";
+import { sendMessage } from "../../socket/emit";
 import {
   ChatAreaDmProps,
   IConversationContext,
   IMessage,
   IMessageBody,
-} from "../typings";
+} from "../../typings";
 import SocketContext from "./socket_context/context";
-import { leaveConversation } from "../services/conversations";
-import { getMember } from "../helpers";
+import { leaveConversation } from "../../services/conversations";
+import { getMember } from "../../helpers";
 
 // This temporary, before link user to chat
 let userId: number | null;
