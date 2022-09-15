@@ -10,9 +10,10 @@ const Authenticate = () => {
 	const token = cookie.get('token') as string;
 	const [passcode, setPasscode] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
-	const { userInfo, setUserInfo } :any = useContext(UserContext);
+	const { userInfo, setUserInfo }: any = useContext(UserContext);
 
-	async function sendCode() {
+	async function sendCode(e: any) {
+		e.preventDefault();
 		try {
 			const res = await sendPassCodeFromCookie(passcode);
 			if (res.data.status === 'success') {
@@ -38,27 +39,29 @@ const Authenticate = () => {
 						enter your 6-digit 2FA key
 					</h2>
 				</div>
-				<div className='bg-white px-10 py-4 rounded-b-3xl flex flex-col'>
-					<input
-						placeholder='2FA key'
-						type='text'
-						className='bg-gray-100 px-4 py-2 my-2 rounded-full border border-slate-300'
-						onChange={(e) => {
-							setPasscode(e.target.value);
-						}}
-					/>
-					<button
-						onClick={sendCode}
-						className='bg-sky-800 px-6 py-2 w-min my-3 m-auto text-l text-white font-semibold capitalize rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-sky-700 hover:scale-105'
-					>
-						submit
-					</button>
-					{errorMessage ? (
-						<p className='bg-red-200 text-red-700 py-2 rounded-full pl-4 border border-red-700'>
-							{errorMessage}
-						</p>
-					) : null}
-				</div>
+				<form action='#'>
+					<div className='bg-white px-10 py-4 rounded-b-3xl flex flex-col'>
+						<input
+							placeholder='2FA key'
+							type='text'
+							className='bg-gray-100 px-4 py-2 my-2 rounded-full border border-slate-300'
+							onChange={(e) => {
+								setPasscode(e.target.value);
+							}}
+						/>
+						<button
+							onClick={sendCode}
+							className='bg-sky-800 px-6 py-2 w-min my-3 m-auto text-l text-white font-semibold capitalize rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-sky-700 hover:scale-105'
+						>
+							submit
+						</button>
+						{errorMessage ? (
+							<p className='bg-red-200 text-red-700 py-2 rounded-full pl-4 border border-red-700'>
+								{errorMessage}
+							</p>
+						) : null}
+					</div>
+				</form>
 			</div>
 		</main>
 	);
