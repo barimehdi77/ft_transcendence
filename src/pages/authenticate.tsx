@@ -1,15 +1,30 @@
+import { useState, useContext } from 'react';
 import Router from 'next/router';
-import { useState } from 'react';
-import { sendPassCode } from '../components/2FA/sendPassCode';
+import cookie from 'js-cookie';
+
+import { getData } from '../components/getData';
+import { UserContext } from '../contexts/userContext';
+import { sendPassCodeFromCookie } from '../components/2FA/sendPassCodeFromCookie';
 
 const Authenticate = () => {
+	const token = cookie.get('token') as string;
 	const [passcode, setPasscode] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const { userInfo, setUserInfo } :any = useContext(UserContext);
 
 	async function sendCode() {
 		try {
-			const res = await sendPassCode(passcode);
-			if (res.data.status === 'success') Router.push('/');
+			const res = await sendPassCodeFromCookie(passcode);
+			if (res.data.status === 'success') {
+				localStorage.setItem('token', token);
+				cookie.remove('token');
+				async function fillUserData() {
+					const user = await getData('http://localhost:8080/api/user');
+					setUserInfo(user);
+				}
+				fillUserData();
+				Router.push('/');
+			}
 		} catch (error: any) {
 			setErrorMessage(error.response.data.message);
 		}
