@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
   UseGuards,
-  Headers
+  Headers,
 } from '@nestjs/common';
 import { ConversationService } from './conversation.service';
 import {
@@ -26,17 +26,22 @@ import { UserService } from 'src/user/user.service';
 @UseGuards(AuthGuard('jwt'))
 @Controller('conversations')
 export class ConversationController {
-  constructor(private readonly conversationService: ConversationService,
-    private readonly userService: UserService) {}
+  constructor(
+    private readonly conversationService: ConversationService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post('/room')
   async createConversationRoom(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: CreateConversatioRoomnDto,
   ) {
     try {
       const conversation =
-        await this.conversationService.createConversationRoom(dto, this.userService.decode(auth).intra_id);
+        await this.conversationService.createConversationRoom(
+          dto,
+          this.userService.decode(auth).intra_id,
+        );
       return {
         status: 'success',
         conversation,
@@ -55,7 +60,7 @@ export class ConversationController {
 
   @Post('/dm')
   async createConversationDm(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: CreateConversationDmDto,
   ) {
     try {
@@ -82,11 +87,14 @@ export class ConversationController {
 
   @Post('/checkPassword')
   async checkPassword(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: CheckPasswordDto,
   ) {
     try {
-      const res = await this.conversationService.checkPassword(dto, this.userService.decode(auth).intra_id);
+      const res = await this.conversationService.checkPassword(
+        dto,
+        this.userService.decode(auth).intra_id,
+      );
       return {
         status: 'success',
         pass: res,
@@ -105,7 +113,7 @@ export class ConversationController {
 
   @Post('/room/members/add')
   async addNewMember(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: addNewMemberDto,
   ) {
     try {
@@ -131,7 +139,7 @@ export class ConversationController {
 
   @Post('/room/members/remove')
   async removeMember(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: addNewMemberDto,
   ) {
     try {
@@ -157,7 +165,7 @@ export class ConversationController {
 
   @Post('/room/admins/add')
   async addNewAdmin(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: addNewMemberDto,
   ) {
     try {
@@ -183,7 +191,7 @@ export class ConversationController {
 
   @Post('/room/admins/remove')
   async removeAdmin(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: addNewMemberDto,
   ) {
     try {
@@ -209,7 +217,7 @@ export class ConversationController {
 
   @Post('/room/members/join')
   async joinConversation(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: JoinConversationDto,
   ) {
     try {
@@ -235,7 +243,7 @@ export class ConversationController {
 
   @Post('/room/members/leave')
   async leaveConversation(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: JoinConversationDto,
   ) {
     try {
@@ -261,7 +269,7 @@ export class ConversationController {
 
   @Patch('/room/edit/:id')
   async editConversation(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
     @Body() dto: EditRoomDto,
   ) {
@@ -334,7 +342,7 @@ export class ConversationController {
 
   @Get('/room/:id')
   async getRoomConversationById(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
   ) {
     try {
@@ -410,7 +418,7 @@ export class ConversationController {
   }
   @Get('/messages/:id')
   async getConversationMessages(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
   ) {
     try {
@@ -437,7 +445,7 @@ export class ConversationController {
 
   @Get('/dm/messages/:id')
   async getConversationMessagesDms(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Param('id') conversationId: string,
   ) {
     try {
@@ -464,7 +472,7 @@ export class ConversationController {
 
   @Post('/room/members/ban')
   async banMemberFromConversation(
-     @Headers('Authorization') auth: string,
+    @Headers('Authorization') auth: string,
     @Body() dto: BanMemberDto,
   ) {
     try {
@@ -487,5 +495,4 @@ export class ConversationController {
       };
     }
   }
-
 }

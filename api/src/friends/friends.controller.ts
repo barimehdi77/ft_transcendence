@@ -164,4 +164,55 @@ export class FriendsController {
       });
     }
   }
+
+
+  @Post('block')
+  async blockUser(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() createFriendRequestDto: CreateFriendRequestDto,
+    @Headers('Authorization') auth: string,
+  ) {
+    try {
+      const blockedUser = await this.friendsService.blockUser(auth, createFriendRequestDto);
+      if (blockedUser) {
+        return res.status(200).json({
+          status: 'success',
+          message: 'User blocked Successfully',
+          data: blockedUser,
+        });
+      }
+    } catch (error: any) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'Error Sending Blocking User',
+        error: error.message ? error.message : error,
+      });
+    }
+  }
+
+  @Post('unblock')
+  async unblockUser(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() createFriendRequestDto: CreateFriendRequestDto,
+    @Headers('Authorization') auth: string,
+  ) {
+    try {
+      const blockedUser = await this.friendsService.unblockUser(auth, createFriendRequestDto);
+      if (blockedUser) {
+        return res.status(200).json({
+          status: 'success',
+          message: 'User unblocked Successfully',
+        });
+      }
+    } catch (error: any) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'Error Sending Blocking User',
+        error: error.message ? error.message : error,
+      });
+    }
+  }
+
 }

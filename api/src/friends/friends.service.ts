@@ -99,7 +99,7 @@ export class FriendsService {
           console.log('req', request);
           const req = await this.prisma.user.findUnique({
             where: {
-              intra_id: request.from,
+              intra_id: request.to,
             },
             select: {
               user_name: true,
@@ -118,8 +118,8 @@ export class FriendsService {
     return null;
   }
 
-  async getRequest(id: number): Promise<number> {
-    const request = await this.prisma.friendsList.findUnique({
+  async getFriendRequest(id: number): Promise<number> {
+    const Friendrequest = await this.prisma.friendsList.findUnique({
       where: {
         id: id,
       },
@@ -127,7 +127,7 @@ export class FriendsService {
         to: true,
       },
     });
-    return request.to;
+    return Friendrequest.to;
   }
 
   async update(
@@ -135,7 +135,7 @@ export class FriendsService {
     auth: string,
   ) {
     const intra_id = this.userService.decode(auth).intra_id;
-    const to = await this.getRequest(id);
+    const to = await this.getFriendRequest(id);
     if (to === intra_id) {
       const update = this.prisma.friendsList.update({
         where: {
@@ -156,7 +156,7 @@ export class FriendsService {
 
   async remove(id: number, auth: string) {
     const intra_id = this.userService.decode(auth).intra_id;
-    const to = await this.getRequest(id);
+    const to = await this.getFriendRequest(id);
     if (to === intra_id) {
       const removed = await this.prisma.friendsList.delete({
         where: {
@@ -166,5 +166,51 @@ export class FriendsService {
       return removed;
     }
     throw new UnauthorizedException();
+  }
+
+  async blockUser(auth: string, createFriendRequestDto: CreateFriendRequestDto) {
+    const fromIntra_id = this.userService.decode(auth).intra_id;
+    const findFriendRequest = await this.prisma.friendsList.findUnique({
+      where: {
+        from_to: {
+          from: fromIntra_id,
+          to: createFriendRequestDto.to
+        }
+      }
+    });
+    if (findFriendRequest === null) {
+      const blockedUser = await this.prisma.friendsList.create({
+        data: {
+          from: fromIntra_id,
+          to: createFriendRequestDto.to,
+          status: FriendStatus.BLOCKED
+        }
+      });
+      return (blockedUser);
+    }
+    else {
+      const blockedUser = await this.prisma.friendsList.update({
+        where: {
+          id: findFriendRequest.id,
+        },
+        data: {
+          status: FriendStatus.BLOCKED
+        }
+      });
+      return (blockedUser);
+    }
+  }
+
+  async unblockUser(auth: string, createFriendRequestDto: CreateFriendRequestDto) {
+    const fromIntra_id = this.userService.decode(auth).intra_id;
+    const findblockRequest = await this.prisma.friendsList.delete({
+      where: {
+        from_to: {
+          from: fromIntra_id,
+          to: createFriendRequestDto.to
+        }
+      },
+    });
+    return (findblockRequest);
   }
 }

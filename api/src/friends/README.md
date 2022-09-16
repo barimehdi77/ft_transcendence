@@ -151,40 +151,6 @@ Authorization Bearer Token
 
 `Token Bearer <token>`
 
-## Body Example:
-
-```
-NO BODY NEEDED :)
-```
-
-## Response Example on success:
-
-```
-{
-    "status": "success",
-    "message": "Friend Request accepted Successfully",
-    "data": {
-        "id": 2,
-        "status": "ACCEPTED"
-    }
-}
-```
-
-## Response Example on Failure:
-
-```
-{
-    "statusCode": 401,
-    "message": "Unauthorized"
-}
-```
-
-## JWT Token
-
-Authorization Bearer Token
-
-`Token Bearer <token>`
-
 # DELETE specific Friend Request (DECLINED)
 
 this endpoint deleted the Friend Request when a user is declined it.
@@ -212,3 +178,70 @@ this endpoint deleted the Friend Request when a user is declined it.
 Authorization Bearer Token
 
 `Token Bearer <token>`
+
+# POST Block User
+
+a user can block other user.
+
+## Body Example:
+
+```
+{
+    "to": 62484 (intra_id of the user you want to block)
+}
+```
+
+## Response Example on success:
+
+```
+{
+    "status": "success",
+    "message": "User blocked Successfully",
+    "data": {
+        "id": 2,
+        "from": 39523,
+        "to": 62484,
+        "status": "BLOCKED"
+    }
+}
+```
+
+## Response Example on Failure:
+
+```
+{
+    "statusCode": 401,
+    "message": "Unauthorized"
+}
+```
+
+
+# POST unBlock User
+
+a user can unblock other user.
+
+## Body Example:
+
+```
+{
+    "to": 62484 (intra_id of the user you want to unblock)
+}
+```
+
+## Response Example on success:
+
+```
+{
+    "status": "success",
+    "message": "User unblocked Successfully",
+}
+```
+
+## Response Example on Failure:
+
+```
+{
+    "statusCode": 401,
+    "message": "Unauthorized"
+}
+```
