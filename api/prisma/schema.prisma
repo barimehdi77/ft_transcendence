@@ -114,9 +114,7 @@ model BannedUser {
 enum FriendStatus {
   PENDING
   ACCEPTED
-  REJECTED
-  REMOVED
-  BANNED
+  BLOCKED
 }
 
 enum ProfileStatus {
