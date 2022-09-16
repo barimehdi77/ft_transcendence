@@ -15,19 +15,21 @@ JSON
     "status": "success",
     "message": "User found",
     "data": {
-        "user_name": "barimehdi77",
+        "user_name": "mbari",
         "first_name": "Mehdi",
         "last_name": "Bari",
         "login": "mbari",
         "image_url": "https://cdn.intra.42.fr/users/mbari.jpg",
         "email": "mbari@student.1337.ma",
+        "intra_id": 62484,
         "profile": {
-            "status": "online",
-            "played_games": 7,
-            "user_points": 77,
-            "wins": 7,
+            "status": "ONLINE",
+            "played_games": 0,
+            "user_points": 0,
+            "wins": 0,
             "losses": 0
-        }
+        },
+        "isFriends": "BLOCKED"
     }
 }
 ```
@@ -71,19 +73,21 @@ This endpoint need JWT of that user.
     "status": "success",
     "message": "User found",
     "data": {
-        "user_name": "barimehdi77",
-        "first_name": "Mehdi",
-        "last_name": "Bari",
-        "login": "mbari",
-        "image_url": "https://cdn.intra.42.fr/users/mbari.jpg",
-        "email": "mbari@student.1337.ma",
+        "user_name": "aerragha",
+        "first_name": "Ayoub",
+        "last_name": "Erraghay",
+        "login": "aerragha",
+        "image_url": "https://cdn.intra.42.fr/users/aerragha.jpg",
+        "email": "zeehindi@gmail.com",
+        "intra_id": 39523,
         "profile": {
-            "status": "online",
-            "played_games": 7,
-            "user_points": 77,
-            "wins": 7,
+            "status": "ONLINE",
+            "played_games": 0,
+            "user_points": 0,
+            "wins": 0,
             "losses": 0
-        }
+        },
+        "isFriends": null
     }
 }
 ```

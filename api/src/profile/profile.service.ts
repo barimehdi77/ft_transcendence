@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { FriendStatus } from '@prisma/client';
 import { PrismaService } from 'src/app/prisma.service';
 import { UserProfile } from 'src/auth/dto/User.dto';
 import { UserService } from 'src/user/user.service';
@@ -24,6 +25,7 @@ export class ProfileService {
         login: true,
         image_url: true,
         email: true,
+        intra_id: true,
         profile: {
           select: {
             status: true,
@@ -35,11 +37,15 @@ export class ProfileService {
         }
       }
     });
-    return (user);
+    return ({
+      ...user,
+      isFriends: null
+    });
   };
 
-  async findOne(user_name: string): Promise<UserProfile> {
-    const user = this.prisma.user.findUnique({
+  async findOne(user_name: string, auth: string): Promise<UserProfile> {
+    const intra_id = this.userService.decode(auth).intra_id;
+    const user = await this.prisma.user.findUnique({
       where: {
         user_name: user_name.toLocaleLowerCase(),
       },
@@ -50,6 +56,7 @@ export class ProfileService {
         login: true,
         image_url: true,
         email: true,
+        intra_id: true,
         profile: {
           select: {
             status: true,
@@ -60,8 +67,38 @@ export class ProfileService {
           }
         }
       }
+    });
+    const isFriends = await this.prisma.friendsList.findFirst({
+      where: {
+        OR: [
+          {
+            from: user.intra_id,
+            to: intra_id
+          },
+          {
+            from: intra_id,
+            to: user.intra_id,
+          }
+        ]
+      }
     })
-    return (user);
+    if (isFriends && isFriends.status === FriendStatus.BLOCKED) {
+      if (isFriends.from === intra_id) {
+        return ({
+          ...user,
+          isFriends: isFriends.status
+        })
+      }
+      else {
+        return (null);
+      }
+    }
+    else {
+      return ({
+        ...user,
+        isFriends: (isFriends === null) ? null : isFriends.status
+      });
+    }
   }
 
   // async ProfileLayout(user_name: string) : Promise<ReadProfileLayout> {
