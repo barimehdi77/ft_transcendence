@@ -39,10 +39,10 @@ export class ProfileController {
   }
 
   @Get(':user_name')
-  async findOne(@Param('user_name') user_name: string, @Req() req: Request, @Res() res: Response){
+  async findOne(@Param('user_name') user_name: string, @Req() req: Request, @Res() res: Response, @Headers('Authorization') auth: string){
 
     try {
-      const user = await this.profileService.findOne(user_name);
+      const user = await this.profileService.findOne(user_name, auth);
       if (user === null) {
         return res.status(409).json({
           status: 'failure',
