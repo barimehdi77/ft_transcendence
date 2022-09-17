@@ -15,6 +15,7 @@ import {
   // HttpStatus,
   UseInterceptors,
   UploadedFile,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 // import { Prisma } from '@prisma/client';
@@ -23,16 +24,17 @@ import { Request, Response } from 'express';
 // import { jwtInfo } from './dto/jwt.dto';
 import { UpdateUserInfo } from './dto/User.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { GetUser } from 'src/auth/decorator';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('find')
-  find() {
-    return 'ana findit chi haja'; // abdel-ke
-  }
+  // @Get('find')
+  // find() {
+  //   return 'ana findit chi haja'; // abdel-ke
+  // }
   // @Post()
   // async create(@Body() data: Prisma.UserUncheckedCreateInput, @Res() res: Response) {
   //   try {
@@ -107,4 +109,19 @@ export class UserController {
   // remove(@Param('id') id: string) {
   //   return this.userService.remove({id: +id});
   // }
+  @Get('/find')
+  @UseGuards(AuthGuard('jwt'))
+  findUsersNotIn(@GetUser('intra_id') intra_id: number) {
+    return this.userService.findUsers(intra_id);
+  }
+
+  @Get('/findConversation/:id')
+  @UseGuards(AuthGuard('jwt'))
+  findUsers(
+    @Param('id') conversationId: string,
+    @GetUser('intra_id') intra_id: number,
+  ) {
+    return this.userService.findUsersNotIn(conversationId, intra_id);
+  }
+  
 }

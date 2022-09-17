@@ -20,6 +20,7 @@ export interface ConversationsListProps {
 }
 
 export interface ChatAreaProps {
+  user : IMembers;
   conversation: IConversation | null;
   loading: boolean;
   handleSelectedRoom: (value: IConversation) => void;

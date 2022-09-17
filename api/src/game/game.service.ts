@@ -5,12 +5,10 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class GameService {
   constructor(private prisma: PrismaClient) {}
-  // constructor(private prisma: PrismaService) {}
   FRAMERATE = 30;
   state: any = {};
   clientRooms: any = {};
   clientSpectating: any = {};
-  // gameActive: boolean = false;
   gameActive: any = {};
   canvasWidth = 600;
   canvasHeight: number = this.canvasWidth / 2;
@@ -108,7 +106,6 @@ export class GameService {
     // sample AI to control the com paddle
     // playerTwo.y += (ball.y - (playerTwo.y + playerTwo.height / 2)) * 1;
 
-    // if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0)
     if (ball.y - ball.radius < 0 || ball.y + ball.radius > this.canvasHeight)
       // setball({...ball, velocityY: -ball.velocityY});
       ball.velocityY = -ball.velocityY;
@@ -210,8 +207,8 @@ export class GameService {
           this.emitGameOver(server, roomName, winner);
           await this.prisma.match.create({
             data: {
-              player_one: stateRoom.playerOne.id,
-              player_two: stateRoom.playerTwo.id,
+              player_one: stateRoom.playerOne.name,
+              player_two: stateRoom.playerTwo.name,
               player_one_score: stateRoom.playerOne.score,
               player_two_score: stateRoom.playerTwo.score,
             },
@@ -230,8 +227,8 @@ export class GameService {
         if (this.playerDisconnected[roomName] === 1)
           await this.prisma.match.create({
             data: {
-              player_one: stateRoom.playerOne.id,
-              player_two: stateRoom.playerTwo.id,
+              player_one: stateRoom.playerOne.name,
+              player_two: stateRoom.playerTwo.name,
               player_one_score: 0,
               player_two_score: 10,
             },
@@ -239,8 +236,8 @@ export class GameService {
         else if (this.playerDisconnected[roomName] === 2)
           await this.prisma.match.create({
             data: {
-              player_one: stateRoom.playerOne.id,
-              player_two: stateRoom.playerTwo.id,
+              player_one: stateRoom.playerOne.name,
+              player_two: stateRoom.playerTwo.name,
               player_one_score: 10,
               player_two_score: 0,
             },
@@ -249,7 +246,7 @@ export class GameService {
     }, 1000 / this.FRAMERATE);
   };
 
-  handleNewGame(client: Socket, name: string) {
+  handleNewGame(client: Socket, userInfo: any) {
     const roomName = Math.floor(Math.random() * 1000000);
     this.clientRooms[client.id] = roomName;
     this.roomName = roomName;
@@ -257,7 +254,7 @@ export class GameService {
 
     this.state[roomName] = this.createGameState();
     this.state[roomName].playerOne.id = client.id;
-    this.state[roomName].playerOne.name = name;
+    this.state[roomName].playerOne.name = userInfo.user_name;
     client.join(roomName.toString());
     client.emit('init', 1);
   }
@@ -267,7 +264,7 @@ export class GameService {
     server: Server,
     client: Socket,
     gameCode: string,
-    name: string,
+    userInfo: any,
   ) {
     let room: string;
     if (!gameCode) return;
@@ -300,7 +297,7 @@ export class GameService {
 
     client.join(gameCode);
     this.state[gameCode].playerTwo.id = client.id;
-    this.state[gameCode].playerTwo.name = name;
+    this.state[gameCode].playerTwo.name = userInfo.user_name;
     client.emit('init', 2);
     this.starting(server, this.state, gameCode);
   }
@@ -308,9 +305,9 @@ export class GameService {
   roomName: number;
   cp = 1;
   wait = false;
-  handlePlayGame(server: Server, client: Socket) {
+  handlePlayGame(server: Server, client: Socket, userInfo: any) {
     if (this.cp % 2 != 0) {
-      this.handleNewGame(client, '');
+      this.handleNewGame(client, userInfo);
       // console.log("First => cp: ", this.cp, " toomName: ", this.roomName);
       this.cp++;
       this.wait = true;
@@ -320,7 +317,7 @@ export class GameService {
       }, 500);
     } else {
       // console.log("second => cp: ", this.cp, " roomName: ", this.roomName);
-      this.handleJoinGame(server, client, this.roomName.toString(), '');
+      this.handleJoinGame(server, client, this.roomName.toString(), userInfo);
       // console.log("gameActive", this.gameActive);
       this.cp++;
       this.wait = false;

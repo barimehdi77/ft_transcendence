@@ -21,12 +21,14 @@ import { FriendsModule } from 'src/friends/friends.module';
 import { ConversationModule } from 'src/conversation/conversation.module';
 import { MessagesModule } from 'src/messages/messages.module';
 // import { ValidateComplateProfileMiddleware } from 'src/comman/middleware/ValidateCompleteProfile.middleware';
+import { GameModule } from 'src/game/game.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    GameModule,
     UserModule,
     AuthModule,
     ProfileModule,

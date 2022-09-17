@@ -86,7 +86,8 @@ export class GameGateway {
   }
 
   @SubscribeMessage('playGame')
-  handlePlayGame(@ConnectedSocket() client: Socket) {
-    this.gameService.handlePlayGame(this.server, client);
+  handlePlayGame(@MessageBody() userInfo: any, @ConnectedSocket() client: Socket) {
+    // console.log("userInfo: ", userInfo);
+    this.gameService.handlePlayGame(this.server, client, userInfo);
   }
 }

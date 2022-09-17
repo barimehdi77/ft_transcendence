@@ -20,22 +20,26 @@ import NewDm from "../../components/chat/NewDm";
 import { getAllUsers } from "../../services/users";
 import { joinConversation } from "../../socket/emit";
 
+import { UserContext } from '../../contexts/userContext';
+
 // This temporary, before link user to chat
 let userId: number | null = 39523;
 if (typeof window !== "undefined") {
   userId = parseInt(localStorage.getItem("userId_temp") as string, 10);
 }
 
-const user: IMembers = {
-  intra_id: userId,
-  first_name: "Erraghay",
-  last_name: "Ayoub",
-  user_name: "aerragha",
-  image_url:
-    "https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A",
-};
+// const user: IMembers = {
+//   intra_id: userId,
+//   first_name: "Erraghay",
+//   last_name: "Ayoub",
+//   user_name: "aerragha",
+//   image_url:
+//     "https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A",
+// };
 
 const dm = () => {
+  const { userInfo } = useContext(UserContext);
+
   const {
     conversations,
     setConversations,
@@ -50,6 +54,7 @@ const dm = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
+    setSelectedConversation(null);
     getConversationsList();
     findUsers();
   }, []);
@@ -226,7 +231,7 @@ const dm = () => {
             >
               <ConversationsListDms
                 setStartDmOpen={setStartDmOpen}
-                user={user}
+                user={userInfo}
                 loading={loading}
                 setLoading={setLoading}
                 list={conversations}
@@ -239,7 +244,7 @@ const dm = () => {
               <div className="flex-1 flex h-full">
                 <ConversationsListDms
                   setStartDmOpen={setStartDmOpen}
-                  user={user}
+                  user={userInfo}
                   loading={loading}
                   setLoading={setLoading}
                   list={conversations}
@@ -249,7 +254,7 @@ const dm = () => {
                   conversation={selectedConversation}
                   getConversationsList={getConversationsList}
                   loading={loading}
-                  user={user}
+                  user={userInfo}
                 />
               </div>
             </div>

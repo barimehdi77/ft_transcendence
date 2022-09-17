@@ -1,21 +1,17 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 // import { io } from 'socket.io-client'
 import { paintGame, drawRect, drawText } from './drawing'
 import { socket } from '../socket';
-
-// const socket = io('http://localhost:8080');
-
-//import SocketContext from "../../components/socket_context/context";
+import { UserContext } from '../contexts/userContext';
 
 const Game = () => {
+  const { userInfo } = useContext(UserContext);
   const canvasRef = useRef(null);
   let canvas: HTMLCanvasElement;
   let ctx: any;
 
   const [gameCodeInput, setGameCodeInput] = useState('');
-  // const [namePlayer, setNamePlayer] = useState('');
   const [gameCodeDisplay, setGameCodeDisplay] = useState('');
-  // const [initialScreen, setinitialScreen] = useState(false);
   const [gameActive, setGameActive] = useState(false);
   const [playerNamber, setPlayerNamber] = useState(0);
 
@@ -44,36 +40,32 @@ const Game = () => {
         }
       }
     }
-  } else console.log("Walooo");
-  
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      canvas = canvasRef.current;
-      ctx = canvas.getContext('2d');
-      if (window.innerWidth > 1300) {
-        canvas.width = 600;
-        canvas.height = canvas.width / 2;
-      }
-      else if (window.innerWidth < 1300 && window.innerWidth > 600) {
-        canvas.width = 500;
-        canvas.height = canvas.width / 2;
-      }
-      else if (window.innerWidth < 600) {
-        canvas.width = 300;
-        canvas.height = canvas.width / 2;
-      }
-      socket.emit('canvaSize', { width: canvas.width, height: canvas.height });
-    }
-  }, []);
-
-  const playGame = () => {
-    socket.emit('playGame');
   }
 
+  if (canvasRef.current) {
+    canvas = canvasRef.current;
+    ctx = canvas.getContext('2d');
+    if (window.innerWidth > 1300) {
+      canvas.width = 600;
+      canvas.height = canvas.width / 2;
+    }
+    else if (window.innerWidth < 1300 && window.innerWidth > 600) {
+      canvas.width = 500;
+      canvas.height = canvas.width / 2;
+    }
+    else if (window.innerWidth < 600) {
+      canvas.width = 300;
+      canvas.height = canvas.width / 2;
+    }
+  }
+
+  const playGame = () => {
+    socket.emit('playGame', userInfo);
+    setGameActive(true);
+  }
 
   useEffect(() => {
-    playGame();    
+    playGame();
   }, [])
 
   const spectateGame = () => {
@@ -134,11 +126,9 @@ const Game = () => {
     setGameActive(false);
     if (data === playerNamber) {
       alert('You Win!');
-      // console.log('You Win!');
     }
     if (data !== playerNamber) {
       alert('You Lose :(');
-      // console.log('You Lose :(');
     }
   }
   socket.off('gameOver').on('gameOver', handleGameOver);
@@ -146,7 +136,6 @@ const Game = () => {
   const handlePlayerDisconnected = (player: number) => {
     if (player !== playerNamber) {
       alert('Your opponent disconnected. You win!');
-      // console.log('Your opponent disconnected. You win!');
     }
   }
   socket.off('playerDisconnected').on('playerDisconnected', handlePlayerDisconnected);
@@ -166,7 +155,7 @@ const Game = () => {
     }
   }
   socket.off('waiting').on('waiting', handleWaiting);
-  
+
   let countDown = 3;
   const handleStarting = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -178,12 +167,11 @@ const Game = () => {
   return (
     <div className='min-h-screen flex justify-center items-center'>
       <div>
-          <div id='gameScreen'>
-            <h1>your game code is: <span id='gameCodeDisplay'>{gameCodeDisplay}</span> </h1>
-            <div style={{ display: "flex", justifyContent: "center" }} >
-              <canvas ref={canvasRef} style={{ border: "1px solid #c3c3c3", backgroundColor: "black" }}></canvas>
-            </div>
+        <div id='gameScreen'>
+          <div style={{ display: "flex", justifyContent: "center" }} >
+            <canvas ref={canvasRef} style={{ border: "1px solid #c3c3c3", backgroundColor: "black" }}></canvas>
           </div>
+        </div>
       </div>
     </div>
   );
