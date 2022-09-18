@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SocketContext from "./context";
-import { initSockets } from "../../socket";
-import { IConversation } from "../../typings";
+import { initSockets } from "../../../socket";
+import { IConversation } from "../../../typings";
 //       ^ initSockets is shown later on
 const SocketProvider = (props: any) => {
   const [conversations, setConversations] = useState([]);

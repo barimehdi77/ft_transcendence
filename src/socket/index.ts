@@ -7,7 +7,7 @@ if (typeof window !== "undefined") {
   token = localStorage.getItem("token");
 }
 
-export const socket = io("http://192.168.0.159:8080", {
+export const socket = io("http://localhost:8080", {
   extraHeaders: {
     Authorization: "Bearer " + token,
   },

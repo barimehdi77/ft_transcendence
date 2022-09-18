@@ -8,6 +8,11 @@ import cookie from 'js-cookie';
 import Layout from '../components/layout';
 import { getData } from '../components/getData';
 
+
+import SocketProvider from "../components/chat/socket_context/index";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 function MyApp({ Component, pageProps }: AppProps) {
 	const token = cookie.get('token') as string;
 	const [userInfo, setUserInfo] = useState({});
@@ -41,9 +46,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 	return (
 		<UserContext.Provider value={{ userInfo, setUserInfo }}>
-			<Layout>
-				<Component {...pageProps} />
-			</Layout>
+			<SocketProvider>
+				<Layout>
+					<ToastContainer />
+					<Component {...pageProps} />
+				</Layout>
+			</SocketProvider>
 		</UserContext.Provider>
 	);
 }

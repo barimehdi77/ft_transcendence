@@ -13,10 +13,10 @@ import { leaveConversation } from "../../services/conversations";
 import { getMember } from "../../helpers";
 
 // This temporary, before link user to chat
-let userId: number | null;
-if (typeof window !== "undefined") {
-  userId = parseInt(localStorage.getItem("userId_temp") as string, 10);
-}
+// let userId: number | null;
+// if (typeof window !== "undefined") {
+//   userId = parseInt(localStorage.getItem("userId_temp") as string, 10);
+// }
 ////////////////////////////////////////////////////
 
 const ChatAreaDm = ({
@@ -82,7 +82,7 @@ const ChatAreaDm = ({
 
       <div className="messages flex-1 overflow-auto">
         {messages.map((message: IMessage) => {
-          const isMe = message.sent_by.intra_id === userId;
+          const isMe = message.sent_by.intra_id === user.intra_id;
           return (
             <div
               key={message.message_id}
@@ -93,7 +93,9 @@ const ChatAreaDm = ({
                   <div className="w-12 h-12 relative">
                     <img
                       className="w-12 h-12 rounded-full mx-auto"
-                      src="https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A"
+                      // src="https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A"
+                      // src={user.image_url}
+                      src={getMember(user.intra_id, conversation.members)?.image_url}
                       alt="chat-user"
                     />
                     <span className="absolute w-4 h-4 bg-gray-400 rounded-full right-0 bottom-0 border-2 border-white"></span>

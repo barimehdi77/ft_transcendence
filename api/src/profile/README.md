@@ -113,3 +113,44 @@ This endpoint need JWT of that user.
 Authorization Bearer Token
 
 `Token        Bearer <token>`
+
+
+# GET user Match History
+
+URL: `localhost:8080/api/profile/:user_name/matches`
+
+this endpoint return the user match history
+
+## Response Example on success:
+```
+{
+    "status": "success",
+    "message": "User found",
+    "data": [
+        {
+            "player_one": {
+                "name": "aerragha",
+                "score": 0
+            },
+            "player_two": {
+                "name": "mbari",
+                "score": 2
+            },
+            "winner": "player_two"
+        }
+    ]
+}
+```
+## Response Example on error:
+```
+{
+    "status": "error",
+    "message": "Error updating user data",
+    "error": error.message ? error.message : error
+}
+```
+
+## JWT Token
+Authorization Bearer Token
+
+`Token        Bearer <token>`

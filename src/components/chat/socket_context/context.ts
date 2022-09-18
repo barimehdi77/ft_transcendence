@@ -1,5 +1,5 @@
 import React, { createContext } from "react"; 
-import { IConversationContext } from "../../typings";
+import { IConversationContext } from "../../../typings";
 
 const SocketContext = createContext<IConversationContext>({
   conversations: [],

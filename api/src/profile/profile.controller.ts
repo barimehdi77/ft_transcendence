@@ -63,6 +63,30 @@ export class ProfileController {
     }
   }
 
+  @Get(':user_name/matches')
+  async getMatches(@Param('user_name') user_name: string, @Req() req: Request, @Res() res: Response) {
+    try {
+      const matchsHistory = await this.profileService.getMatches(user_name);
+      if (matchsHistory === null) {
+        return res.status(409).json({
+          status: 'failure',
+          message: "Can not find the user Matches",
+        });
+      }
+      return res.status(200).json({
+        status: 'success',
+        message: "Matches Found",
+        data: matchsHistory
+      });
+    } catch (error: any) {
+      return res.status(500).json({
+				status: 'error',
+				message: 'Error Getting user matches',
+				error: error.message ? error.message : error
+			});
+    }
+  }
+
   // @Get('/layout/:user_name')
   // async ProfileLayout (@Param('user_name') user_name: string): Promise<ReadProfileLayout> {
   //   console.log("profile/layout/:username is called")

@@ -33,6 +33,8 @@ import AddUserPopUp from "../../components/chat/AddUserPopUp";
 import BanUserPopUp from "../../components/chat/BanUserPopUp";
 import { UserContext } from '../../contexts/userContext';
 
+import { UserContext } from '../../contexts/userContext';
+
 // This temporary, before link user to chat
 let userId: number | null = 39523;
 if (typeof window !== "undefined") {
@@ -46,16 +48,17 @@ const options = [
   { value: "locked", label: "Locked" },
 ];
 
-const user: IMembers = {
-  intra_id: userId,
-  first_name: "Erraghay",
-  last_name: "Ayoub",
-  user_name: 'aerragha',
-  image_url:
-    "https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A",
-};
+// const user: IMembers = {
+//   intra_id: userId,
+//   first_name: "Erraghay",
+//   last_name: "Ayoub",
+//   user_name: 'aerragha',
+//   image_url:
+//     "https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A",
+// };
 
 const rooms = () => {
+  const { userInfo } = useContext(UserContext);
   const {
     conversations,
     setConversations,
@@ -125,6 +128,7 @@ const rooms = () => {
 
 
   useEffect(() => {
+    setSelectedConversation(null);
     getConversationsList();
     findUsers();
     findPublicConversations();
@@ -616,7 +620,7 @@ const rooms = () => {
                 setCreateOpen={setCreateOpen}
                 setJoinOpen={setJoinOpen}
                 findUsersNotInConversation={findUsersNotInConversation}
-                user={user}
+                user={userInfo}
                 loading={loading}
                 setLoading={setLoading}
                 list={conversations}
@@ -631,13 +635,14 @@ const rooms = () => {
                   setCreateOpen={setCreateOpen}
                   setJoinOpen={setJoinOpen}
                   findUsersNotInConversation={findUsersNotInConversation}
-                  user={user}
+                  user={userInfo}
                   loading={loading}
                   setLoading={setLoading}
                   list={conversations}
                   type="normal"
                 />
                 <ChatArea
+                  user={userInfo}
                   conversation={selectedConversation}
                   handleSelectedRoom={handleSelectedRoom}
                   getConversationsList={getConversationsList}
@@ -943,7 +948,7 @@ const rooms = () => {
                       </small>
                     </div>
                   </div>
-                  {!(user.intra_id === member.intra_id) ? (
+                  {!(userInfo.intra_id === member.intra_id) ? (
                     <div className="flex-2 space-x-2">
                       {!selectedConversation.admins.find(
                         (admin) => admin.intra_id === member.intra_id
@@ -1079,7 +1084,7 @@ const rooms = () => {
                       </small>
                     </div>
                   </div>
-                  {!(user.intra_id === member.intra_id) && (
+                  {!(userInfo.intra_id === member.intra_id) && (
                     <div className="flex-2">
                       <button
                         disabled={removeAdminLoader !== 0 ? true : false}

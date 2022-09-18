@@ -122,6 +122,7 @@ export class UserService {
         intra_id: this.decode(auth).intra_id,
       },
       select: {
+        intra_id: true,
         first_name: true,
         last_name: true,
         user_name: true,
@@ -211,4 +212,52 @@ export class UserService {
   //     where,
   //   });
   // }
+
+  findUsers(intra_id: number) {
+    return this.prisma.user.findMany({
+      where: {
+        profile_done: true,
+        intra_id: {
+          not: {
+            equals: intra_id,
+          },
+        },
+      },
+      select: {
+        intra_id: true,
+        first_name: true,
+        last_name: true,
+        user_name: true,
+        image_url: true,
+      },
+    });
+  }
+
+  findUsersNotIn(conversationId: string, intra_id: number) {
+    return this.prisma.user.findMany({
+      where: {
+        profile_done: true,
+        intra_id: {
+          not: {
+            equals: intra_id,
+          },
+        },
+        NOT: {
+          MemberConversations: {
+            some: {
+              conversation_id: conversationId,
+            },
+          },
+        },
+      },
+      select: {
+        intra_id: true,
+        first_name: true,
+        last_name: true,
+        user_name: true,
+        image_url: true,
+      },
+    });
+  }
+
 }
