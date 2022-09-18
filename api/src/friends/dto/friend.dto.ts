@@ -1,6 +1,7 @@
 
 
 export class FriendRequest {
+	id: number;
 	from: number;
 	to: number;
 	status: string;
@@ -10,13 +11,16 @@ export class CreateFriendRequestDto {
 }
 
 export class GetFriendRequestDto {
-	// id: Number; TBD
+	id: number;
 	to: UserInfo;
 	status: string;
 }
 
-
 export class UserInfo {
 	user_name: string;
 	image_url: string;
+}
+
+export class UpdateFriendRequest {
+	status: string;
 }

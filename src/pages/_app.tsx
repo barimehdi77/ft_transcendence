@@ -24,19 +24,21 @@ function MyApp({ Component, pageProps }: AppProps) {
 		}
 		async function fillUserData() {
 			const user = await getData('http://localhost:8080/api/user');
-			if (user.statusCode! === 401) Router.push('/login');
-			else if (
-				!user.profile_done ||
-				(user.statusCode! === 477 && Router.pathname !== '/setup')
-			)
-				Router.push('/setup');
-			if (
-				(user.statusCode! !== 401 &&
-					Router.pathname === '/login' &&
-					user.profile_done) ||
-				(user.profile_done && Router.pathname === '/setup')
-			)
-				Router.push('/');
+			if (Router.pathname !== '/authenticate') {
+				if (user.statusCode! === 401) Router.push('/login');
+				else if (
+					!user.profile_done ||
+					(user.statusCode! === 477 && Router.pathname !== '/setup')
+				)
+					Router.push('/setup');
+				if (
+					(user.statusCode! !== 401 &&
+						Router.pathname === '/login' &&
+						user.profile_done) ||
+					(user.profile_done && Router.pathname === '/setup')
+				)
+					Router.push('/');
+			}
 			setUserInfo(user);
 		}
 		fillUserData();

@@ -31,6 +31,7 @@ import { getAllUsers, getUsersNotInConversation } from "../../services/users";
 import Avatar from "react-avatar";
 import AddUserPopUp from "../../components/chat/AddUserPopUp";
 import BanUserPopUp from "../../components/chat/BanUserPopUp";
+import { UserContext } from '../../contexts/userContext';
 
 import { UserContext } from '../../contexts/userContext';
 
@@ -118,6 +119,13 @@ const rooms = () => {
     members: [],
     password: "",
   });
+	const { userInfo, setUserInfo }: any = useContext(UserContext);
+  user.first_name = userInfo.first_name,
+  user.last_name = userInfo.last_name,
+  user.user_name = userInfo.user_name,
+  user.image_url = userInfo.image_url
+
+
 
   useEffect(() => {
     setSelectedConversation(null);
