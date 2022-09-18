@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/app/prisma.service';
 import { UserProfile } from 'src/auth/dto/User.dto';
 import { UserService } from 'src/user/user.service';
-import { ReadProfile, ReadProfileLayout } from './dto/read-profile.dto';
+import { matchDetails, ReadProfile, ReadProfileLayout, winner } from './dto/read-profile.dto';
 
 @Injectable()
 export class ProfileService {
@@ -62,6 +62,37 @@ export class ProfileService {
       }
     })
     return (user);
+  }
+
+
+  async getMatches(username: string): Promise<matchDetails[]> {
+    const matches = await this.prisma.match.findMany({
+      where: {
+        OR: [
+          {
+            player_one: username,
+          },
+          {
+            player_two: username
+          }
+        ],
+      }
+    });
+    console.log(`the user ${username} played `,matches)
+    const matchsHistory: matchDetails[] = matches.map(match => {
+      return ({
+        player_one: {
+          name: match.player_one,
+          score: match.player_one_score,
+        },
+        player_two: {
+          name: match.player_two,
+          score: match.player_two_score
+        },
+        winner: (match.player_one_score > match.player_two_score) ? winner.PLAYER_ONE : winner.PLAYER_TWO
+      });
+    });
+    return (matchsHistory);
   }
 
   // async ProfileLayout(user_name: string) : Promise<ReadProfileLayout> {
