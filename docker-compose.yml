@@ -7,7 +7,7 @@ services:
             - postgres
             - front-end
         environment:
-            DATABASE_URL: postgresql://user:password@192.168.77.4:5432/db
+            DATABASE_URL: postgresql://user:password@192.168.77.4:5432/db?schema=public
             NODE_ENV: development
             PORT: 8080
             POSTGRES_USER: user
