@@ -205,6 +205,7 @@ export class GameService {
           clearInterval(interval);
           this.gameActive[roomName] = false;
           this.emitGameOver(server, roomName, winner);
+          console.log(stateRoom);
           await this.prisma.match.create({
             data: {
               player_one: stateRoom.playerOne.name,

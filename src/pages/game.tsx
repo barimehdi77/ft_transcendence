@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useContext } from 'react';
 import { paintGame, drawRect, drawText } from './drawing'
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
+import { NextResponse } from 'next/server';
 
 const Game = () => {
   const { userInfo } = useContext(UserContext);

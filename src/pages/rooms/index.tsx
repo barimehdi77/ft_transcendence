@@ -33,8 +33,6 @@ import AddUserPopUp from "../../components/chat/AddUserPopUp";
 import BanUserPopUp from "../../components/chat/BanUserPopUp";
 import { UserContext } from '../../contexts/userContext';
 
-import { UserContext } from '../../contexts/userContext';
-
 // This temporary, before link user to chat
 let userId: number | null = 39523;
 if (typeof window !== "undefined") {
@@ -58,7 +56,7 @@ const options = [
 // };
 
 const rooms = () => {
-  const { userInfo } = useContext(UserContext);
+  // const { userInfo } = useContext(UserContext);
   const {
     conversations,
     setConversations,
@@ -120,10 +118,10 @@ const rooms = () => {
     password: "",
   });
 	const { userInfo, setUserInfo }: any = useContext(UserContext);
-  user.first_name = userInfo.first_name,
-  user.last_name = userInfo.last_name,
-  user.user_name = userInfo.user_name,
-  user.image_url = userInfo.image_url
+  // user.first_name = userInfo.first_name,
+  // user.last_name = userInfo.last_name,
+  // user.user_name = userInfo.user_name,
+  // user.image_url = userInfo.image_url
 
 
 
