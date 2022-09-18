@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import Router from 'next/router';
 import cookie from 'js-cookie';
 
@@ -7,18 +7,22 @@ import { UserContext } from '../contexts/userContext';
 import { sendPassCodeFromCookie } from '../components/2FA/sendPassCodeFromCookie';
 
 const Authenticate = () => {
-	const token = cookie.get('token') as string;
 	const [passcode, setPasscode] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
-	const { userInfo, setUserInfo }: any = useContext(UserContext);
+	const [token, setToken] = useState('');
+	const { setUserInfo }: any = useContext(UserContext);
 
+	useEffect(() => {
+		setToken(cookie.get('token') as string);
+		cookie.remove('token');
+	}, [])
+	
 	async function sendCode(e: any) {
 		e.preventDefault();
 		try {
-			const res = await sendPassCodeFromCookie(passcode);
+			const res = await sendPassCodeFromCookie(passcode, token);
 			if (res.data.status === 'success') {
 				localStorage.setItem('token', token);
-				cookie.remove('token');
 				async function fillUserData() {
 					const user = await getData('http://localhost:8080/api/user');
 					setUserInfo(user);

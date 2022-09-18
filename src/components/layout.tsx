@@ -10,7 +10,7 @@ const Layout = ({ children }: any) => {
 	return (
 		<div className='bg-hero-pattern bg-cover bg-center'>
 			{userInfo ? (
-				userInfo.profile_done && Router.pathname !== '/authenticate' ? (
+				userInfo.profile_done && Router.pathname !== '/authenticate' && Router.pathname !== '/game' ? (
 					<Navbar />
 				) : null
 			) : null}
