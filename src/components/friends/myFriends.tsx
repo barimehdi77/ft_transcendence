@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getData } from '../getData';
 
 const MyFriends = () => {
-	const [friendsList, setFriendsList] = useState();
+	const [friendsList, setFriendsList]: any = useState();
 
 	useEffect(() => {
 		async function fillData() {
@@ -16,7 +16,7 @@ const MyFriends = () => {
 	return (
 		<>
 			{friendsList
-				? friendsList.data.map((request, id) => {
+				? friendsList.data.map((request: any, id: number) => {
 						const user = request.to;
 						return (
 							<div key={id} className='mt-4 flex items-center'>
