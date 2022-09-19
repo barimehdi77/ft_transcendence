@@ -1,11 +1,11 @@
 import { addFriend } from './addFriend';
 
-const FriendButtons = () => {
+const FriendButtons = ({ intra_id }: any) => {
 	const handleClick = async () => {
 		try {
-			const res = await addFriend();
+			const res = await addFriend(intra_id);
 			console.log(res);
-			
+
 			// const res = await sendPassCode(passcode);
 			// if (res.data.status === 'success') {
 			// 	async function fillUserData() {

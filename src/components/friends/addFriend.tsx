@@ -1,5 +1,5 @@
 import axios from 'axios';
-export const addFriend = async () => {
+export const addFriend = async (intra_id: number) => {
 	const url = 'http://localhost:8080/api/friends/request';
 	const config = {
 		headers: {
@@ -9,7 +9,7 @@ export const addFriend = async () => {
 	const res = await axios.post(
 		url,
 		{
-			to: 62473,
+			to: intra_id,
 		},
 		config
 	);

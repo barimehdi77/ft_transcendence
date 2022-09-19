@@ -29,7 +29,7 @@ const ProfileHeader = ({ profileData }: any) => {
 				</div>
 				<UserImage image_url={profileData.image_url} />
 			</div>
-			{profileData.user_name !== userInfo.user_name ? <FriendButtons /> : null}
+			{profileData.user_name !== userInfo.user_name ? <FriendButtons intra_id={profileData.intra_id} /> : null}
 		</div>
 	);
 };
