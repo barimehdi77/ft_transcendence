@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { PrismaClient } from '@prisma/client';
+import { type } from '@prisma/client';
 
 @Injectable()
 export class GameService {
@@ -15,7 +16,7 @@ export class GameService {
   playerDisconnected: any = {};
   waitlist: boolean = false;
   roomName: number;
-
+  idPrisma: any = {};
   createGameState() {
     return {
       playerOne: {
@@ -276,12 +277,13 @@ export class GameService {
     this.state[gameCode].playerTwo.name = userInfo.user_name;
     client.emit('init', 2);
     const stateRoom = this.state[gameCode];
-    await this.prisma.match.create({
+    this.idPrisma[stateRoom] = await this.prisma.match.create({
       data: {
         player_one: stateRoom.playerOne.name,
         player_two: stateRoom.playerTwo.name,
         player_one_score: stateRoom.playerOne.score,
         player_two_score: stateRoom.playerTwo.score,
+        status:  type.playing
       },
     });
     this.starting(server, this.state, gameCode);
@@ -322,25 +324,25 @@ export class GameService {
   async prismaUpdate(roomName: string, p1: number, p2: number, disconnect: boolean) {
     const stateRoom = this.state[roomName];
     if (!disconnect)
-      return await this.prisma.match.updateMany({
+      return await this.prisma.match.update({
         where: {
-          player_one: stateRoom.playerOne.name,
-          player_two: stateRoom.playerTwo.name,
+          id: this.idPrisma[stateRoom].id
         },
         data: {
           player_one_score: stateRoom.playerOne.score,
           player_two_score: stateRoom.playerTwo.score,
+          status: type.end
         }
       });
     else
-      return await this.prisma.match.updateMany({
+      return await this.prisma.match.update({
         where: {
-          player_one: stateRoom.playerOne.name,
-          player_two: stateRoom.playerTwo.name,
+          id: this.idPrisma[stateRoom].id
         },
         data: {
           player_one_score: p1,
           player_two_score: p2,
+          status: type.end
         }
       });
   }
