@@ -13,9 +13,9 @@ const Navbar = () => {
 			</h1>
 			<div className='items'>
 				<ul className='flex items-center'>
-					<NavbarItem path='game' pagename='play' />
-					<NavbarItem path='chat' pagename='chat' />
-					<NavbarItem path='friends' pagename='friends' />
+					<NavbarItem path='/game' pagename='play' />
+					<NavbarItem path='/chat' pagename='chat' />
+					<NavbarItem path='/friends' pagename='friends' />
 					<Dropdown />
 				</ul>
 			</div>

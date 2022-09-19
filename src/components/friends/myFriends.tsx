@@ -11,6 +11,8 @@ const MyFriends = () => {
 		fillData();
 	}, []);
 
+	console.log(friendsList);
+
 	const friendTest = {
 		user_name: 'mbari',
 		image_url: 'https://cdn.intra.42.fr/users/mbari.jpg',

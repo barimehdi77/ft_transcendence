@@ -1,4 +1,4 @@
-import FriendRequests from '../components/friends/friend-requests';
+import FriendRequests from '../components/friends/friendRequests';
 import MyFriends from '../components/friends/myFriends';
 
 const Friends = () => {
