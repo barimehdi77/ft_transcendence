@@ -15,15 +15,15 @@ services:
     #     networks:
     #         - network
 
-    # front-end:
-    #     build: src/
-    #     depends_on:
-    #         - database
-    #     ports:
-    #         - "80:80" # the port number is for dev only prud port is == 8080
-    #     restart: on-failure
-    #     networks:
-    #         - network
+    front-end:
+        build: src/
+        depends_on:
+            - database
+        ports:
+            - "80:80" # the port number is for dev only prud port is == 8080
+        restart: on-failure
+        networks:
+            - network
 
 
     database:
