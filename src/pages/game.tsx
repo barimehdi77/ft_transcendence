@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef, useContext } from 'react';
-// import { io } from 'socket.io-client'
 import { paintGame, drawRect, drawText } from './drawing'
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 import { NextResponse } from 'next/server';
+
+import Router from "next/router";
 
 const Game = () => {
   const { userInfo } = useContext(UserContext);
@@ -81,7 +82,6 @@ const Game = () => {
         ctx?.clearRect(0, 0, canvas.width, canvas.height);
       drawRect(ctx, 0, 0, canvas.width, canvas.height, "black");
       if (!gameActive) {
-        // console.log("gameActive handlegame ret : ", gameActive);
         return;
       }
       let StateTemp = JSON.parse(state);
@@ -96,7 +96,6 @@ const Game = () => {
   }
 
   const handlInit = async (number: number) => {
-    // setinitialScreen(true);
     setPlayerNamber(number);
     setGameActive(true);
   }
@@ -106,30 +105,29 @@ const Game = () => {
     if (canvasRef.current) {
       if (ctx?.clearRect)
         ctx?.clearRect(0, 0, canvas.width, canvas.height);
-      drawRect(ctx, 0, 0, canvas.width, canvas.height, "black");
-      document.addEventListener("keydown", keydown);
+        drawRect(ctx, 0, 0, canvas.width, canvas.height, "black");
+        document.addEventListener("keydown", keydown);
       if (!gameActive) {
-        // console.log("gameActive handlegame ret : ", gameActive);
         return;
       }
-
       let StateTemp = JSON.parse(gameState);
       requestAnimationFrame(() => paintGame(ctx, StateTemp, canvas.width, canvas.height));
     }
   }
   socket.off('gameState').on('gameState', handlGameState);
-
+  
   const handleGameOver = (data: any) => {
-    if (!gameActive) {
+    if (!gameActive)
       return;
-    }
     data = JSON.parse(data);
     setGameActive(false);
     if (data === playerNamber) {
       alert('You Win!');
+      Router.push("/");
     }
     if (data !== playerNamber) {
       alert('You Lose :(');
+      Router.push("/");
     }
   }
   socket.off('gameOver').on('gameOver', handleGameOver);
