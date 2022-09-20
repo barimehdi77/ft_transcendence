@@ -1,8 +1,10 @@
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '../getData';
 
 const MyFriends = () => {
 	const [friendsList, setFriendsList]: any = useState();
+	let plural = '';
 
 	useEffect(() => {
 		async function fillData() {
@@ -11,33 +13,44 @@ const MyFriends = () => {
 		fillData();
 	}, []);
 
-	console.log(friendsList);
+	if (friendsList) friendsList.data.length !== 1 ? (plural = 's') : null;
 
 	return (
 		<>
-			{friendsList
-				? friendsList.data.map((request: any, id: number) => {
+			{friendsList ? (
+				<div>
+					<p>
+						{friendsList.data.length} friend{plural}
+					</p>
+					{friendsList.data.map((request: any, id: number) => {
 						const user = request.to;
 						return (
 							<div key={id} className='mt-4 flex items-center'>
-								<img
-									src={user.image_url}
-									alt='User Avatar'
-									className='w-16 h-16 object-cover rounded-full'
-								/>
+								<Link href={`/profile/${user.user_name}`}>
+									<img
+										src={user.image_url}
+										alt='User Avatar'
+										className='w-16 h-16 object-cover rounded-full'
+									/>
+								</Link>
 								<div className='ml-4'>
-									<h4 className='text-xl font-medium mb-2'>{user.user_name}</h4>
+									<Link href={`/profile/${user.user_name}`}>
+										<h4 className='text-xl font-medium mb-2'>
+											{user.user_name}
+										</h4>
+									</Link>
 									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2'>
-										Accept
+										Play Game
 									</button>
 									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2'>
-										Decline
+										Message
 									</button>
 								</div>
 							</div>
 						);
-				  })
-				: null}
+					})}
+				</div>
+			) : null}
 		</>
 	);
 };
