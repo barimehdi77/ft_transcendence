@@ -89,6 +89,7 @@ Authorization Bearer Token
 `Token Bearer <token>`
 
 # GET all Friend Request (PENDING FRIEND REQUESTS)
+URL: `localhost:8080/api/friends/request`
 
 this endpoint retrive all friend Requests for the logged in user
 
@@ -118,6 +119,7 @@ Authorization Bearer Token
 `Token Bearer <token>`
 
 # PATCH update specific Friend Request
+URL: `localhost:8080/api/friends/request/:friendRequestId`
 
 this endpoint Update the friend request from PENDING to ACCEPTED
 
