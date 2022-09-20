@@ -29,21 +29,21 @@ export class MessagesGateway {
   server: Server;
   constructor(private readonly messagesService: MessagesService) {}
 
-  afterInit() {
-    console.log('Chat websocket Server Started');
-  }
+  // afterInit() {
+  //   console.log('Chat websocket Server Started');
+  // }
 
-  handleConnection(client: Socket) {
-    console.log(
-      `Chat client connected: ${client.id}`,
-      ' length: ',
-      this.server.engine.clientsCount,
-    );
-  }
+  // handleConnection(client: Socket) {
+  //   console.log(
+  //     `Chat client connected: ${client.id}`,
+  //     ' length: ',
+  //     this.server.engine.clientsCount,
+  //   );
+  // }
 
-  handleDisconnect(client: Socket) {
-    console.log(`Chat client disconnected: ${client.id}`);
-  }
+  // handleDisconnect(client: Socket) {
+  //   console.log(`Chat client disconnected: ${client.id}`);
+  // }
 
   @SubscribeMessage('joinConversation')
   joinConversation(
