@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 
 import UserImage from '../userImage';
-import FriendButtons from '../friends/friendButtons';
+import AddAndBlockButtons from '../friends/addAndBlockButtons';
 
 const ProfileHeader = ({ profileData }: any) => {
 	const { userInfo } = useContext(UserContext);
@@ -29,7 +29,9 @@ const ProfileHeader = ({ profileData }: any) => {
 				</div>
 				<UserImage image_url={profileData.image_url} />
 			</div>
-			{profileData.user_name !== userInfo.user_name ? <FriendButtons intra_id={profileData.intra_id} /> : null}
+			{profileData.user_name !== userInfo.user_name ? (
+				<AddAndBlockButtons intra_id={profileData.intra_id} />
+			) : null}
 		</div>
 	);
 };

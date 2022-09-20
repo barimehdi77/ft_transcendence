@@ -2,16 +2,21 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '../getData';
 
-const MyFriends = () => {
-	const [friendsList, setFriendsList]: any = useState();
+const MyFriends = ({
+	friendRequests,
+	setFriendRequests,
+	friendsList,
+	setFriendsList,
+}: any) => {
 	let plural = '';
-
 	useEffect(() => {
 		async function fillData() {
 			setFriendsList(await getData('http://localhost:8080/api/friends'));
 		}
 		fillData();
 	}, []);
+
+	console.log(friendsList);
 
 	if (friendsList) friendsList.data.length !== 1 ? (plural = 's') : null;
 
@@ -30,12 +35,12 @@ const MyFriends = () => {
 									<img
 										src={user.image_url}
 										alt='User Avatar'
-										className='w-16 h-16 object-cover rounded-full'
+										className='w-16 h-16 object-cover rounded-full cursor-pointer'
 									/>
 								</Link>
 								<div className='ml-4'>
 									<Link href={`/profile/${user.user_name}`}>
-										<h4 className='text-xl font-medium mb-2'>
+										<h4 className='text-xl font-medium mb-2 cursor-pointer'>
 											{user.user_name}
 										</h4>
 									</Link>

@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import FriendRequests from '../components/friends/friendRequests';
 import MyFriends from '../components/friends/myFriends';
 
 const Friends = () => {
+	const [friendRequests, setFriendRequests]: any = useState();
+	const [friendsList, setFriendsList]: any = useState();
+
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
 			<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] mt-20'>
@@ -15,11 +19,21 @@ const Friends = () => {
 						friend requests:
 					</h3>
 					<div className='max-h-64 overflow-auto'>
-						<FriendRequests />
+						<FriendRequests
+							friendRequests={friendRequests}
+							setFriendRequests={setFriendRequests}
+							friendsList={friendsList}
+							setFriendsList={setFriendsList}
+						/>
 					</div>
 					<h3 className='text-2xl capitalize font-semibold mt-4'>friends:</h3>
 					<div className='max-h-64 overflow-auto'>
-						<MyFriends />
+						<MyFriends
+							friendRequests={friendRequests}
+							setFriendRequests={setFriendRequests}
+							friendsList={friendsList}
+							setFriendsList={setFriendsList}
+						/>
 					</div>
 				</div>
 			</div>
