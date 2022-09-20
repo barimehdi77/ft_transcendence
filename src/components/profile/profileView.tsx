@@ -5,7 +5,7 @@ import ProfileHeader from '../../components/profile/profileHeader';
 import ProfileStats from '../../components/profile/profileStats';
 import MatchHistoryButton from '../../components/profile/matchHistoryButton';
 
-const ProfileView = ({ profileData }: any) => {
+const ProfileView = ({ profileData }: any) => {	
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
 			{profileData.status === 'success' ? (

@@ -214,6 +214,66 @@ export class GameService {
               player_two_score: stateRoom.playerTwo.score,
             },
           });
+          if (stateRoom.playerOne.score > stateRoom.playerTwo.score) {
+            await this.prisma.user.update({
+              where: {
+                user_name: stateRoom.playerOne.name,
+              },
+              data: {
+                profile: {
+                  update: {
+                    played_games: {increment: 1},
+                    wins: {increment: 1},
+                    user_points: {increment: 3}
+                  }
+                }
+              }
+            });
+            await this.prisma.user.update({
+              where: {
+                user_name: stateRoom.playerTwo.name,
+              },
+              data: {
+                profile: {
+                  update: {
+                    played_games: {increment: 1},
+                    losses: {increment: 1},
+                    user_points: {decrement: 2}
+                  }
+                }
+              }
+            });
+          }
+          else {
+            await this.prisma.user.update({
+              where: {
+                user_name: stateRoom.playerTwo.name,
+              },
+              data: {
+                profile: {
+                  update: {
+                    played_games: {increment: 1},
+                    wins: {increment: 1},
+                    user_points: {increment: 3}
+                  }
+                }
+              }
+            });
+            await this.prisma.user.update({
+              where: {
+                user_name: stateRoom.playerOne.name,
+              },
+              data: {
+                profile: {
+                  update: {
+                    played_games: {increment: 1},
+                    losses: {increment: 1},
+                    user_points: {decrement: 2}
+                  }
+                }
+              }
+            });
+          }
         }
       } else {
         // ${this.state[roomName]}

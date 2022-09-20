@@ -1,11 +1,10 @@
 import axios from 'axios';
-import cookie from 'js-cookie';
 
-export const sendPassCodeFromCookie = async (passcode: string) => {
+export const sendPassCodeFromCookie = async (passcode: string, token: string) => {
 	const url = 'http://localhost:8080/api/auth/turn-on';
 	const config = {
 		headers: {
-			Authorization: `Bearer ${cookie.get('token')}`,
+			Authorization: `Bearer ${token}`,
 		},
 	};
 	const res = await axios.post(

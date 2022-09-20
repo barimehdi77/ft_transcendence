@@ -1,6 +1,5 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { UserContext } from '../../contexts/userContext';
-import { useState } from 'react';
 import Link from 'next/link';
 
 import Button from '@mui/material/Button';
@@ -38,7 +37,7 @@ const Dropdown = () => {
 					<li className='lowercase text-xl font-semibold ml-10'>
 						{userInfo.user_name}
 					</li>
-					<UserImage />
+					<UserImage image_url={userInfo.image_url} />
 				</div>
 			</Button>
 			<Menu
