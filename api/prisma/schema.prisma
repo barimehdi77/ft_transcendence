@@ -47,18 +47,13 @@ model Profile {
   @@map(name: "profile")
 }
 
-enum type {
-  playing
-  end
-}
-
 model Match {
   id               Int    @id @default(autoincrement())
   player_one       String
   player_two       String
   player_one_score Int
   player_two_score Int
-  status           type
+  status           GameStatus
   User             User?  @relation(fields: [userId], references: [id])
   userId           Int?
 }
@@ -130,4 +125,9 @@ enum ProfileStatus {
   ONLINE
   INGAME
   OFLINE
+}
+
+enum GameStatus {
+  PLAYING
+  ENDED
 }

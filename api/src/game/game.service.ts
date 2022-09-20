@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { PrismaClient } from '@prisma/client';
-import { type } from '@prisma/client';
+import { GameStatus, PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class GameService {
@@ -206,75 +205,7 @@ export class GameService {
           clearInterval(interval);
           this.gameActive[roomName] = false;
           this.emitGameOver(server, roomName, winner);
-          console.log(stateRoom);
-          // await this.prisma.match.create({
-          //   data: {
-          //     player_one: stateRoom.playerOne.name,
-          //     player_two: stateRoom.playerTwo.name,
-          //     player_one_score: stateRoom.playerOne.score,
-          //     player_two_score: stateRoom.playerTwo.score,
-          //   },
-          // });
-          if (stateRoom.playerOne.score > stateRoom.playerTwo.score) {
-            await this.prisma.user.update({
-              where: {
-                user_name: stateRoom.playerOne.name,
-              },
-              data: {
-                profile: {
-                  update: {
-                    played_games: {increment: 1},
-                    wins: {increment: 1},
-                    user_points: {increment: 3}
-                  }
-                }
-              }
-            });
-            await this.prisma.user.update({
-              where: {
-                user_name: stateRoom.playerTwo.name,
-              },
-              data: {
-                profile: {
-                  update: {
-                    played_games: {increment: 1},
-                    losses: {increment: 1},
-                    user_points: {decrement: 2}
-                  }
-                }
-              }
-            });
-          }
-          else {
-            await this.prisma.user.update({
-              where: {
-                user_name: stateRoom.playerTwo.name,
-              },
-              data: {
-                profile: {
-                  update: {
-                    played_games: {increment: 1},
-                    wins: {increment: 1},
-                    user_points: {increment: 3}
-                  }
-                }
-              }
-            });
-            await this.prisma.user.update({
-              where: {
-                user_name: stateRoom.playerOne.name,
-              },
-              data: {
-                profile: {
-                  update: {
-                    played_games: {increment: 1},
-                    losses: {increment: 1},
-                    user_points: {decrement: 2}
-                  }
-                }
-              }
-            });
-          }
+          return;
         }
       } else {
         this.emitPlayerDesconnected(
@@ -351,7 +282,7 @@ export class GameService {
         player_two: stateRoom.playerTwo.name,
         player_one_score: stateRoom.playerOne.score,
         player_two_score: stateRoom.playerTwo.score,
-        status:  type.playing
+        status:  GameStatus.PLAYING
       },
     });
     this.starting(server, this.state, gameCode);
@@ -399,7 +330,7 @@ export class GameService {
         data: {
           player_one_score: stateRoom.playerOne.score,
           player_two_score: stateRoom.playerTwo.score,
-          status: type.end
+          status: GameStatus.ENDED
         }
       });
     else
@@ -410,7 +341,7 @@ export class GameService {
         data: {
           player_one_score: p1,
           player_two_score: p2,
-          status: type.end
+          status: GameStatus.ENDED
         }
       });
   }
@@ -420,7 +351,67 @@ export class GameService {
   }
 
   async emitGameOver(server: Server, roomName: string, winner: any) {
-    this.prismaUpdate(roomName, 0, 0, false);
+    const matchGame = await this.prismaUpdate(roomName, 0, 0, false);
+    if (matchGame.player_one_score > matchGame.player_two_score) {
+      await this.prisma.user.update({
+        where: {
+          user_name: matchGame.player_one,
+        },
+        data: {
+          profile: {
+            update: {
+              played_games: {increment: 1},
+              wins: {increment: 1},
+              user_points: {increment: 3}
+            }
+          }
+        }
+      });
+      await this.prisma.user.update({
+        where: {
+          user_name: matchGame.player_two,
+        },
+        data: {
+          profile: {
+            update: {
+              played_games: {increment: 1},
+              losses: {increment: 1},
+              user_points: {decrement: 2}
+            }
+          }
+        }
+      });
+    }
+    else {
+      await this.prisma.user.update({
+        where: {
+          user_name: matchGame.player_two,
+        },
+        data: {
+          profile: {
+            update: {
+              played_games: {increment: 1},
+              wins: {increment: 1},
+              user_points: {increment: 3}
+            }
+          }
+        }
+      });
+      await this.prisma.user.update({
+        where: {
+          user_name: matchGame.player_one,
+        },
+        data: {
+          profile: {
+            update: {
+              played_games: {increment: 1},
+              losses: {increment: 1},
+              user_points: {decrement: 2}
+            }
+          }
+        }
+      });
+    }
     server.in(roomName).emit('gameOver', JSON.stringify(winner));
   }
 
