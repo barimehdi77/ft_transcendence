@@ -152,6 +152,7 @@ Authorization Bearer Token
 `Token Bearer <token>`
 
 # DELETE specific Friend Request (DECLINED)
+URL : `localhost:8080/api/friends/request/:friendRequestId`
 
 this endpoint deleted the Friend Request when a user is declined it.
 
@@ -180,6 +181,7 @@ Authorization Bearer Token
 `Token Bearer <token>`
 
 # POST Block User
+URL: `localhost:8080/api/friends/block`
 
 a user can block other user.
 
@@ -217,6 +219,7 @@ a user can block other user.
 
 
 # POST unBlock User
+URL : `localhost:8080/api/friends/unblock`
 
 a user can unblock other user.
 
