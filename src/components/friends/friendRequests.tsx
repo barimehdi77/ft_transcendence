@@ -74,13 +74,13 @@ const FriendRequests = ({
 										</h4>
 									</Link>
 									<button
-										className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2'
+										className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'
 										onClick={() => handleAccept(request.id)}
 									>
 										Accept
 									</button>
 									<button
-										className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2'
+										className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 hover:bg-sky-700'
 										onClick={() => handleDecline(request.id)}
 									>
 										Decline
