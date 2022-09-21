@@ -25,7 +25,7 @@ const ProfileView = ({ profileData }: any) => {
 							info={profileData.data.login}
 						/>
 						<ProfileStats profileStats={profileData.data.profile} />
-						<MatchHistoryButton profileStats={profileData.data.profile} />
+						<MatchHistoryButton profileData={profileData.data} />
 					</div>
 				</div>
 			) : null}

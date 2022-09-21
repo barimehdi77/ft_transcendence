@@ -27,10 +27,10 @@ const MyFriends = ({
 					<p>
 						{friendsList.data.length} friend{plural}
 					</p>
-					{friendsList.data.map((request: any, id: number) => {
+					{friendsList.data.map((request: any, key: number) => {
 						const user = request.to;
 						return (
-							<div key={id} className='mt-4 flex items-center'>
+							<div key={key} className='mt-4 flex items-center'>
 								<Link href={`/profile/${user.user_name}`}>
 									<img
 										src={user.image_url}

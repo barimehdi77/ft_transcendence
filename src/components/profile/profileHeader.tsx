@@ -15,8 +15,6 @@ const ProfileHeader = ({ profileData }: any) => {
 	else if (points > 20 && points < 40) rank = 'text-slate-300';
 	else if (points > 59) rank = 'text-yellow-500';
 
-	if (profileData.user_name === userInfo.user_name) console.log('its me');
-
 	return (
 		<div className='bg-sky-800 px-10 py-4 rounded-t-3xl	'>
 			<div className='flex items-center'>
