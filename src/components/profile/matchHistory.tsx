@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getData } from '../getData';
+import Score from './score';
 
 const MatchHistory = ({ profileData }: any) => {
 	const [matchHistory, setMatchHistory]: any = useState();
@@ -35,20 +36,7 @@ const MatchHistory = ({ profileData }: any) => {
 					</h2>
 					{matchHistory
 						? matchHistory.data.map((match: any, key: number) => {
-								const { player_one, player_two } = match;
-								console.log(match);
-
-								return (
-									<h1 className='font-medium'>
-										<span>
-											{player_one.name} {player_one.score}
-										</span>
-										{' - '}
-										<span>
-											{player_two.score} {player_two.name}
-										</span>
-									</h1>
-								);
+								return <Score match={match} key={key} />;
 						  })
 						: null}
 				</div>
