@@ -28,7 +28,7 @@ const ProfileHeader = ({ profileData }: any) => {
 				<UserImage image_url={profileData.image_url} />
 			</div>
 			{profileData.user_name !== userInfo.user_name ? (
-				<AddAndBlockButtons intra_id={profileData.intra_id} />
+				<AddAndBlockButtons profileData={profileData} />
 			) : null}
 		</div>
 	);
