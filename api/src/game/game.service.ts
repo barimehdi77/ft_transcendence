@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GameStatus, PrismaClient } from '@prisma/client';
+import { GetPlayedGames } from './dto/get-played-games.dto';
+import { ProfileService } from 'src/profile/profile.service';
+import { UserProfile } from 'src/auth/dto/User.dto';
 
 @Injectable()
 export class GameService {
-  constructor(private prisma: PrismaClient) { }
+  constructor(private prisma: PrismaClient,
+    private profileService: ProfileService) { }
+
+
   FRAMERATE = 30;
   state: any = {};
   clientRooms: any = {};
@@ -417,5 +423,25 @@ export class GameService {
 
   emitPlayerDesconnected(server: Server, roomName: string, winner: number) {
     server.in(roomName).emit('playerDisconnected', JSON.stringify(winner));
+  }
+
+
+  async getPlayedGames() {
+    const playedGames = await this.prisma.match.findMany({
+      where: {
+        status: GameStatus.PLAYING,
+      },
+      select: {
+        player_one: true,
+        player_two: true,
+      }
+    });
+    const returnPlayedGames = playedGames.map(async (game) => {
+      return ({
+        player_one: await this.profileService.getProfile(game.player_one),
+        player_two: await this.profileService.getProfile(game.player_two)
+      });
+    });
+    return (Promise.all(returnPlayedGames));
   }
 }
