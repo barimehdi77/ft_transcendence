@@ -58,7 +58,16 @@ the `:id` is the friend request id.
 
 ## response Example On success:
 ```
-
+{
+    "status": "success",
+    "message": "unfriend Successfully",
+    "data": {
+        "id": 1,
+        "from": 39523,
+        "to": 62484,
+        "status": "ACCEPTED"
+    }
+}
 ```
 
 ## Response Example on Failure:
