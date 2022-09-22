@@ -1,12 +1,17 @@
 import { addFriend } from './addFriend';
 import { blockUser } from './blockUser';
 import { unblockUser } from './unblockUser';
+import { getData } from '../getData';
 
-const AddAndBlockButtons = ({ profileData }: any) => {
+const AddAndBlockButtons = ({ profileData, setProfileData }: any) => {
 	const handleAdd = async () => {
 		try {
-			const res = await addFriend(profileData.intra_id);
-			console.log(res);
+			await addFriend(profileData.intra_id);
+			setProfileData(
+				await getData(
+					`http://localhost:8080/api/profile/${profileData.user_name}`
+				)
+			);
 		} catch (error: any) {
 			console.log(error);
 		}
@@ -14,8 +19,12 @@ const AddAndBlockButtons = ({ profileData }: any) => {
 
 	const handleBlock = async () => {
 		try {
-			const res = await blockUser(profileData.intra_id);
-			console.log(res);
+			await blockUser(profileData.intra_id);
+			setProfileData(
+				await getData(
+					`http://localhost:8080/api/profile/${profileData.user_name}`
+				)
+			);
 		} catch (error: any) {
 			console.log(error);
 		}
@@ -23,8 +32,12 @@ const AddAndBlockButtons = ({ profileData }: any) => {
 
 	const handleUnblock = async () => {
 		try {
-			const res = await unblockUser(profileData.intra_id);
-			console.log(res);
+			await unblockUser(profileData.intra_id);
+			setProfileData(
+				await getData(
+					`http://localhost:8080/api/profile/${profileData.user_name}`
+				)
+			);
 		} catch (error: any) {
 			console.log(error);
 		}
@@ -43,15 +56,12 @@ const AddAndBlockButtons = ({ profileData }: any) => {
 				</button>
 			) : null}
 			{profileData.isFriends === 'ACCEPTED' ? (
-				<button
-					className='bg-white px-4 py-2 mt-2 mr-2 text-sky-800 font-semibold rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-white hover:scale-105'
-					onClick={handleAdd}
-				>
-					Unfriend
+				<button className='bg-gray-600 px-4 py-2 mt-2 mr-2 text-white font-semibold rounded-full cursor-default drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
+					Friends
 				</button>
 			) : null}
 			{profileData.isFriends === 'PENDING' ? (
-				<button className='bg-gray-600 px-4 py-2 mt-2 mr-2 text-white font-semibold rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-white hover:scale-105'>
+				<button className='bg-gray-600 px-4 py-2 mt-2 mr-2 text-white font-semibold rounded-full cursor-default drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
 					Pending...
 				</button>
 			) : null}

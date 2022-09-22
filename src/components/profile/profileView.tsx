@@ -5,12 +5,15 @@ import ProfileHeader from '../../components/profile/profileHeader';
 import ProfileStats from '../../components/profile/profileStats';
 import MatchHistoryButton from '../../components/profile/matchHistoryButton';
 
-const ProfileView = ({ profileData }: any) => {	
+const ProfileView = ({ profileData, setProfileData }: any) => {	
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
 			{profileData.status === 'success' ? (
 				<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] mt-20'>
-					<ProfileHeader profileData={profileData.data} />
+					<ProfileHeader
+						profileData={profileData.data}
+						setProfileData={setProfileData}
+					/>
 					<div className='bg-white px-10 py-4 rounded-b-3xl'>
 						<ProfileInfoItem
 							icon={faUser}

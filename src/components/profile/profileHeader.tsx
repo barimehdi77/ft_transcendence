@@ -6,7 +6,7 @@ import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import UserImage from '../userImage';
 import AddAndBlockButtons from '../friends/addAndBlockButtons';
 
-const ProfileHeader = ({ profileData }: any) => {
+const ProfileHeader = ({ profileData, setProfileData }: any) => {
 	const { userInfo } = useContext(UserContext);
 	const points = profileData.profile.user_points;
 	let rank;
@@ -28,7 +28,10 @@ const ProfileHeader = ({ profileData }: any) => {
 				<UserImage image_url={profileData.image_url} />
 			</div>
 			{profileData.user_name !== userInfo.user_name ? (
-				<AddAndBlockButtons profileData={profileData} />
+				<AddAndBlockButtons
+					profileData={profileData}
+					setProfileData={setProfileData}
+				/>
 			) : null}
 		</div>
 	);

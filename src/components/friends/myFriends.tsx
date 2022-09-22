@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '../getData';
+import { declineRequest } from './declineRequest';
 
 const MyFriends = ({
 	friendRequests,
@@ -15,6 +16,22 @@ const MyFriends = ({
 		}
 		fillData();
 	}, []);
+
+	async function handleUnfriend(id: number) {
+		try {
+			const res = await declineRequest(id);
+			console.log('unfriend', res);
+		} catch (error) {
+			console.log(error);
+		}
+		// async function fillData() {
+		// 	setFriendRequests(
+		// 		await getData('http://localhost:8080/api/friends/request')
+		// 	);
+		// 	setFriendsList(await getData('http://localhost:8080/api/friends'));
+		// }
+		// fillData();
+	}
 
 	console.log(friendsList);
 
@@ -44,10 +61,16 @@ const MyFriends = ({
 											{user.user_name}
 										</h4>
 									</Link>
-									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2'>
+									<button
+										className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'
+										onClick={() => handleUnfriend(request.id)}
+									>
+										Unfriend
+									</button>
+									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
 										Play Game
 									</button>
-									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2'>
+									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
 										Message
 									</button>
 								</div>
