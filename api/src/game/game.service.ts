@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GameStatus, PrismaClient } from '@prisma/client';
-import { GetPlayedGames } from './dto/get-played-games.dto';
+import { GetPlayingGames } from './dto/get-playing-games.dto';
 import { ProfileService } from 'src/profile/profile.service';
 import { UserProfile } from 'src/auth/dto/User.dto';
 
@@ -426,7 +426,7 @@ export class GameService {
   }
 
 
-  async getPlayedGames() {
+  async getPlayingGames() {
     const playedGames = await this.prisma.match.findMany({
       where: {
         status: GameStatus.PLAYING,
