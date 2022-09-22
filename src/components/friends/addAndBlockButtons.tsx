@@ -56,12 +56,12 @@ const AddAndBlockButtons = ({ profileData, setProfileData }: any) => {
 				</button>
 			) : null}
 			{profileData.isFriends === 'ACCEPTED' ? (
-				<button className='bg-gray-600 px-4 py-2 mt-2 mr-2 text-white font-semibold rounded-full cursor-default drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
+				<button className='bg-slate-500 px-4 py-2 mt-2 mr-2 text-white font-semibold rounded-full cursor-default drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
 					Friends
 				</button>
 			) : null}
 			{profileData.isFriends === 'PENDING' ? (
-				<button className='bg-gray-600 px-4 py-2 mt-2 mr-2 text-white font-semibold rounded-full cursor-default drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
+				<button className='bg-slate-500 px-4 py-2 mt-2 mr-2 text-white font-semibold rounded-full cursor-default drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'>
 					Pending...
 				</button>
 			) : null}

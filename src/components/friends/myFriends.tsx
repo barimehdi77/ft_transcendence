@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '../getData';
-import { declineRequest } from './declineRequest';
+import { unfriendUser } from './unfriendUser';
 
 const MyFriends = ({
 	friendRequests,
@@ -19,7 +19,8 @@ const MyFriends = ({
 
 	async function handleUnfriend(id: number) {
 		try {
-			const res = await declineRequest(id);
+			const res = await unfriendUser(id);
+			setFriendsList(await getData('http://localhost:8080/api/friends'));
 			console.log('unfriend', res);
 		} catch (error) {
 			console.log(error);
