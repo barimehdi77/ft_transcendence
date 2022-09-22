@@ -49,6 +49,34 @@ Authorization Bearer Token
 
 `Token Bearer <token>`
 
+# DELETE unfriend user
+URL: `localhost:8080/api/friends/:id`
+
+this endpoint uses to unfriend some one.
+
+the `:id` is the friend request id.
+
+## response Example On success:
+```
+
+```
+
+## Response Example on Failure:
+
+```
+{
+    "statusCode": 401,
+    "message": "Unauthorized"
+}
+```
+
+## JWT Token
+
+Authorization Bearer Token
+
+`Token Bearer <token>`
+
+
 # POST send Friend Request
 
 URL: `localhost:8080/api/friends/request`
