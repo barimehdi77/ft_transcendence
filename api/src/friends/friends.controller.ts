@@ -79,7 +79,7 @@ export class FriendsController {
     }
   }
 
-  @Get(':id')
+  @Delete(':id')
   async unfriend(
     @Req() req: Request,
     @Res() res: Response,
