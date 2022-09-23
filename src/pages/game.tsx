@@ -2,7 +2,6 @@ import { useEffect, useState, useRef, useContext } from 'react';
 import { paintGame, drawRect, drawText } from './drawing'
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
-import { NextResponse } from 'next/server';
 
 import Router from "next/router";
 
@@ -117,10 +116,14 @@ const Game = () => {
   socket.off('gameState').on('gameState', handlGameState);
   
   const handleGameOver = (data: any) => {
+    console.log("gameA: ", gameActive);
+    
     if (!gameActive)
       return;
     data = JSON.parse(data);
     setGameActive(false);
+    console.log("d: ", data, " p: ", playerNamber);
+    
     if (data === playerNamber) {
       alert('You Win!');
       Router.push("/");
@@ -135,6 +138,7 @@ const Game = () => {
   const handlePlayerDisconnected = (player: number) => {
     if (player !== playerNamber) {
       alert('Your opponent disconnected. You win!');
+      Router.push("/");
     }
   }
   socket.off('playerDisconnected').on('playerDisconnected', handlePlayerDisconnected);
@@ -146,7 +150,7 @@ const Game = () => {
 
   let x = 0;
   const handleWaiting = () => {
-    drawText(ctx, ". ", (canvas.width / 2 - 12) + x, canvas.height / 2, "white", 600 / canvas.width);
+    drawText(ctx, ". ", (canvas.width / 2 - 12) + x, canvas.height / 2, "white", 600 / canvas.width, 45);
     x += 10;
     if (x === 40) {
       x = 0;
@@ -158,11 +162,16 @@ const Game = () => {
   let countDown = 3;
   const handleStarting = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawText(ctx, countDown.toString(), canvas.width / 2, canvas.height / 2, "white", 600 / canvas.width);
+    drawText(ctx, countDown.toString(), canvas.width / 2, canvas.height / 2, "white", 600 / canvas.width, 45);
     countDown--;
   }
   socket.off('start').on('start', handleStarting);
 
+  const handlPlayers = (players: string) => {
+    console.log("3iiiw", JSON.parse(players));
+  }
+  socket.off('handlPlayers').on('handlPlayers', handlPlayers);
+  
   return (
     <div className='min-h-screen flex justify-center items-center'>
       <div>

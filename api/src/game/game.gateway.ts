@@ -90,4 +90,10 @@ export class GameGateway {
   handlePlayGame(@MessageBody() userInfo: any, @ConnectedSocket() client: Socket) {
     this.gameService.handlePlayGame(this.server, client, userInfo);
   }
+
+  @SubscribeMessage('listOfPlayersPlaying')
+  handleListOfPlayersPlaying() {
+    return (this.gameService.ListOfPlayersPlaying());
+    // return (this.gameService.playersPlaying);
+  }
 }

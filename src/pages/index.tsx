@@ -17,6 +17,10 @@ const Home = () => {
 				<FontAwesomeIcon icon={faCommentDots} className='mr-5' />
 				<Link href='/chat'>chat</Link>
 			</button>
+			<button className='bg-sky-800 text-7xl text-white uppercase font-bold rounded-full py-10 px-20 mt-20 mb-10 hover:bg-sky-700 hover:scale-105'>
+				<FontAwesomeIcon icon={faTableTennisPaddleBall} className='mr-5' />
+				<Link href='/spectate'>Spectate</Link>
+			</button>
 		</main>
 	);
 };
