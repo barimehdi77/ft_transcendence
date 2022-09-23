@@ -29,11 +29,7 @@ const EditForm = ({ handleCloseModal }: any) => {
 				config
 			);
 			if (res.status === 200) {
-				async function fillUserData() {
-					const user = await getData('http://localhost:8080/api/user');
-					setUserInfo(user);
-				}
-				fillUserData();
+				setUserInfo(await getData('http://localhost:8080/api/user'));
 				handleCloseModal();
 			}
 		} catch (error: any) {

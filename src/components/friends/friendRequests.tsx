@@ -22,27 +22,29 @@ const FriendRequests = ({
 	}, []);
 
 	const handleAccept = async (id: number) => {
-		const res = await acceptRequest(id);
-		async function fillData() {
+		try {
+			const res = await acceptRequest(id);
 			setFriendRequests(
 				await getData('http://localhost:8080/api/friends/request')
 			);
 			setFriendsList(await getData('http://localhost:8080/api/friends'));
+			console.log('accepted', res);
+		} catch (error) {
+			console.log(error);
 		}
-		fillData();
-		console.log('accepted', res);
 	};
 
 	const handleDecline = async (id: number) => {
-		const res = await declineRequest(id);
-		async function fillData() {
+		try {
+			const res = await declineRequest(id);
 			setFriendRequests(
 				await getData('http://localhost:8080/api/friends/request')
 			);
 			setFriendsList(await getData('http://localhost:8080/api/friends'));
+			console.log('declined', res);
+		} catch (error) {
+			console.log(error);
 		}
-		fillData();
-		console.log('declined', res);
 	};
 
 	console.log(friendRequests);

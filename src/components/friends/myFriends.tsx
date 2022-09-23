@@ -25,13 +25,6 @@ const MyFriends = ({
 		} catch (error) {
 			console.log(error);
 		}
-		// async function fillData() {
-		// 	setFriendRequests(
-		// 		await getData('http://localhost:8080/api/friends/request')
-		// 	);
-		// 	setFriendsList(await getData('http://localhost:8080/api/friends'));
-		// }
-		// fillData();
 	}
 
 	console.log(friendsList);

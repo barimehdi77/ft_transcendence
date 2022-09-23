@@ -9,7 +9,7 @@ import AvatarField from './avatarField';
 import { getData } from '../getData';
 
 const UserInputForm = () => {
-	const { userInfo, setUserInfo } :any = useContext(UserContext);
+	const { userInfo, setUserInfo }: any = useContext(UserContext);
 	const url = 'http://localhost:8080/api/user/setup';
 	const login = userInfo.login;
 	const [username, setUsername] = useState(login);
@@ -29,11 +29,7 @@ const UserInputForm = () => {
 			data.append('avatar', file);
 			const res = await axios.post(url, data, config);
 			if (res.status === 200) {
-				async function fillUserData() {
-					const user = await getData('http://localhost:8080/api/user');
-					setUserInfo(user);
-				}
-				fillUserData();
+				setUserInfo(await getData('http://localhost:8080/api/user'));
 				Router.push('/');
 			}
 		} catch (error: any) {

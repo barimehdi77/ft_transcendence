@@ -15,19 +15,15 @@ const Authenticate = () => {
 	useEffect(() => {
 		setToken(cookie.get('token') as string);
 		cookie.remove('token');
-	}, [])
-	
+	}, []);
+
 	async function sendCode(e: any) {
 		e.preventDefault();
 		try {
 			const res = await sendPassCodeFromCookie(passcode, token);
 			if (res.data.status === 'success') {
 				localStorage.setItem('token', token);
-				async function fillUserData() {
-					const user = await getData('http://localhost:8080/api/user');
-					setUserInfo(user);
-				}
-				fillUserData();
+				setUserInfo(await getData('http://localhost:8080/api/user'));
 				Router.push('/');
 			}
 		} catch (error: any) {
