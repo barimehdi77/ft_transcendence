@@ -21,6 +21,7 @@ import { getAllUsers } from "../../services/users";
 import { joinConversation } from "../../socket/emit";
 
 import { UserContext } from '../../contexts/userContext';
+import Head from 'next/head'
 
 // This temporary, before link user to chat
 let userId: number | null = 39523;
@@ -38,7 +39,7 @@ if (typeof window !== "undefined") {
 // };
 
 const dm = () => {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo }: any = useContext(UserContext);
 
   const {
     conversations,
@@ -174,6 +175,9 @@ const dm = () => {
 
   return (
     <div className="w-full h-screen">
+			<Head>
+				<title>Direct messages</title>
+			</Head>
       <div className="flex h-full">
         <div className="flex-1 bg-gray-100 w-full h-full">
           <div className="main-body container m-auto w-11/12 h-full flex flex-col">
