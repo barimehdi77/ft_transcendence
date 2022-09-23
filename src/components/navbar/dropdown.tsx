@@ -1,6 +1,7 @@
-import { useState, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/userContext';
 import Link from 'next/link';
+import { getData } from '../getData';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -14,6 +15,14 @@ import Logout from './logout';
 
 const Dropdown = () => {
 	const { userInfo }: any = useContext(UserContext);
+	const [profileData, setProfileData]: any = useState({});
+
+	useEffect(() => {
+		async function fillProfileData() {
+			setProfileData(await getData('http://localhost:8080/api/profile/me'));
+		}
+		fillProfileData();
+	}, []);
 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const openDropdown = Boolean(anchorEl);
@@ -23,6 +32,8 @@ const Dropdown = () => {
 	const handleCloseDropdown = () => {
 		setAnchorEl(null);
 	};
+
+	console.log('profile', profileData);
 
 	return (
 		<>
@@ -37,7 +48,14 @@ const Dropdown = () => {
 					<li className='lowercase text-xl font-semibold ml-10'>
 						{userInfo.user_name}
 					</li>
-					<UserImage image_url={userInfo.image_url} />
+					{profileData.data ? (
+						<UserImage
+							image_url={userInfo.image_url}
+							status={profileData.data.profile.status}
+						/>
+					) : (
+						<UserImage image_url={userInfo.image_url} status='online' />
+					)}
 				</div>
 			</Button>
 			<Menu
