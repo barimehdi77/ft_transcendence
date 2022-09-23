@@ -7,7 +7,7 @@ import axios from 'axios';
 import { getData } from '../getData';
 
 const EditForm = ({ handleCloseModal }: any) => {
-	const { userInfo, setUserInfo } = useContext(UserContext);
+	const { userInfo, setUserInfo }: any = useContext(UserContext);
 	const [username, setUsername] = useState(userInfo.user_name);
 	const [file, setFile]: any = useState();
 	const [errorMessage, setErrorMessage] = useState();

@@ -3,7 +3,7 @@ import { UserContext } from '../../contexts/userContext';
 import { getData } from '../getData';
 
 const TurnOff2FA = () => {
-	const { userInfo, setUserInfo } = useContext(UserContext);
+	const { userInfo, setUserInfo } :any = useContext(UserContext);
 
 	async function turnOff2FA() {
 		const res = await getData('http://localhost:8080/api/auth/turn-off');

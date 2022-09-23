@@ -7,7 +7,7 @@ import { sendPassCode } from './sendPassCode';
 import { getData } from '../getData';
 
 const TwoFactorAuthModal = ({ handleCloseModal }: any) => {
-	const { userInfo, setUserInfo } = useContext(UserContext);
+	const { userInfo, setUserInfo } :any = useContext(UserContext);
 	const [qrCode, setQrCode]: any = useState();
 	const [passcode, setPasscode] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');

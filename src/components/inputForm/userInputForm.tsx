@@ -9,7 +9,7 @@ import AvatarField from './avatarField';
 import { getData } from '../getData';
 
 const UserInputForm = () => {
-	const { userInfo, setUserInfo } = useContext(UserContext);
+	const { userInfo, setUserInfo } :any = useContext(UserContext);
 	const url = 'http://localhost:8080/api/user/setup';
 	const login = userInfo.login;
 	const [username, setUsername] = useState(login);

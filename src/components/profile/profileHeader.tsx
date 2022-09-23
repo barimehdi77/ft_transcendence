@@ -7,7 +7,7 @@ import UserImage from '../userImage';
 import AddAndBlockButtons from '../friends/addAndBlockButtons';
 
 const ProfileHeader = ({ profileData, setProfileData }: any) => {
-	const { userInfo } = useContext(UserContext);
+	const { userInfo }: any = useContext(UserContext);
 	const points = profileData.profile.user_points;
 	let rank;
 
