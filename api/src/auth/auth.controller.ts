@@ -46,29 +46,28 @@ export class AuthController {
   @Get('redirect')
   @UseGuards(AuthGuard('42'))
   async redirect(@Req() req: Request, @Res() res: Response) {
-
     try {
       const user = await this.authService.GenirateJWT(req, res);
 
-      if(user === null) {
+      if (user === null) {
         return res.status(409).json({
           status: 'failure',
-          message: "Can not Generate JWT Token",
+          message: 'Can not Generate JWT Token',
         });
-      }
-      else {
+      } else {
         res.cookie('token', user.token);
-        if (user.isTwoFactorAuthenticationEnabled) return res.redirect(301, 'http://localhost/authenticate');
-        else if (user.profile_done) return res.redirect(301, 'http://localhost/');
+        if (user.isTwoFactorAuthenticationEnabled)
+          return res.redirect(301, 'http://localhost/authenticate');
+        else if (user.profile_done)
+          return res.redirect(301, 'http://localhost/');
         else return res.redirect(301, 'http://localhost/setup');
       }
-
     } catch (error) {
       return res.status(500).json({
-				status: 'error',
-				message: 'Error updating user data',
-				error: error.message ? error.message : error
-			});
+        status: 'error',
+        message: 'Error updating user data',
+        error: error.message ? error.message : error,
+      });
     }
   }
 
@@ -81,25 +80,28 @@ export class AuthController {
   ) {
     try {
       const user = this.userService.decode(auth) as UserDecoder;
-      const otp = await this.authService.generateTwoFactorAuthenticationSecret(user);
-      const QRcode = await this.authService.pipeQrCodeStream(res, otp.otpauthUrl);
+      const otp = await this.authService.generateTwoFactorAuthenticationSecret(
+        user,
+      );
+      const QRcode = await this.authService.pipeQrCodeStream(
+        res,
+        otp.otpauthUrl,
+      );
 
-      if(QRcode === null) {
+      if (QRcode === null) {
         return res.status(409).json({
           status: 'failure',
-          message: "Can not Generate QR code",
+          message: 'Can not Generate QR code',
         });
+      } else {
+        return QRcode;
       }
-      else {
-        return QRcode
-      }
-
     } catch (error) {
       return res.status(500).json({
-				status: 'error',
-				message: 'Error updating user data',
-				error: error.message ? error.message : error
-			});
+        status: 'error',
+        message: 'Error updating user data',
+        error: error.message ? error.message : error,
+      });
     }
   }
 
@@ -108,33 +110,36 @@ export class AuthController {
   async turnOnTwoFactorAuthentication(
     @Req() request: Request,
     @Res() res: Response,
-    @Body("twoFactorAuthenticationCode") twoFactorAuthenticationCode: string,
+    @Body('twoFactorAuthenticationCode') twoFactorAuthenticationCode: string,
     @Headers('Authorization') auth: string,
   ) {
-
     try {
-      const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, auth);
+      const isCodeValid =
+        await this.authService.isTwoFactorAuthenticationCodeValid(
+          twoFactorAuthenticationCode,
+          auth,
+        );
 
-      if(isCodeValid === false) {
+      if (isCodeValid === false) {
         return res.status(409).json({
           status: 'failure',
-          message: "Wrong authentication code",
+          message: 'Wrong authentication code',
         });
-      }
-      else {
-        const user = await this.userService.turnOnTwoFactorAuthentication(this.userService.decode(auth).login);
+      } else {
+        const user = await this.userService.turnOnTwoFactorAuthentication(
+          this.userService.decode(auth).login,
+        );
         return res.status(200).json({
           status: 'success',
-          message: "2FA Activated Successfully",
+          message: '2FA Activated Successfully',
         });
       }
-
     } catch (error) {
       return res.status(500).json({
-				status: 'error',
-				message: 'Error updating user data',
-				error: error.message ? error.message : error
-			});
+        status: 'error',
+        message: 'Error updating user data',
+        error: error.message ? error.message : error,
+      });
     }
   }
 
@@ -145,29 +150,28 @@ export class AuthController {
     @Res() res: Response,
     @Headers('Authorization') auth: string,
   ) {
-
     try {
-      const user = await this.userService.turnOffTwoFactorAuthentication(this.userService.decode(auth).login);
+      const user = await this.userService.turnOffTwoFactorAuthentication(
+        this.userService.decode(auth).login,
+      );
 
-      if(user === null) {
+      if (user === null) {
         return res.status(409).json({
           status: 'failure',
-          message: "An Error Happend while turning 2FA off",
+          message: 'An Error Happend while turning 2FA off',
         });
-      }
-      else {
+      } else {
         return res.status(200).json({
           status: 'success',
-          message: "2FA Disactivated Successfully",
+          message: '2FA Disactivated Successfully',
         });
       }
-
     } catch (error) {
       return res.status(500).json({
-				status: 'error',
-				message: 'Error updating user data',
-				error: error.message ? error.message : error
-			});
+        status: 'error',
+        message: 'Error updating user data',
+        error: error.message ? error.message : error,
+      });
     }
   }
 
@@ -176,33 +180,32 @@ export class AuthController {
   async authenticate(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() twoFactorAuthenticationCode : string,
+    @Body() twoFactorAuthenticationCode: string,
     @Headers('Authorization') auth: string,
   ) {
-
-
     try {
-      const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, auth);
+      const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(
+        twoFactorAuthenticationCode,
+        auth,
+      );
 
-      if(isCodeValid === null) {
+      if (isCodeValid === null) {
         return res.status(409).json({
           status: 'failure',
-          message: "Wrong authentication code",
+          message: 'Wrong authentication code',
         });
-      }
-      else {
+      } else {
         return res.status(200).json({
           status: 'success',
-          message: "2FA Code is valid",
+          message: '2FA Code is valid',
         });
       }
-
     } catch (error) {
       return res.status(500).json({
-				status: 'error',
-				message: 'Error updating user data',
-				error: error.message ? error.message : error
-			});
+        status: 'error',
+        message: 'Error updating user data',
+        error: error.message ? error.message : error,
+      });
     }
   }
 
@@ -223,5 +226,32 @@ export class AuthController {
    * This will logging the user out
    */
   @Get('logout')
-  logout() {}
+  @UseGuards(AuthGuard('jwt'))
+  logout(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Headers('Authorization') auth: string,
+  ) {
+    try {
+      const user = this.authService.logout(auth);
+
+      if (user === null) {
+        return res.status(409).json({
+          status: 'failure',
+          message: 'Wrong authentication code',
+        });
+      } else {
+        return res.status(200).json({
+          status: 'success',
+          message: 'logged out',
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'Error updating user data',
+        error: error.message ? error.message : error,
+      });
+    }
+  }
 }

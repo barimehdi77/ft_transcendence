@@ -124,7 +124,7 @@ enum FriendStatus {
 enum ProfileStatus {
   ONLINE
   INGAME
-  OFLINE
+  OFFLINE
 }
 
 enum GameStatus {
