@@ -41,15 +41,4 @@ import { GameModule } from 'src/game/game.module';
   controllers: [AppController],
   providers: [AppService, UserService, PrismaService, JwtService, CloudinaryService],
 })
-export class AppModule {}//implements NestModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer
-  //     .apply(validateUserMiddleware)
-  //     .forRoutes('user', 'profile', '');
-  //   consumer
-  //     .apply(ValidateComplateProfileMiddleware)
-  //     .exclude('api/auth/login', 'api/auth/redirect', 'api/user', 'api/user/setup')
-  //     .forRoutes('*');
-  // }
-
-// }
+export class AppModule {}
