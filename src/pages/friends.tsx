@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useState } from 'react';
 import FriendRequests from '../components/friends/friendRequests';
 import MyFriends from '../components/friends/myFriends';
@@ -8,6 +9,9 @@ const Friends = () => {
 
 	return (
 		<main className='min-h-screen flex flex-col items-center justify-center'>
+			<Head>
+				<title>Friends</title>
+			</Head>
 			<div className='drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] mt-20'>
 				<div className='bg-sky-800 px-10 py-4 rounded-t-3xl	'>
 					<h2 className='text-2xl text-white text-center font-semibold capitalize'>

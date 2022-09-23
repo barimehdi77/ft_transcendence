@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { GameStatus, PrismaClient } from '@prisma/client';
+import { GameStatus, Prisma, PrismaClient, ProfileStatus } from '@prisma/client';
 import { GetPlayingGames } from './dto/get-playing-games.dto';
 import { ProfileService } from 'src/profile/profile.service';
 import { UserProfile } from 'src/auth/dto/User.dto';
@@ -290,8 +290,32 @@ export class GameService {
         player_two: stateRoom.playerTwo.name,
         player_one_score: stateRoom.playerOne.score,
         player_two_score: stateRoom.playerTwo.score,
-        status: GameStatus.PLAYING
+        status: GameStatus.PLAYING,
       },
+    });
+    await this.prisma.user.update({
+      where: {
+        user_name: stateRoom.playerOne.name
+      },
+      data: {
+        profile: {
+          update: {
+            status: ProfileStatus.INGAME,
+          }
+        }
+      }
+    });
+    await this.prisma.user.update({
+      where: {
+        user_name: stateRoom.playerTwo.name
+      },
+      data: {
+        profile: {
+          update: {
+            status: ProfileStatus.INGAME,
+          }
+        }
+      }
     });
     this.starting(server, this.state, gameCode);
   }
@@ -330,40 +354,7 @@ export class GameService {
     }, 1000 / this.FRAMERATE);
   }
 
-  async prismaUpdate(roomName: string, p1: number, p2: number, disconnect: boolean) {
-    const stateRoom = this.state[roomName];
-    if (!disconnect)
-      return await this.prisma.match.update({
-        where: {
-          id: this.idPrisma[stateRoom].id
-        },
-        data: {
-          player_one_score: stateRoom.playerOne.score,
-          player_two_score: stateRoom.playerTwo.score,
-          status: GameStatus.ENDED
-        }
-      });
-    else
-      return await this.prisma.match.update({
-        where: {
-          id: this.idPrisma[stateRoom].id
-        },
-        data: {
-          player_one_score: p1,
-          player_two_score: p2,
-          status: GameStatus.ENDED
-        }
-      });
-  }
-
-  emitGameState(server: Server, gameState: any, roomName: string) {
-    server.sockets.in(roomName).emit('gameState', JSON.stringify(gameState));
-  }
-
-  async emitGameOver(server: Server, roomName: string, winner: any) {
-    delete this.playersPlaying[roomName];
-    this.updateplayers(server, roomName);
-    const matchGame = await this.prismaUpdate(roomName, 0, 0, false);
+  async updatePlayerPoints(matchGame: any) {
     if (matchGame.player_one_score > matchGame.player_two_score) {
       await this.prisma.user.update({
         where: {
@@ -374,7 +365,8 @@ export class GameService {
             update: {
               played_games: { increment: 1 },
               wins: { increment: 1 },
-              user_points: { increment: 3 }
+              user_points: { increment: 3 },
+              status: ProfileStatus.ONLINE,
             }
           }
         }
@@ -388,7 +380,8 @@ export class GameService {
             update: {
               played_games: { increment: 1 },
               losses: { increment: 1 },
-              user_points: { decrement: 2 }
+              user_points: { decrement: 2 },
+              status: ProfileStatus.ONLINE,
             }
           }
         }
@@ -404,7 +397,8 @@ export class GameService {
             update: {
               played_games: { increment: 1 },
               wins: { increment: 1 },
-              user_points: { increment: 3 }
+              user_points: { increment: 3 },
+              status: ProfileStatus.ONLINE,
             }
           }
         }
@@ -418,12 +412,53 @@ export class GameService {
             update: {
               played_games: { increment: 1 },
               losses: { increment: 1 },
-              user_points: { decrement: 2 }
+              user_points: { decrement: 2 },
+              status: ProfileStatus.ONLINE,
             }
           }
         }
       });
     }
+  }
+
+  async prismaUpdate(roomName: string, p1: number, p2: number, disconnect: boolean) {
+    const stateRoom = this.state[roomName];
+    if (!disconnect) {
+      const matchData =  await this.prisma.match.update({
+        where: {
+          id: this.idPrisma[stateRoom].id
+        },
+        data: {
+          player_one_score: stateRoom.playerOne.score,
+          player_two_score: stateRoom.playerTwo.score,
+          status: GameStatus.ENDED
+        }
+      });
+      this.updatePlayerPoints(matchData);
+    }
+    else {
+      const matchDate = await this.prisma.match.update({
+        where: {
+          id: this.idPrisma[stateRoom].id
+        },
+        data: {
+          player_one_score: p1,
+          player_two_score: p2,
+          status: GameStatus.ENDED
+        }
+      });
+      this.updatePlayerPoints(matchDate);
+    }
+  }
+
+  emitGameState(server: Server, gameState: any, roomName: string) {
+    server.sockets.in(roomName).emit('gameState', JSON.stringify(gameState));
+  }
+
+  async emitGameOver(server: Server, roomName: string, winner: any) {
+    delete this.playersPlaying[roomName];
+    this.updateplayers(server, roomName);
+    const matchGame = await this.prismaUpdate(roomName, 0, 0, false);
     server.in(roomName).emit('gameOver', JSON.stringify(winner));
   }
 
