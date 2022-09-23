@@ -7,7 +7,7 @@ import axios from 'axios';
 import { getData } from '../getData';
 
 const EditForm = ({ handleCloseModal }: any) => {
-	const { userInfo, setUserInfo } = useContext(UserContext);
+	const { userInfo, setUserInfo }: any = useContext(UserContext);
 	const [username, setUsername] = useState(userInfo.user_name);
 	const [file, setFile]: any = useState();
 	const [errorMessage, setErrorMessage] = useState();
@@ -29,11 +29,7 @@ const EditForm = ({ handleCloseModal }: any) => {
 				config
 			);
 			if (res.status === 200) {
-				async function fillUserData() {
-					const user = await getData('http://localhost:8080/api/user');
-					setUserInfo(user);
-				}
-				fillUserData();
+				setUserInfo(await getData('http://localhost:8080/api/user'));
 				handleCloseModal();
 			}
 		} catch (error: any) {

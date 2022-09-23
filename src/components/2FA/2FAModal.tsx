@@ -7,7 +7,7 @@ import { sendPassCode } from './sendPassCode';
 import { getData } from '../getData';
 
 const TwoFactorAuthModal = ({ handleCloseModal }: any) => {
-	const { userInfo, setUserInfo } = useContext(UserContext);
+	const { userInfo, setUserInfo }: any = useContext(UserContext);
 	const [qrCode, setQrCode]: any = useState();
 	const [passcode, setPasscode] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
@@ -25,13 +25,9 @@ const TwoFactorAuthModal = ({ handleCloseModal }: any) => {
 		try {
 			const res = await sendPassCode(passcode);
 			if (res.data.status === 'success') {
-				async function fillUserData() {
-					const user = await getData('http://localhost:8080/api/user');
-					setUserInfo(user);
-				}
-				fillUserData();
-				handleCloseModal();
+				setUserInfo(await getData('http://localhost:8080/api/user'));
 			}
+			handleCloseModal();
 		} catch (error: any) {
 			console.log(error);
 			setErrorMessage(error.response.data.message);

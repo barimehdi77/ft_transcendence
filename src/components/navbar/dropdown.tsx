@@ -13,7 +13,7 @@ import TurnOff2FA from '../2FA/turnOff2FA';
 import Logout from './logout';
 
 const Dropdown = () => {
-	const { userInfo } = useContext(UserContext);
+	const { userInfo }: any = useContext(UserContext);
 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const openDropdown = Boolean(anchorEl);
@@ -77,7 +77,7 @@ const Dropdown = () => {
 					onKeyDown={(e) => e.stopPropagation()}
 					onClick={handleCloseDropdown}
 				>
-					<Logout/>
+					<Logout />
 				</MenuItem>
 			</Menu>
 		</>
