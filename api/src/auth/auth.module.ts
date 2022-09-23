@@ -12,6 +12,7 @@ import { PassportModule } from '@nestjs/passport';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UserModule } from 'src/user/user.module';
 import { AppModule } from 'src/app/app.module';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -23,6 +24,7 @@ import { AppModule } from 'src/app/app.module';
     UserService,
     ConfigService,
     PrismaService,
+    PrismaClient,
     CloudinaryService,
   ],
 })
