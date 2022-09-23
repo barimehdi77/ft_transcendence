@@ -55,6 +55,11 @@ export class FriendsService {
             select: {
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true
+                }
+              }
             },
           });
           return {
@@ -104,6 +109,11 @@ export class FriendsService {
             select: {
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                }
+              }
             },
           });
           return {
