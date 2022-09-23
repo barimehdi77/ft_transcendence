@@ -6,14 +6,14 @@ import ProfileView from '../../components/profile/profileView';
 
 const Profile = () => {
 	const username: any = useRouter().query.userId;
-	const [profileData, setprofileData]: any = useState();
+	const [profileData, setProfileData]: any = useState();
 
 	useEffect(() => {
 		async function fillUserData() {
 			const user = await getData(
 				`http://localhost:8080/api/profile/${username}`
 			);
-			setprofileData(user);
+			setProfileData(user);
 		}
 		if (username) fillUserData();
 	}, [username]);
@@ -32,7 +32,7 @@ const Profile = () => {
 					/>
 				</main>
 			);
-		else return <ProfileView profileData={profileData} />;
+		else return <ProfileView profileData={profileData} setProfileData={setProfileData} />;
 	}
 };
 

@@ -15,7 +15,7 @@ import { ToastContainer } from "react-toastify";
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const token = cookie.get('token') as string;
-	const [userInfo, setUserInfo] = useState({});
+	const [userInfo, setUserInfo] :any = useState({});
 
 	useEffect(() => {
 		if (token && Router.pathname !== '/authenticate') {

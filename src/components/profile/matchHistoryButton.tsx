@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 
 import MatchHistory from './matchHistory';
 
-const MatchHistoryButton = ({ profileStats }: any) => {
+const MatchHistoryButton = ({ profileData }: any) => {
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -23,7 +23,7 @@ const MatchHistoryButton = ({ profileStats }: any) => {
 				aria-describedby='modal-modal-description'
 			>
 				<>
-					<MatchHistory profileStats={profileStats} />
+					<MatchHistory profileData={profileData} />
 				</>
 			</Modal>
 		</div>
