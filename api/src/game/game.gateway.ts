@@ -24,7 +24,7 @@ import { Server, Socket } from 'socket.io';
 export class GameGateway {
   @WebSocketServer()
   server: Server;
-  constructor(private readonly gameService: GameService) {}
+  constructor(private readonly gameService: GameService) { }
 
   // afterInit() {
   //   console.log('Websocket Server Started,Listening on Port:8080');
@@ -41,13 +41,20 @@ export class GameGateway {
   handleDisconnect(client: Socket) {
     // console.log(`Client disconnected: ${client.id}`);
     const roomName = this.gameService.clientRooms[client.id];
+    // console.log(client.id, this.gameService.state);
     if (this.gameService.state[roomName]) {
+      // console.log("disco ", this.gameService.roomName, " ", this.gameService.gameActive[this.gameService.roomName]);
+
       this.gameService.waitlist = false;
-      this.gameService.gameActive[this.gameService.roomName] = false;
-      if (client.id === this.gameService.state[roomName].playerOne.id)
+      this.gameService.gameActive[roomName] = false;
+      if (client.id === this.gameService.state[roomName].playerOne.id) {
+        // console.log("disconne ", 1);
         this.gameService.playerDisconnected[roomName] = 1;
-      else if (client.id === this.gameService.state[roomName].playerTwo.id)
+      }
+      else if (client.id === this.gameService.state[roomName].playerTwo.id) {
+        // console.log("disconne ", 2);
         this.gameService.playerDisconnected[roomName] = 2;
+      }
     }
   }
 
@@ -83,7 +90,8 @@ export class GameGateway {
     @MessageBody() gameCode: string,
     @ConnectedSocket() client: Socket,
   ) {
-    this.gameService.handleSpectateGame(this.server, client, gameCode);
+    this.gameService.start[client.id] = true;
+    return this.gameService.handleSpectateGame(this.server, client, gameCode);
   }
 
   @SubscribeMessage('playGame')
@@ -94,6 +102,13 @@ export class GameGateway {
   @SubscribeMessage('listOfPlayersPlaying')
   handleListOfPlayersPlaying() {
     return (this.gameService.ListOfPlayersPlaying());
+    // return (this.gameService.playersPlaying);
+  }
+  @SubscribeMessage('stop')
+  stop(@ConnectedSocket() client: Socket) {
+    this.gameService.start[client.id] = false;
+    console.log("stop ", client.id, "    ", this.gameService.start);
+
     // return (this.gameService.playersPlaying);
   }
 }

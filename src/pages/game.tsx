@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from 'react';
-import { paintGame, drawRect, drawText } from './drawing';
+import { paintGame, drawRect, drawText } from '../components/drawing/drawing';
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
@@ -22,7 +22,7 @@ const Game = () => {
 	};
 
 	if (typeof window !== 'undefined') {
-		console.log(window.innerWidth, ' ', window.innerHeight);
+		// console.log(window.innerWidth, ' ', window.innerHeight);
 		window.onresize = () => {
 			if (gameActive) {
 				if (canvasRef.current) {
@@ -65,26 +65,26 @@ const Game = () => {
 		playGame();
 	}, []);
 
-	const spectateGame = () => {
-		// setinitialScreen(true);
-		socket.emit('spectateGame', gameCodeInput.toString());
-		init(0);
-	};
+	// const spectateGame = () => {
+	// 	// setinitialScreen(true);
+	// 	socket.emit('spectateGame', gameCodeInput.toString());
+	// 	init(0);
+	// };
 
-	const handlSpectateState = (state: string) => {
-		if (canvasRef.current) {
-			if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
-			drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
-			if (!gameActive) {
-				return;
-			}
-			let StateTemp = JSON.parse(state);
-			requestAnimationFrame(() =>
-				paintGame(ctx, StateTemp, canvas.width, canvas.height)
-			);
-		}
-	};
-	socket.off('spectateState').on('spectateState', handlSpectateState);
+	// const handlSpectateState = (state: string) => {
+	// 	if (canvasRef.current) {
+	// 		if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
+	// 		drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
+	// 		if (!gameActive) {
+	// 			return;
+	// 		}
+	// 		let StateTemp = JSON.parse(state);
+	// 		requestAnimationFrame(() =>
+	// 			paintGame(ctx, StateTemp, canvas.width, canvas.height)
+	// 		);
+	// 	}
+	// };
+	// socket.off('spectateState').on('spectateState', handlSpectateState);
 
 	// PAGE GAME
 	const keydown = (e: any) => {
@@ -113,13 +113,13 @@ const Game = () => {
 	};
 	socket.off('gameState').on('gameState', handlGameState);
 
-	const handleGameOver = (data: any) => {
-		console.log('gameA: ', gameActive);
+	const handleGameOver = (data: number) => {
+		// console.log('gameA: ', gameActive);
 
 		if (!gameActive) return;
-		data = JSON.parse(data);
+		// data = JSON.parse(data);
 		setGameActive(false);
-		console.log('d: ', data, ' p: ', playerNamber);
+		// console.log('d: ', data, ' p: ', playerNamber);
 
 		if (data === playerNamber) {
 			alert('You Win!');
@@ -133,14 +133,13 @@ const Game = () => {
 	socket.off('gameOver').on('gameOver', handleGameOver);
 
 	const handlePlayerDisconnected = (player: number) => {
+		// console.log(player, " !== ", playerNamber);
 		if (player !== playerNamber) {
 			alert('Your opponent disconnected. You win!');
 			Router.push('/');
 		}
 	};
-	socket
-		.off('playerDisconnected')
-		.on('playerDisconnected', handlePlayerDisconnected);
+	socket.off('playerDisconnected').on('playerDisconnected', handlePlayerDisconnected);
 
 	const handleGameCode = (gameCode: string) => {
 		setGameCodeDisplay(gameCode);
