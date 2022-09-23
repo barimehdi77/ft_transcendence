@@ -49,6 +49,43 @@ Authorization Bearer Token
 
 `Token Bearer <token>`
 
+# DELETE unfriend user
+URL: `localhost:8080/api/friends/:id`
+
+this endpoint uses to unfriend some one.
+
+the `:id` is the friend request id.
+
+## response Example On success:
+```
+{
+    "status": "success",
+    "message": "unfriend Successfully",
+    "data": {
+        "id": 1,
+        "from": 39523,
+        "to": 62484,
+        "status": "ACCEPTED"
+    }
+}
+```
+
+## Response Example on Failure:
+
+```
+{
+    "statusCode": 401,
+    "message": "Unauthorized"
+}
+```
+
+## JWT Token
+
+Authorization Bearer Token
+
+`Token Bearer <token>`
+
+
 # POST send Friend Request
 
 URL: `localhost:8080/api/friends/request`
@@ -89,6 +126,7 @@ Authorization Bearer Token
 `Token Bearer <token>`
 
 # GET all Friend Request (PENDING FRIEND REQUESTS)
+URL: `localhost:8080/api/friends/request`
 
 this endpoint retrive all friend Requests for the logged in user
 
@@ -118,6 +156,7 @@ Authorization Bearer Token
 `Token Bearer <token>`
 
 # PATCH update specific Friend Request
+URL: `localhost:8080/api/friends/request/:friendRequestId`
 
 this endpoint Update the friend request from PENDING to ACCEPTED
 
@@ -152,6 +191,7 @@ Authorization Bearer Token
 `Token Bearer <token>`
 
 # DELETE specific Friend Request (DECLINED)
+URL : `localhost:8080/api/friends/request/:friendRequestId`
 
 this endpoint deleted the Friend Request when a user is declined it.
 
@@ -180,6 +220,7 @@ Authorization Bearer Token
 `Token Bearer <token>`
 
 # POST Block User
+URL: `localhost:8080/api/friends/block`
 
 a user can block other user.
 
@@ -217,6 +258,7 @@ a user can block other user.
 
 
 # POST unBlock User
+URL : `localhost:8080/api/friends/unblock`
 
 a user can unblock other user.
 

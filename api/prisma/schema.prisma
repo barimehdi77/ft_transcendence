@@ -53,6 +53,7 @@ model Match {
   player_two       String
   player_one_score Int
   player_two_score Int
+  status           GameStatus
   User             User?  @relation(fields: [userId], references: [id])
   userId           Int?
 }
@@ -124,4 +125,9 @@ enum ProfileStatus {
   ONLINE
   INGAME
   OFLINE
+}
+
+enum GameStatus {
+  PLAYING
+  ENDED
 }

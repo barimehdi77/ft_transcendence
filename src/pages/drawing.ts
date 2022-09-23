@@ -23,10 +23,10 @@ const drawCircle = (ctx: any, x: number, y: number, r: number, color: string) =>
 }
 
 // // draw Text
-const drawText = (ctx: any, text: string, x: number, y: number, color: string, percentage: number) => {
+const drawText = (ctx: any, text: string, x: number, y: number, color: string, percentage: number, size: number) => {
     if (ctx) {
         ctx.fillStyle = color;
-        ctx.font = `${45 / percentage}px fantasy`;
+        ctx.font = `${size / percentage}px fantasy`;
         ctx.fillText(text, x, y);
     }
 }
@@ -58,8 +58,11 @@ const paintPlayers = (ctx: any, gameState: any, percentage: number) => {
 
     drawRect(ctx, pOne.x, pOne.y, pOne.width, pOne.height, pOne.color);
     drawRect(ctx, pTwo.x, pTwo.y, pTwo.width, pTwo.height, pTwo.color);
-    drawText(ctx, pOne.score.toString(), (600 / 4) / percentage, (300 / 5) / percentage, "white", percentage);
-    drawText(ctx, pTwo.score.toString(), ((600 / 4) * 3) / percentage, (300 / 5) / percentage, "white", percentage);
+    drawText(ctx, pOne.score.toString(), (600 / 4) / percentage, (300 / 5) / percentage, "white", percentage, 45);
+    drawText(ctx, pTwo.score.toString(), ((600 / 4) * 3) / percentage, (300 / 5) / percentage, "white", percentage, 45);
+    
+    drawText(ctx, pOne.name, 10 / percentage, ((300 / 5) / percentage) - 300 / 8, "white", percentage, 20);
+    drawText(ctx, pTwo.name, ((600 / 1.9)) / percentage, ((300 / 5) / percentage) - 300 / 8, "white", percentage, 20);
 }
 
 export { drawRect, drawText, drawNet, drawCircle, paintGame, paintPlayers }

@@ -8,8 +8,8 @@ module.exports = {
 		extend: {
 			backgroundImage: (theme) => ({
 				'hero-pattern': "url('/bg-pattern.png')",
-			})
-		}
+			}),
+		},
 	},
 	plugins: [],
 };

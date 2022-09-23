@@ -26,22 +26,23 @@ export class GameGateway {
   server: Server;
   constructor(private readonly gameService: GameService) {}
 
-  afterInit() {
-    console.log('Websocket Server Started,Listening on Port:8080');
-  }
+  // afterInit() {
+  //   console.log('Websocket Server Started,Listening on Port:8080');
+  // }
 
-  handleConnection(client: Socket) {
-    console.log(
-      `Client game connected: ${client.id}`,
-      ' length: ',
-      this.server.engine.clientsCount,
-    );
-  }
+  // handleConnection(client: Socket) {
+  //   console.log(
+  //     `Client game connected: ${client.id}`,
+  //     ' length: ',
+  //     this.server.engine.clientsCount,
+  //   );
+  // }
 
   handleDisconnect(client: Socket) {
     // console.log(`Client disconnected: ${client.id}`);
     const roomName = this.gameService.clientRooms[client.id];
     if (this.gameService.state[roomName]) {
+      this.gameService.waitlist = false;
       this.gameService.gameActive[this.gameService.roomName] = false;
       if (client.id === this.gameService.state[roomName].playerOne.id)
         this.gameService.playerDisconnected[roomName] = 1;
@@ -87,7 +88,12 @@ export class GameGateway {
 
   @SubscribeMessage('playGame')
   handlePlayGame(@MessageBody() userInfo: any, @ConnectedSocket() client: Socket) {
-    // console.log("userInfo: ", userInfo);
     this.gameService.handlePlayGame(this.server, client, userInfo);
+  }
+
+  @SubscribeMessage('listOfPlayersPlaying')
+  handleListOfPlayersPlaying() {
+    return (this.gameService.ListOfPlayersPlaying());
+    // return (this.gameService.playersPlaying);
   }
 }

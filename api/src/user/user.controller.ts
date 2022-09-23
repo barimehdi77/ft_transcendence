@@ -3,16 +3,10 @@ import {
   Get,
   Post,
   Body,
-  // Patch,
-  // Param,
-  // Delete,
   UseGuards,
   Req,
   Res,
   Headers,
-  // UseFilters,
-  // HttpCode,
-  // HttpStatus,
   UseInterceptors,
   UploadedFile,
   Param,
@@ -31,38 +25,29 @@ import { GetUser } from 'src/auth/decorator';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @Get('find')
-  // find() {
-  //   return 'ana findit chi haja'; // abdel-ke
-  // }
-  // @Post()
-  // async create(@Body() data: Prisma.UserUncheckedCreateInput, @Res() res: Response) {
-  //   try {
-  //     const user = await this.userService.create(data);
-  //     if (!user) {
-  //       return res.status(HttpStatus.BAD_REQUEST).json({
-  //         status: 'faild',
-  //         message: "Can not Create User",
-  //       });
-  //     }
-  // return res.status(200).json({
-  //   status: 'success',
-  //   message: "User Register Successfully",
-  //   data: user,
-  // });
-  //   } catch (error) {
-
-  //   }
-  // }
-
   @Get()
+  // @UseGuards(AuthGuard('jwt'))
   async findUser(
     @Req() req: Request,
     @Res() res: Response,
     @Headers('Authorization') auth: string,
   ) {
-    const user = await this.userService.FindUser(auth);
-    return res.send(user);
+    try {
+      const user = await this.userService.FindUser(auth);
+      if (user === null) {
+        return res.status(409).json({
+          status: 'failure',
+          message: 'jwt not correct',
+        });
+      }
+      return res.send(user);
+    } catch (error) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'Error updating user data',
+        error: error.message ? error.message : error,
+      });
+    }
   }
 
   @Post('/setup')
@@ -74,8 +59,6 @@ export class UserController {
     @UploadedFile() file: Express.Multer.File,
     @Body() data: UpdateUserInfo,
   ) {
-    console.log('File: ', file);
-    console.log('Data: ', data);
     try {
       data.avatar = file;
       const user = await this.userService.accountSetup(data, auth);
@@ -100,15 +83,6 @@ export class UserController {
     }
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() data: Prisma.UserUpdateInput) {
-  //   return this.userService.update({id: +id}, data);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.userService.remove({id: +id});
-  // }
   @Get('/find')
   @UseGuards(AuthGuard('jwt'))
   findUsersNotIn(@GetUser('intra_id') intra_id: number) {
@@ -123,5 +97,5 @@ export class UserController {
   ) {
     return this.userService.findUsersNotIn(conversationId, intra_id);
   }
-  
+
 }

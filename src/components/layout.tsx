@@ -5,12 +5,16 @@ import Router from 'next/router';
 import Navbar from './navbar/navbar';
 
 const Layout = ({ children }: any) => {
-	const { userInfo } = useContext(UserContext);
+	const { userInfo } :any = useContext(UserContext);
 
 	return (
 		<div className='bg-hero-pattern bg-cover bg-center'>
 			{userInfo ? (
-				userInfo.profile_done && Router.pathname !== '/authenticate' ? (
+				userInfo.profile_done &&
+				Router.pathname !== '/authenticate' &&
+				Router.pathname !== '/game' &&
+				Router.pathname !== '/rooms' &&
+				Router.pathname !== '/dms' ? (
 					<Navbar />
 				) : null
 			) : null}

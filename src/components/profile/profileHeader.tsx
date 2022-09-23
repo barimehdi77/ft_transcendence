@@ -1,7 +1,13 @@
+import { useContext } from 'react';
+import { UserContext } from '../../contexts/userContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 
-const ProfileHeader = ({ profileData }: any) => {
+import UserImage from '../userImage';
+import AddAndBlockButtons from '../friends/addAndBlockButtons';
+
+const ProfileHeader = ({ profileData, setProfileData }: any) => {
+	const { userInfo }: any = useContext(UserContext);
 	const points = profileData.profile.user_points;
 	let rank;
 
@@ -10,19 +16,23 @@ const ProfileHeader = ({ profileData }: any) => {
 	else if (points > 59) rank = 'text-yellow-500';
 
 	return (
-		<div className='bg-sky-800 flex items-center px-10 py-4 rounded-t-3xl	'>
-			<div className='text-neutral-100'>
-				<h2 className='text-xl font-semibold inline'>
-					{profileData.user_name}
-				</h2>
-				<FontAwesomeIcon icon={faMedal} className={`text-2xl ${rank} ml-2`} />
-				<p>{profileData.email}</p>
+		<div className='bg-sky-800 px-10 py-4 rounded-t-3xl	'>
+			<div className='flex items-center'>
+				<div className='text-neutral-100'>
+					<h2 className='text-xl font-semibold inline'>
+						{profileData.user_name}
+					</h2>
+					<FontAwesomeIcon icon={faMedal} className={`text-2xl ${rank} ml-2`} />
+					<p>{profileData.email}</p>
+				</div>
+				<UserImage image_url={profileData.image_url} />
 			</div>
-			<img
-				src={profileData.image_url}
-				alt='User Avatar'
-				className='w-12 h-12 object-cover rounded-full ml-4'
-			/>
+			{profileData.user_name !== userInfo.user_name ? (
+				<AddAndBlockButtons
+					profileData={profileData}
+					setProfileData={setProfileData}
+				/>
+			) : null}
 		</div>
 	);
 };

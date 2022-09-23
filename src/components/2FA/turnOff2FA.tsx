@@ -3,16 +3,12 @@ import { UserContext } from '../../contexts/userContext';
 import { getData } from '../getData';
 
 const TurnOff2FA = () => {
-	const { userInfo, setUserInfo } = useContext(UserContext);
+	const { userInfo, setUserInfo }: any = useContext(UserContext);
 
 	async function turnOff2FA() {
 		const res = await getData('http://localhost:8080/api/auth/turn-off');
 		if (res.status === 'success') {
-			async function fillUserData() {
-				const user = await getData('http://localhost:8080/api/user');
-				setUserInfo(user);
-			}
-			fillUserData();
+			setUserInfo(await getData('http://localhost:8080/api/user'));
 		}
 	}
 

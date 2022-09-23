@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { PrismaClient } from '@prisma/client';
+import { GameStatus, PrismaClient } from '@prisma/client';
+import { GetPlayingGames } from './dto/get-playing-games.dto';
+import { ProfileService } from 'src/profile/profile.service';
+import { UserProfile } from 'src/auth/dto/User.dto';
 
 @Injectable()
 export class GameService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient,
+    private profileService: ProfileService) { }
+
+
   FRAMERATE = 30;
   state: any = {};
   clientRooms: any = {};
@@ -13,6 +19,11 @@ export class GameService {
   canvasWidth = 600;
   canvasHeight: number = this.canvasWidth / 2;
   playerDisconnected: any = {};
+  waitlist: boolean = false;
+  roomName: number;
+  idPrisma: any = {};
+
+  playersPlaying: any = {}
 
   createGameState() {
     return {
@@ -128,8 +139,8 @@ export class GameService {
       ball.speed += 0.1;
       // update the score;
     }
-    if (playerOne.score == 2) return 1;
-    if (playerTwo.score == 2) return 2;
+    if (playerOne.score == 15) return 1;
+    if (playerTwo.score == 15) return 2;
     return false;
   }
 
@@ -186,6 +197,8 @@ export class GameService {
       count--;
       if (count === 0) {
         clearInterval(int);
+        server.emit('listOfPlayersPlaying', JSON.stringify(this.playersPlaying))
+        // this.updateplayers(server, roomName);
         this.startGameInterval(server, state, roomName);
       }
     }, 1500);
@@ -198,50 +211,25 @@ export class GameService {
       const stateRoom = state[roomName];
       if (this.gameActive[roomName]) {
         if (!winner) {
-          // clinet.emit('gameState', JSON.stringify(state));
           this.emitGameState(server, stateRoom, roomName);
         } else {
-          // console.log("GameOver: ", stateRoom);
           clearInterval(interval);
           this.gameActive[roomName] = false;
           this.emitGameOver(server, roomName, winner);
-          await this.prisma.match.create({
-            data: {
-              player_one: stateRoom.playerOne.name,
-              player_two: stateRoom.playerTwo.name,
-              player_one_score: stateRoom.playerOne.score,
-              player_two_score: stateRoom.playerTwo.score,
-            },
-          });
+          return;
         }
       } else {
-        // ${this.state[roomName]}
-        // console.log(`player[] ${this.playerDisconnected[roomName]} was disconnected`);
         this.emitPlayerDesconnected(
           server,
           roomName,
           this.playerDisconnected[roomName],
         );
         clearInterval(interval);
-        // console.log("disconnect: ", state[roomName]);
         if (this.playerDisconnected[roomName] === 1)
-          await this.prisma.match.create({
-            data: {
-              player_one: stateRoom.playerOne.name,
-              player_two: stateRoom.playerTwo.name,
-              player_one_score: 0,
-              player_two_score: 10,
-            },
-          });
+          this.prismaUpdate(roomName, 0, 10, true);
         else if (this.playerDisconnected[roomName] === 2)
-          await this.prisma.match.create({
-            data: {
-              player_one: stateRoom.playerOne.name,
-              player_two: stateRoom.playerTwo.name,
-              player_one_score: 10,
-              player_two_score: 0,
-            },
-          });
+          this.prismaUpdate(roomName, 10, 0, true);
+        return;
       }
     }, 1000 / this.FRAMERATE);
   };
@@ -256,16 +244,16 @@ export class GameService {
     this.state[roomName].playerOne.id = client.id;
     this.state[roomName].playerOne.name = userInfo.user_name;
     client.join(roomName.toString());
-    client.emit('init', 1);
+    client.in(roomName.toString()).emit('init', 1);
   }
 
   //client.on('joinGame', handleJoinGame);
-  handleJoinGame(
+  handleJoinGame = async (
     server: Server,
     client: Socket,
     gameCode: string,
     userInfo: any,
-  ) {
+  ) => {
     let room: string;
     if (!gameCode) return;
     this.gameActive[gameCode] = true;
@@ -288,38 +276,41 @@ export class GameService {
       client.emit('unknownGame');
       return;
     }
-    // else if (numClients > 1) {
-    //     client.emit('tooManyPlayers');
-    //     return;
-    // }
-
     this.clientRooms[client.id] = gameCode;
 
     client.join(gameCode);
     this.state[gameCode].playerTwo.id = client.id;
     this.state[gameCode].playerTwo.name = userInfo.user_name;
-    client.emit('init', 2);
+    this.playersPlaying[gameCode] = { p1: this.state[gameCode].playerOne.name, p2: this.state[gameCode].playerTwo.name };
+    client.in(gameCode).emit('init', 2);
+    const stateRoom = this.state[gameCode];
+    this.idPrisma[stateRoom] = await this.prisma.match.create({
+      data: {
+        player_one: stateRoom.playerOne.name,
+        player_two: stateRoom.playerTwo.name,
+        player_one_score: stateRoom.playerOne.score,
+        player_two_score: stateRoom.playerTwo.score,
+        status: GameStatus.PLAYING
+      },
+    });
     this.starting(server, this.state, gameCode);
   }
 
-  roomName: number;
-  cp = 1;
   wait = false;
+  name: string;
   handlePlayGame(server: Server, client: Socket, userInfo: any) {
-    if (this.cp % 2 != 0) {
+    if (!this.waitlist) {
+      this.name = userInfo.user_name;
+      this.waitlist = true;
       this.handleNewGame(client, userInfo);
-      // console.log("First => cp: ", this.cp, " toomName: ", this.roomName);
-      this.cp++;
       this.wait = true;
       const interval = setInterval(() => {
         server.in(this.roomName.toString()).emit('waiting');
         if (!this.wait) clearInterval(interval);
       }, 500);
-    } else {
-      // console.log("second => cp: ", this.cp, " roomName: ", this.roomName);
+    } else if (this.name !== userInfo.user_name) {
+      this.waitlist = false;
       this.handleJoinGame(server, client, this.roomName.toString(), userInfo);
-      // console.log("gameActive", this.gameActive);
-      this.cp++;
       this.wait = false;
     }
   }
@@ -331,22 +322,144 @@ export class GameService {
       .get(gameCode)
       .forEach((value) => (room = value));
     this.clientSpectating[client.id] = gameCode;
-    setInterval(() => {
+    const interval = setInterval(() => {
       const state = this.state[gameCode];
       server.emit('spectateState', JSON.stringify(state));
+      if (!this.gameActive[gameCode])
+        clearInterval(interval);
     }, 1000 / this.FRAMERATE);
+  }
+
+  async prismaUpdate(roomName: string, p1: number, p2: number, disconnect: boolean) {
+    const stateRoom = this.state[roomName];
+    if (!disconnect)
+      return await this.prisma.match.update({
+        where: {
+          id: this.idPrisma[stateRoom].id
+        },
+        data: {
+          player_one_score: stateRoom.playerOne.score,
+          player_two_score: stateRoom.playerTwo.score,
+          status: GameStatus.ENDED
+        }
+      });
+    else
+      return await this.prisma.match.update({
+        where: {
+          id: this.idPrisma[stateRoom].id
+        },
+        data: {
+          player_one_score: p1,
+          player_two_score: p2,
+          status: GameStatus.ENDED
+        }
+      });
   }
 
   emitGameState(server: Server, gameState: any, roomName: string) {
     server.sockets.in(roomName).emit('gameState', JSON.stringify(gameState));
   }
 
-  emitGameOver(server: Server, roomName: string, winner: any) {
-    // console.log("Over gameActive", this.gameActive);
+  async emitGameOver(server: Server, roomName: string, winner: any) {
+    delete this.playersPlaying[roomName];
+    this.updateplayers(server, roomName);
+    const matchGame = await this.prismaUpdate(roomName, 0, 0, false);
+    if (matchGame.player_one_score > matchGame.player_two_score) {
+      await this.prisma.user.update({
+        where: {
+          user_name: matchGame.player_one,
+        },
+        data: {
+          profile: {
+            update: {
+              played_games: { increment: 1 },
+              wins: { increment: 1 },
+              user_points: { increment: 3 }
+            }
+          }
+        }
+      });
+      await this.prisma.user.update({
+        where: {
+          user_name: matchGame.player_two,
+        },
+        data: {
+          profile: {
+            update: {
+              played_games: { increment: 1 },
+              losses: { increment: 1 },
+              user_points: { decrement: 2 }
+            }
+          }
+        }
+      });
+    }
+    else {
+      await this.prisma.user.update({
+        where: {
+          user_name: matchGame.player_two,
+        },
+        data: {
+          profile: {
+            update: {
+              played_games: { increment: 1 },
+              wins: { increment: 1 },
+              user_points: { increment: 3 }
+            }
+          }
+        }
+      });
+      await this.prisma.user.update({
+        where: {
+          user_name: matchGame.player_one,
+        },
+        data: {
+          profile: {
+            update: {
+              played_games: { increment: 1 },
+              losses: { increment: 1 },
+              user_points: { decrement: 2 }
+            }
+          }
+        }
+      });
+    }
     server.in(roomName).emit('gameOver', JSON.stringify(winner));
   }
 
   emitPlayerDesconnected(server: Server, roomName: string, winner: number) {
-    server.in(roomName).emit('playerDisconnected', JSON.stringify(winner));
+    // delete this.state[roomName];
+      delete this.playersPlaying[roomName];
+      this.updateplayers(server, roomName);
+      server.in(roomName).emit('playerDisconnected', JSON.stringify(winner));
+  }
+
+  updateplayers(server: Server, roomName: string) {
+    if (!this.gameActive[roomName])
+      server.emit('updateplayers', JSON.stringify(this.playersPlaying));
+  }
+
+  ListOfPlayersPlaying() {
+    return this.playersPlaying;
+  }
+
+
+  async getPlayingGames() {
+    const playedGames = await this.prisma.match.findMany({
+      where: {
+        status: GameStatus.PLAYING,
+      },
+      select: {
+        player_one: true,
+        player_two: true,
+      }
+    });
+    const returnPlayedGames = playedGames.map(async (game) => {
+      return ({
+        player_one: await this.profileService.getProfile(game.player_one),
+        player_two: await this.profileService.getProfile(game.player_two)
+      });
+    });
+    return (Promise.all(returnPlayedGames));
   }
 }
