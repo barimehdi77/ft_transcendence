@@ -79,6 +79,31 @@ export class FriendsController {
     }
   }
 
+  @Delete(':id')
+  async unfriend(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('id') id: string,
+  ) {
+    try {
+      const unfriend = await this.friendsService.unfriend(+id);
+      if (unfriend) {
+        return res.status(200).json({
+          status: 'success',
+          message: 'unfriend Successfully',
+          data: unfriend,
+        });
+      }
+    } catch (error: any) {
+      console.log(error);
+      return res.status(500).json({
+        status: 'error',
+        message: 'Error Removing Friend',
+        error: error.message ? error.message : error,
+      });
+    }
+  }
+
   @Get('request')
   async findAll(
     @Req() req: Request,
@@ -139,14 +164,14 @@ export class FriendsController {
   }
 
   @Delete('request/:id')
-  async remove(
+  async removeFriendRequest(
     @Req() req: Request,
     @Res() res: Response,
     @Param('id') id: string,
     @Headers('Authorization') auth: string,
   ) {
     try {
-      const removed = await this.friendsService.remove(+id, auth);
+      const removed = await this.friendsService.removeFriendRequest(+id, auth);
       console.log('return from service', removed);
       if (removed) {
         return res.status(200).json({
@@ -165,7 +190,6 @@ export class FriendsController {
     }
   }
 
-
   @Post('block')
   async blockUser(
     @Req() req: Request,
@@ -174,7 +198,10 @@ export class FriendsController {
     @Headers('Authorization') auth: string,
   ) {
     try {
-      const blockedUser = await this.friendsService.blockUser(auth, createFriendRequestDto);
+      const blockedUser = await this.friendsService.blockUser(
+        auth,
+        createFriendRequestDto,
+      );
       if (blockedUser) {
         return res.status(200).json({
           status: 'success',
@@ -199,7 +226,10 @@ export class FriendsController {
     @Headers('Authorization') auth: string,
   ) {
     try {
-      const blockedUser = await this.friendsService.unblockUser(auth, createFriendRequestDto);
+      const blockedUser = await this.friendsService.unblockUser(
+        auth,
+        createFriendRequestDto,
+      );
       if (blockedUser) {
         return res.status(200).json({
           status: 'success',
@@ -214,5 +244,4 @@ export class FriendsController {
       });
     }
   }
-
 }

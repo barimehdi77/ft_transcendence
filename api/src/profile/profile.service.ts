@@ -43,7 +43,39 @@ export class ProfileService {
     });
   };
 
+  async getProfile (user_name: string): Promise<UserProfile> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        user_name: user_name,
+      },
+      select: {
+        user_name: true,
+        first_name: true,
+        last_name: true,
+        login: true,
+        image_url: true,
+        email: true,
+        intra_id: true,
+        profile: {
+          select: {
+            status: true,
+            played_games: true,
+            user_points: true,
+            wins: true,
+            losses: true,
+          }
+        }
+      }
+    });
+    console.log(user);
+    return ({
+      ...user,
+      isFriends: null
+    })
+  }
+
   async findOne(user_name: string, auth: string): Promise<UserProfile> {
+    console.log('hehr');
     const intra_id = this.userService.decode(auth).intra_id;
     const user = await this.prisma.user.findUnique({
       where: {
@@ -68,6 +100,9 @@ export class ProfileService {
         }
       }
     });
+    if (!user) {
+      return (null);
+    }
     const isFriends = await this.prisma.friendsList.findFirst({
       where: {
         OR: [

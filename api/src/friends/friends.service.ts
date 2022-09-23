@@ -99,7 +99,7 @@ export class FriendsService {
           console.log('req', request);
           const req = await this.prisma.user.findUnique({
             where: {
-              intra_id: request.to,
+              intra_id: intra_id === request.to ? request.from : request.to,
             },
             select: {
               user_name: true,
@@ -130,10 +130,7 @@ export class FriendsService {
     return Friendrequest.to;
   }
 
-  async update(
-    id: number,
-    auth: string,
-  ) {
+  async update(id: number, auth: string) {
     const intra_id = this.userService.decode(auth).intra_id;
     const to = await this.getFriendRequest(id);
     if (to === intra_id) {
@@ -154,7 +151,16 @@ export class FriendsService {
     throw new UnauthorizedException();
   }
 
-  async remove(id: number, auth: string) {
+  async unfriend(id: number) {
+    const removed = await this.prisma.friendsList.delete({
+      where: {
+        id: id,
+      },
+    });
+    return removed;
+  }
+
+  async removeFriendRequest(id: number, auth: string) {
     const intra_id = this.userService.decode(auth).intra_id;
     const to = await this.getFriendRequest(id);
     if (to === intra_id) {
@@ -168,49 +174,54 @@ export class FriendsService {
     throw new UnauthorizedException();
   }
 
-  async blockUser(auth: string, createFriendRequestDto: CreateFriendRequestDto) {
+  async blockUser(
+    auth: string,
+    createFriendRequestDto: CreateFriendRequestDto,
+  ) {
     const fromIntra_id = this.userService.decode(auth).intra_id;
     const findFriendRequest = await this.prisma.friendsList.findUnique({
       where: {
         from_to: {
           from: fromIntra_id,
-          to: createFriendRequestDto.to
-        }
-      }
+          to: createFriendRequestDto.to,
+        },
+      },
     });
     if (findFriendRequest === null) {
       const blockedUser = await this.prisma.friendsList.create({
         data: {
           from: fromIntra_id,
           to: createFriendRequestDto.to,
-          status: FriendStatus.BLOCKED
-        }
+          status: FriendStatus.BLOCKED,
+        },
       });
-      return (blockedUser);
-    }
-    else {
+      return blockedUser;
+    } else {
       const blockedUser = await this.prisma.friendsList.update({
         where: {
           id: findFriendRequest.id,
         },
         data: {
-          status: FriendStatus.BLOCKED
-        }
+          status: FriendStatus.BLOCKED,
+        },
       });
-      return (blockedUser);
+      return blockedUser;
     }
   }
 
-  async unblockUser(auth: string, createFriendRequestDto: CreateFriendRequestDto) {
+  async unblockUser(
+    auth: string,
+    createFriendRequestDto: CreateFriendRequestDto,
+  ) {
     const fromIntra_id = this.userService.decode(auth).intra_id;
     const findblockRequest = await this.prisma.friendsList.delete({
       where: {
         from_to: {
           from: fromIntra_id,
-          to: createFriendRequestDto.to
-        }
+          to: createFriendRequestDto.to,
+        },
       },
     });
-    return (findblockRequest);
+    return findblockRequest;
   }
 }

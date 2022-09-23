@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 
 import UserImage from '../userImage';
-import FriendButtons from '../friends/friendButtons';
+import AddAndBlockButtons from '../friends/addAndBlockButtons';
 
-const ProfileHeader = ({ profileData }: any) => {
+const ProfileHeader = ({ profileData, setProfileData }: any) => {
 	const { userInfo } = useContext(UserContext);
 	const points = profileData.profile.user_points;
 	let rank;
@@ -14,8 +14,6 @@ const ProfileHeader = ({ profileData }: any) => {
 	if (points < 20) rank = 'text-yellow-700';
 	else if (points > 20 && points < 40) rank = 'text-slate-300';
 	else if (points > 59) rank = 'text-yellow-500';
-
-	if (profileData.user_name === userInfo.user_name) console.log('its me');
 
 	return (
 		<div className='bg-sky-800 px-10 py-4 rounded-t-3xl	'>
@@ -29,7 +27,12 @@ const ProfileHeader = ({ profileData }: any) => {
 				</div>
 				<UserImage image_url={profileData.image_url} />
 			</div>
-			{profileData.user_name !== userInfo.user_name ? <FriendButtons intra_id={profileData.intra_id} /> : null}
+			{profileData.user_name !== userInfo.user_name ? (
+				<AddAndBlockButtons
+					profileData={profileData}
+					setProfileData={setProfileData}
+				/>
+			) : null}
 		</div>
 	);
 };
