@@ -1,9 +1,10 @@
 import Router from 'next/router';
+import { getData } from '../getData';
 
 const Logout = () => {
-	const logUserOut = () => {
+	const logUserOut = async () => {
+		await getData('http://localhost:8080/api/auth/logout')
 		localStorage.removeItem('token');
-		console.log('clicked');
 		Router.reload()
 	};
 	return <button onClick={logUserOut}>Logout</button>;

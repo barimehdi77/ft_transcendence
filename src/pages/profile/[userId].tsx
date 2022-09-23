@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { getData } from '../../components/getData';
 import ProfileView from '../../components/profile/profileView';
+import Head from 'next/head';
 
 const Profile = () => {
 	const username: any = useRouter().query.userId;
@@ -22,6 +23,9 @@ const Profile = () => {
 		if (profileData.status! === 'failure')
 			return (
 				<main className='min-h-screen flex flex-col items-center justify-center'>
+					<Head>
+						<title>User not found</title>
+					</Head>
 					<h1 className='text-4xl font-bold text-sky-900 mb-8'>
 						User not found
 					</h1>
@@ -32,7 +36,18 @@ const Profile = () => {
 					/>
 				</main>
 			);
-		else return <ProfileView profileData={profileData} setProfileData={setProfileData} />;
+		else
+			return (
+				<>
+					<Head>
+						<title>{profileData.data.user_name}</title>
+					</Head>
+					<ProfileView
+						profileData={profileData}
+						setProfileData={setProfileData}
+					/>
+				</>
+			);
 	}
 };
 

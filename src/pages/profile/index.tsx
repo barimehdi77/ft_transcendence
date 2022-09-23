@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getData } from '../../components/getData';
 import ProfileView from '../../components/profile/profileView';
+import Head from 'next/head';
 
 const Profile = () => {
 	const [profileData, setProfileData]: any = useState({});
@@ -12,7 +13,14 @@ const Profile = () => {
 		fillProfileData();
 	}, []);
 
-	return <ProfileView profileData={profileData} />;
+	return (
+		<>
+			<Head>
+				<title>My Profile</title>
+			</Head>
+			<ProfileView profileData={profileData} />;
+		</>
+	);
 };
 
 export default Profile;

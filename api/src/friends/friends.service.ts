@@ -55,6 +55,11 @@ export class FriendsService {
             select: {
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true
+                }
+              }
             },
           });
           return {
@@ -104,6 +109,11 @@ export class FriendsService {
             select: {
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                }
+              }
             },
           });
           return {
@@ -197,11 +207,15 @@ export class FriendsService {
       });
       return blockedUser;
     } else {
-      const blockedUser = await this.prisma.friendsList.update({
+      await this.prisma.friendsList.delete({
         where: {
-          id: findFriendRequest.id,
-        },
+          id: findFriendRequest.id
+        }
+      })
+      const blockedUser = await this.prisma.friendsList.create({
         data: {
+          from: fromIntra_id,
+          to: createFriendRequestDto.to,
           status: FriendStatus.BLOCKED,
         },
       });

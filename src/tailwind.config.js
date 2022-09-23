@@ -9,9 +9,6 @@ module.exports = {
 			backgroundImage: (theme) => ({
 				'hero-pattern': "url('/bg-pattern.png')",
 			}),
-			screens: {
-				navbar: '960px',
-			},
 		},
 	},
 	plugins: [],
