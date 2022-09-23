@@ -32,6 +32,7 @@ import Avatar from "react-avatar";
 import AddUserPopUp from "../../components/chat/AddUserPopUp";
 import BanUserPopUp from "../../components/chat/BanUserPopUp";
 import { UserContext } from '../../contexts/userContext';
+import Head from "next/head";
 
 // This temporary, before link user to chat
 let userId: number | null = 39523;
@@ -551,7 +552,10 @@ const rooms = () => {
   };
 
   return (
-    <div className="w-full h-screen">
+		<div className="w-full h-screen">
+			<Head>
+				<title>Chat rooms</title>
+			</Head>
       <div className="flex h-full">
         <div className="flex-1 bg-gray-100 w-full h-full">
           <div className="main-body container m-auto w-11/12 h-full flex flex-col">
