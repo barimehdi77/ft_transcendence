@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import React from 'react';
 
 const Login = () => {
@@ -6,6 +7,9 @@ const Login = () => {
 			className='min-h-screen flex flex-col items-center justify-center'
 			style={{ minWidth: '900px' }}
 		>
+			<Head>
+				<title>Logout</title>
+			</Head>
 			<div>
 				<h1 className='text-center text-6xl font-extrabold uppercase'>
 					king pong
