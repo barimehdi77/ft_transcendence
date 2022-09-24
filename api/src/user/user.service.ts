@@ -132,6 +132,11 @@ export class UserService {
         profile_done: true,
         isTwoFactorAuthenticationEnabled: true,
         twoFactorAuthenticationSecret: true,
+        profile: {
+          select: {
+            status: true,
+          }
+        },
       },
     });
     return user;
