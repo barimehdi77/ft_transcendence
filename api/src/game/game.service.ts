@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GameStatus, PrismaClient } from '@prisma/client';
-import { GetPlayingGames } from './dto/get-playing-games.dto';
 import { ProfileService } from 'src/profile/profile.service';
-import { UserProfile } from 'src/auth/dto/User.dto';
 
 @Injectable()
 export class GameService {
   constructor(private prisma: PrismaClient,
     private profileService: ProfileService) { }
 
+  users: any = {}
 
   FRAMERATE = 10;
   state: any = {};
@@ -27,6 +26,7 @@ export class GameService {
 
   createGameState() {
     return {
+      color: Math.floor(Math.random() * 4),
       playerOne: {
         id: 'playerOne',
         name: '',
@@ -34,7 +34,7 @@ export class GameService {
         y: (this.canvasHeight - 100) / 2,
         width: 10,
         height: 100,
-        color: 'white',
+        // color: 'white',
         score: 0,
       },
       playerTwo: {
@@ -44,7 +44,7 @@ export class GameService {
         y: (this.canvasHeight - 100) / 2,
         width: 10,
         height: 100,
-        color: 'white',
+        // color: 'white',
         score: 0,
       },
       ball: {
@@ -54,7 +54,7 @@ export class GameService {
         speed: 7,
         velocityX: 7,
         velocityY: 7,
-        color: 'white',
+        // color: 'white',
       },
     };
   }
@@ -240,6 +240,7 @@ export class GameService {
     client.emit('gameCode', roomName);
 
     this.state[roomName] = this.createGameState();
+
     this.state[roomName].playerOne.id = client.id;
     this.state[roomName].playerOne.name = userInfo.user_name;
     client.join(roomName.toString());
@@ -316,6 +317,7 @@ export class GameService {
       this.handleJoinGame(server, client, this.roomName.toString(), userInfo);
       this.wait = false;
     }
+    return this.state[this.roomName].color;
   }
 
   start = {};
@@ -331,15 +333,15 @@ export class GameService {
       // console.log("clientSpectating: ", this.clientSpectating[client.id]);
 
       // if (!this.clientSpectating[client.id]) {
-        // this.clientSpectating[client.id] = gameCode;
-        // client.join(client.id);
-        const interval = setInterval(() => {
-          const state = this.state[gameCode];
-          // server.in(gameCode).emit('spectateState', JSON.stringify(state));
-          server.to(client.id).emit('spectateState', JSON.stringify(state));
-          if (!this.gameActive[gameCode] || !this.start[client.id])
-            clearInterval(interval);
-        }, 1000 / this.FRAMERATE);
+      // this.clientSpectating[client.id] = gameCode;
+      // client.join(client.id);
+      const interval = setInterval(() => {
+        const state = this.state[gameCode];
+        // server.in(gameCode).emit('spectateState', JSON.stringify(state));
+        server.to(client.id).emit('spectateState', JSON.stringify(state));
+        if (!this.gameActive[gameCode] || !this.start[client.id])
+          clearInterval(interval);
+      }, 1000 / this.FRAMERATE);
       // }
       return true;
     }
