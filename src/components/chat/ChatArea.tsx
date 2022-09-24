@@ -35,18 +35,22 @@ const ChatArea = ({
 
   const submitMessage = (e: any) => {
     e.preventDefault();
-    const body: IMessageBody = {
-      conversationId: conversation?.conversation_id,
-      body: message,
-      type: "room",
-    };
-    sendMessage(body)
-      .then((res) => {
-        setMessage("");
-      })
-      .catch((error: string) => {
-        toast.error(error);
-      });
+    if (message.trim() !== "" && message.length <= 1000) {
+      const body: IMessageBody = {
+        conversationId: conversation?.conversation_id,
+        body: message,
+        type: "room",
+      };
+      sendMessage(body)
+        .then((res) => {
+          setMessage("");
+        })
+        .catch((error: string) => {
+          toast.error(error);
+        });
+    } else {
+      toast.error("Message must be not empty & less than 1000 characters");
+    }
   };
 
   if (!conversation) {

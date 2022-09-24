@@ -32,18 +32,22 @@ const ChatAreaDm = ({
 
   const submitMessage = (e: any) => {
     e.preventDefault();
-    const body: IMessageBody = {
-      conversationId: conversation?.conversation_id,
-      body: message,
-      type: "dm",
-    };
-    sendMessage(body)
-      .then((res) => {
-        setMessage("");
-      })
-      .catch((error: string) => {
-        toast.error(error);
-      });
+    if (message.trim() !== "" && message.length <= 1000) {
+      const body: IMessageBody = {
+        conversationId: conversation?.conversation_id,
+        body: message,
+        type: "dm",
+      };
+      sendMessage(body)
+        .then((res) => {
+          setMessage("");
+        })
+        .catch((error: string) => {
+          toast.error(error);
+        });
+    } else {
+      toast.error("Message must be not empty & less than 1000 characters");
+    }
   };
 
   if (!conversation) {
@@ -110,11 +114,11 @@ const ChatAreaDm = ({
 
               <div className="flex-1 px-2">
                 <div
-                  className={`inline-block  rounded-full p-2 px-6 ${
+                  className={`break-words inline-block text-center rounded-full ${message.body.length <= 300 ? 'p-2 px-6' : 'p-5 px-14'} ${
                     isMe ? "bg-sky-800 text-white" : "bg-gray-300 text-gray-700"
                   }`}
                 >
-                  <span>{message.body}</span>
+                  <p className="break-words">{message.body}</p>
                 </div>
                 <div className={`${isMe ? "pr-4" : "pl-4"}`}>
                   <small className="text-gray-500">

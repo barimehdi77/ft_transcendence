@@ -143,7 +143,7 @@ const ConversationsListDms = ({
                 <div>
                   <small className="text-gray-600">
                     {conversation.last_message?.body
-                      ? conversation.last_message?.body
+                      ? conversation.last_message?.body.substring(0, 20)
                       : "No message yet"}
                   </small>
                 </div>
