@@ -31,8 +31,9 @@ import { getAllUsers, getUsersNotInConversation } from "../../services/users";
 import Avatar from "react-avatar";
 import AddUserPopUp from "../../components/chat/AddUserPopUp";
 import BanUserPopUp from "../../components/chat/BanUserPopUp";
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from "../../contexts/userContext";
 import Head from "next/head";
+import Link from "next/link";
 
 // This temporary, before link user to chat
 let userId: number | null = 39523;
@@ -57,7 +58,7 @@ const options = [
 // };
 
 const rooms = () => {
-  const { userInfo } :any = useContext(UserContext);
+  const { userInfo }: any = useContext(UserContext);
   const {
     conversations,
     setConversations,
@@ -552,10 +553,10 @@ const rooms = () => {
   };
 
   return (
-		<div className="w-full h-screen">
-			<Head>
-				<title>Chat rooms</title>
-			</Head>
+    <div className="w-full h-screen">
+      <Head>
+        <title>Chat rooms</title>
+      </Head>
       <div className="flex h-full">
         <div className="flex-1 bg-gray-100 w-full h-full">
           <div className="main-body container m-auto w-11/12 h-full flex flex-col">
@@ -924,11 +925,13 @@ const rooms = () => {
                 >
                   <div className="flex-2">
                     <div className="w-12 h-12 relative">
-                      <img
-                        className="w-12 h-12 rounded-full mx-auto object-cover"
-                        src={member.image_url}
-                        alt="chat-user"
-                      />
+                      <Link href={`/profile/${member.user_name}`}>
+                        <img
+                          className="w-12 h-12 rounded-full mx-auto object-cover cursor-pointer"
+                          src={member.image_url}
+                          alt="chat-user"
+                        />
+                      </Link>
                     </div>
                   </div>
                   <div className="flex-1 px-2">
@@ -1060,11 +1063,13 @@ const rooms = () => {
                 >
                   <div className="flex-2">
                     <div className="w-12 h-12 relative">
-                      <img
-                        className="w-12 h-12 rounded-full mx-auto object-cover"
-                        src={member.image_url}
-                        alt="chat-user"
-                      />
+                      <Link href={`/profile/${member.user_name}`}>
+                        <img
+                          className="w-12 h-12 rounded-full mx-auto object-cover cursor-pointer"
+                          src={member.image_url}
+                          alt="chat-user"
+                        />
+                      </Link>
                     </div>
                   </div>
                   <div className="flex-1 px-2">

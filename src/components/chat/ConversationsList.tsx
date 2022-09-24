@@ -1,4 +1,5 @@
 import moment from "moment";
+import Link from "next/link";
 import { useContext, useState } from "react";
 import Avatar from "react-avatar";
 import { toast } from "react-toastify";
@@ -113,11 +114,13 @@ const ConversationsList = ({
           <div className="flex">
             <div className="flex-2">
               <div className="w-12 h-12 relative">
-                <img
-                  className="w-12 h-12 rounded-full mx-auto"
-                  src={user.image_url}
-                  alt="chat-user"
-                />
+                <Link href={`/profile/${user.user_name}`}>
+                  <img
+                    className="w-12 h-12 rounded-full mx-auto object-cover cursor-pointer"
+                    src={user.image_url}
+                    alt="chat-user"
+                  />
+                </Link>
                 <span
                   className={`absolute w-4 h-4 ${
                     user ? "bg-green-400" : "bg-gray-400"
@@ -228,11 +231,11 @@ const ConversationsList = ({
                   </small>
                 </div>
                 {/* {conversation.not_read_messages > 0 && ( */}
-                <div>
+                {/* <div>
                   <small className="text-xs bg-red-500 text-white rounded-full h-6 w-6 leading-6 text-center inline-block">
                     8
                   </small>
-                </div>
+                </div> */}
                 {/* )} */}
               </div>
             </div>

@@ -80,21 +80,21 @@ const dm = () => {
     [];
 
   useEffect(() => {
-    console.log("id", query.id);
     if (query.id) {
       getConversationFromUrl(parseInt(query.id as string));
     }
+    router.replace('/dms', undefined, { shallow: true });
   }, []);
 
   const getConversationFromUrl = async (userId: number) => {
     try {
       const res: any = await createDmCOnversation(userId);
-      console.log("res", res);
       if (res.status === "success") {
         getMessagesDm(res.conversation.conversation_id);
         setSelectedConversation(res.conversation);
         joinConversation(res.conversation?.conversation_id);
         getConversationsList();
+        
       } else {
         toast.error("user not found");
       }

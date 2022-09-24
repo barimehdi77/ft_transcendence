@@ -9,8 +9,8 @@ import {
   IMessageBody,
 } from "../../typings";
 import SocketContext from "./socket_context/context";
-import { leaveConversation } from "../../services/conversations";
 import { getMember } from "../../helpers";
+import Link from "next/link";
 
 const ChatAreaDm = ({
   conversation,
@@ -35,7 +35,7 @@ const ChatAreaDm = ({
     const body: IMessageBody = {
       conversationId: conversation?.conversation_id,
       body: message,
-      type: 'dm',
+      type: "dm",
     };
     sendMessage(body)
       .then((res) => {
@@ -84,11 +84,13 @@ const ChatAreaDm = ({
               {!isMe ? (
                 <div className="flex-2">
                   <div className="w-12 h-12 relative">
-                    <img
-                      className="w-12 h-12 rounded-full mx-auto"
-                      src={getMember(user.intra_id, conversation.members)?.image_url}
-                      alt="chat-user"
-                    />
+                    <Link href={`/profile/${message.sent_by.user_name}`}>
+                      <img
+                        className="w-12 h-12 rounded-full mx-auto object-cover cursor-pointer"
+                        src={message.sent_by.image_url}
+                        alt="chat-user"
+                      />
+                    </Link>
                     <span className="absolute w-4 h-4 bg-gray-400 rounded-full right-0 bottom-0 border-2 border-white"></span>
                   </div>
                 </div>
