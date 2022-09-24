@@ -70,9 +70,14 @@ const MyFriends = ({
 									>
 										Unfriend
 									</button>
-									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
-										Message
-									</button>
+                  <Link
+                    href={{
+                      pathname: "/dms",
+                      query: { id: user.intra_id },
+                    }}
+                  >
+                    <a  className="bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700">Message</a>
+                  </Link>
 									{user.profile.status === 'ONLINE' ? (
 										<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
 											Play Game

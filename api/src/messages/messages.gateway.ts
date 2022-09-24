@@ -18,32 +18,10 @@ import { JoinConversationDto, SendMessageDto } from './dto';
   },
   path: '/socket',
 })
-/* @WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
-  path: '/socket',
-}) */
 export class MessagesGateway {
   @WebSocketServer()
   server: Server;
   constructor(private readonly messagesService: MessagesService) {}
-
-  // afterInit() {
-  //   console.log('Chat websocket Server Started');
-  // }
-
-  // handleConnection(client: Socket) {
-  //   console.log(
-  //     `Chat client connected: ${client.id}`,
-  //     ' length: ',
-  //     this.server.engine.clientsCount,
-  //   );
-  // }
-
-  // handleDisconnect(client: Socket) {
-  //   console.log(`Chat client disconnected: ${client.id}`);
-  // }
 
   @SubscribeMessage('joinConversation')
   joinConversation(

@@ -15,9 +15,12 @@ export class MessagesService {
 
   async sendMessage(dto: SendMessageDto, intra_id: number) {
     try {
-      if (!dto.body || !dto.body.trim().length) {
+      if (!dto.body || !dto.body.trim().length)
         throw new Error('error: Message is empty');
-      }
+
+      if (dto.body.length > 1000)
+        throw new Error('error: Message is too long, must be less than 1000');
+
       let conversations = [];
       if (dto.type === 'room') {
         conversations = await this.conversationService.getConversationByIdRoom(
