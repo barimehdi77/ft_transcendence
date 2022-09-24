@@ -22,6 +22,7 @@ import { getAllUsers } from "../../services/users";
 import { joinConversation } from "../../socket/emit";
 import { UserContext } from "../../contexts/userContext";
 import Head from "next/head";
+import { getStatus } from "../../helpers";
 
 const dm = () => {
   const { userInfo }: any = useContext(UserContext);
@@ -83,7 +84,7 @@ const dm = () => {
     if (query.id) {
       getConversationFromUrl(parseInt(query.id as string));
     }
-    router.replace('/dms', undefined, { shallow: true });
+    router.replace("/dms", undefined, { shallow: true });
   }, []);
 
   const getConversationFromUrl = async (userId: number) => {
@@ -94,7 +95,6 @@ const dm = () => {
         setSelectedConversation(res.conversation);
         joinConversation(res.conversation?.conversation_id);
         getConversationsList();
-        
       } else {
         toast.error("user not found");
       }
@@ -235,8 +235,14 @@ const dm = () => {
               <div className="flex-1 text-right">
                 <span className="inline-block text-gray-700">
                   Status:{" "}
-                  <span className="inline-block align-middle w-4 h-4 bg-green-400 rounded-full border-2 border-white"></span>{" "}
-                  <b>Online</b>
+                  <span
+                    className={`inline-block align-middle w-4 h-4 ${
+                      getStatus(userInfo?.profile?.status).color
+                    } rounded-full border-2 border-white`}
+                  ></span>{" "}
+                  <b>{
+                      getStatus(userInfo?.profile?.status).text
+                    }</b>
                 </span>
               </div>
             </div>

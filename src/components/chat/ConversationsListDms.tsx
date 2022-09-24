@@ -2,7 +2,7 @@ import moment from "moment";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getMember } from "../../helpers";
+import { getMember, getStatus } from "../../helpers";
 import { getConversationMessagesDm } from "../../services/conversations";
 import { joinConversation } from "../../socket/emit";
 import {
@@ -61,7 +61,7 @@ const ConversationsListDms = ({
                 </Link>
                 <span
                   className={`absolute w-4 h-4 ${
-                    user ? "bg-green-400" : "bg-gray-400"
+                    getStatus(user?.profile?.status).color
                   } rounded-full right-0 bottom-0 border-2 border-white`}
                 ></span>
               </div>
@@ -74,7 +74,7 @@ const ConversationsListDms = ({
               </div>
               <div>
                 <small className="text-gray-600">
-                  {user ? "Online" : "Offline"}
+                  {getStatus(user?.profile?.status).text}
                 </small>
               </div>
             </div>
@@ -124,7 +124,10 @@ const ConversationsListDms = ({
                   />
                   <span
                     className={`absolute w-4 h-4 ${
-                      user ? "bg-green-400" : "bg-gray-400"
+                      getStatus(
+                        getMember(user.intra_id, conversation.members)?.profile
+                          ?.status
+                      ).color
                     } rounded-full right-0 bottom-0 border-2 border-white`}
                   ></span>
                 </div>

@@ -34,6 +34,7 @@ import BanUserPopUp from "../../components/chat/BanUserPopUp";
 import { UserContext } from "../../contexts/userContext";
 import Head from "next/head";
 import Link from "next/link";
+import { getStatus } from "../../helpers";
 
 // This temporary, before link user to chat
 let userId: number | null = 39523;
@@ -600,8 +601,12 @@ const rooms = () => {
               <div className="flex-1 text-right">
                 <span className="inline-block text-gray-700">
                   Status:{" "}
-                  <span className="inline-block align-middle w-4 h-4 bg-green-400 rounded-full border-2 border-white"></span>{" "}
-                  <b>Online</b>
+                  <span
+                    className={`inline-block align-middle w-4 h-4 ${
+                      getStatus(userInfo?.profile?.status).color
+                    } rounded-full border-2 border-white`}
+                  ></span>{" "}
+                  <b>{getStatus(userInfo?.profile?.status).text}</b>
                 </span>
               </div>
             </div>

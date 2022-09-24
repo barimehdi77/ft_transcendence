@@ -607,6 +607,11 @@ export class ConversationService {
               last_name: true,
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                },
+              },
             },
           },
         },
@@ -649,6 +654,11 @@ export class ConversationService {
                   last_name: true,
                   user_name: true,
                   image_url: true,
+                  profile: {
+                    select: {
+                      status: true,
+                    },
+                  },
                 },
               },
               body: true,
@@ -662,6 +672,11 @@ export class ConversationService {
               last_name: true,
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                },
+              },
             },
           },
           admins: {
@@ -671,6 +686,11 @@ export class ConversationService {
               last_name: true,
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                },
+              },
             },
           },
         },
@@ -690,6 +710,9 @@ export class ConversationService {
               last_name: 'last_name',
               user_name: 'user_name',
               image_url: 'image_url',
+              profile: {
+                status: 'OFFLINE',
+              },
             },
             body: 'No message yet',
             sentAt: conversation.createdAt,
@@ -767,6 +790,11 @@ export class ConversationService {
               last_name: true,
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                }
+              },
             },
           },
           body: true,
@@ -819,6 +847,11 @@ export class ConversationService {
             last_name: true,
             user_name: true,
             image_url: true,
+            profile: {
+              select: {
+                status: true,
+              }
+            },
           },
         },
       },
@@ -913,6 +946,11 @@ export class ConversationService {
             last_name: true,
             user_name: true,
             image_url: true,
+            profile: {
+              select: {
+                status: true,
+              }
+            },
           },
         },
         admins: {
@@ -922,6 +960,11 @@ export class ConversationService {
             last_name: true,
             user_name: true,
             image_url: true,
+            profile: {
+              select: {
+                status: true,
+              }
+            },
           },
         },
       },

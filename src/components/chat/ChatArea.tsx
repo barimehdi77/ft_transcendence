@@ -11,13 +11,7 @@ import {
 import SocketContext from "./socket_context/context";
 import { leaveConversation } from "../../services/conversations";
 import Link from "next/link";
-
-// This temporary, before link user to chat
-// let userId: number | null;
-// if (typeof window !== "undefined") {
-//   userId = parseInt(localStorage.getItem("userId_temp") as string, 10);
-// }
-////////////////////////////////////////////////////
+import { getStatus } from "../../helpers";
 
 const ChatArea = ({
   user,
@@ -210,7 +204,11 @@ const ChatArea = ({
                         alt="chat-user"
                       />
                     </Link>
-                    <span className="absolute w-4 h-4 bg-gray-400 rounded-full right-0 bottom-0 border-2 border-white"></span>
+                    <span
+                      className={`absolute w-4 h-4 ${
+                        getStatus(message.sent_by.profile?.status).color
+                      } rounded-full right-0 bottom-0 border-2 border-white`}
+                    ></span>
                   </div>
                 </div>
               ) : null}

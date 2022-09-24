@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import Avatar from "react-avatar";
 import { toast } from "react-toastify";
+import { getStatus } from "../../helpers";
 import {
   checkConversationPassword,
   getConversationMessages,
@@ -123,7 +124,7 @@ const ConversationsList = ({
                 </Link>
                 <span
                   className={`absolute w-4 h-4 ${
-                    user ? "bg-green-400" : "bg-gray-400"
+                    getStatus(user?.profile?.status).color
                   } rounded-full right-0 bottom-0 border-2 border-white`}
                 ></span>
               </div>
@@ -136,7 +137,7 @@ const ConversationsList = ({
               </div>
               <div>
                 <small className="text-gray-600">
-                  {user ? "Online" : "Offline"}
+                  {getStatus(user?.profile?.status).text}
                 </small>
               </div>
             </div>
@@ -203,11 +204,11 @@ const ConversationsList = ({
               <div className="flex-2">
                 <div className="w-12 h-12 relative">
                   <Avatar size="45" name={conversation.name} round={true} />
-                  <span
+                  {/* <span
                     className={`absolute w-4 h-4 ${
                       user ? "bg-green-400" : "bg-gray-400"
                     } rounded-full right-0 bottom-0 border-2 border-white`}
-                  ></span>
+                  ></span> */}
                 </div>
               </div>
               <div className="flex-1 px-2">

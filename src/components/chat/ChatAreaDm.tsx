@@ -9,7 +9,7 @@ import {
   IMessageBody,
 } from "../../typings";
 import SocketContext from "./socket_context/context";
-import { getMember } from "../../helpers";
+import { getMember, getStatus } from "../../helpers";
 import Link from "next/link";
 
 const ChatAreaDm = ({
@@ -66,9 +66,17 @@ const ChatAreaDm = ({
         <div className="flex-3">
           <h2 className="text-xl py-1 mb-8 border-b-2 border-gray-200">
             User:{" "}
-            <b className="uppercase">{`${
-              getMember(user.intra_id, conversation.members)?.first_name
-            } ${getMember(user.intra_id, conversation.members)?.last_name}`}</b>
+            <Link
+              href={`/profile/${
+                getMember(user.intra_id, conversation.members)?.user_name
+              }`}
+            >
+              <b className="uppercase cursor-pointer">{`${
+                getMember(user.intra_id, conversation.members)?.first_name
+              } ${
+                getMember(user.intra_id, conversation.members)?.last_name
+              }`}</b>
+            </Link>
           </h2>
         </div>
       </div>
@@ -91,7 +99,11 @@ const ChatAreaDm = ({
                         alt="chat-user"
                       />
                     </Link>
-                    <span className="absolute w-4 h-4 bg-gray-400 rounded-full right-0 bottom-0 border-2 border-white"></span>
+                    <span
+                      className={`absolute w-4 h-4 ${
+                        getStatus(message.sent_by.profile?.status).color
+                      } rounded-full right-0 bottom-0 border-2 border-white`}
+                    ></span>
                   </div>
                 </div>
               ) : null}
