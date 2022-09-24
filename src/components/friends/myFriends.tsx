@@ -40,8 +40,6 @@ const MyFriends = ({
 					</p>
 					{friendsList.data.map((request: any, key: number) => {
 						const user = request.to;
-						console.log('user', user);
-						
 						let color = 'bg-green-500';
 						if (user.profile.status === 'OFFLINE') color = 'bg-red-600';
 						else if (user.profile.status === 'INGAME') color = 'bg-amber-500';
@@ -73,11 +71,17 @@ const MyFriends = ({
 										Unfriend
 									</button>
 									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
-										Play Game
-									</button>
-									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
 										Message
 									</button>
+									{user.profile.status === 'ONLINE' ? (
+										<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
+											Play Game
+										</button>
+									) : (
+										<button className='bg-slate-500 text-white font-medium rounded-3xl py-2 px-4 mr-2 cursor-default'>
+											Unavailable
+										</button>
+									)}
 								</div>
 							</div>
 						);
