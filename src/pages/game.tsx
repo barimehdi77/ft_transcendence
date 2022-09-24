@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from 'react';
-import { paintGame, drawRect, drawText } from '../components/drawing/drawing';
+import { paintGame, drawText } from '../components/drawing/drawing';
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
@@ -11,10 +11,19 @@ const Game = () => {
 	let canvas: HTMLCanvasElement;
 	let ctx: any;
 
-	const [gameCodeInput, setGameCodeInput] = useState('');
-	const [gameCodeDisplay, setGameCodeDisplay] = useState('');
+	// const [gameCodeInput, setGameCodeInput] = useState('');
+	// const [gameCodeDisplay, setGameCodeDisplay] = useState('');
 	const [gameActive, setGameActive] = useState(false);
 	const [playerNamber, setPlayerNamber] = useState(0);
+	const [randomColor, setRandomColor] = useState(0);
+
+	const color = [
+		{ back: "#000000", front: "#ffffff" },
+		{ back: "#003459", front: "#d9d9d9" },
+		{ back: "#461220", front: "#fed0bb" },
+		{ back: "#590d22", front: "#ffccd5" },
+		{ back: "#184e77", front: "#d9ed92" },
+	];
 
 	const init = (player: number) => {
 		setGameActive(true);
@@ -57,12 +66,13 @@ const Game = () => {
 	}
 
 	const playGame = () => {
-		socket.emit('playGame', userInfo);
+		socket.emit('playGame', userInfo, (ret: number) => setRandomColor(ret));
 		setGameActive(true);
 	};
 
 	useEffect(() => {
 		playGame();
+		// setRandomColor(Math.floor(Math.random() * 4));
 	}, []);
 
 	// const spectateGame = () => {
@@ -100,7 +110,7 @@ const Game = () => {
 	const handlGameState = (gameState: string) => {
 		if (canvasRef.current) {
 			if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
-			drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
+			// drawRect(ctx, 0, 0, canvas.width, canvas.height, '#2ec4b6');
 			document.addEventListener('keydown', keydown);
 			if (!gameActive) {
 				return;
@@ -141,10 +151,10 @@ const Game = () => {
 	};
 	socket.off('playerDisconnected').on('playerDisconnected', handlePlayerDisconnected);
 
-	const handleGameCode = (gameCode: string) => {
-		setGameCodeDisplay(gameCode);
-	};
-	socket.off('gameCode').on('gameCode', handleGameCode);
+	// const handleGameCode = (gameCode: string) => {
+	// 	setGameCodeDisplay(gameCode);
+	// };
+	// socket.off('gameCode').on('gameCode', handleGameCode);
 
 	let x = 0;
 	const handleWaiting = () => {
@@ -153,7 +163,7 @@ const Game = () => {
 			'. ',
 			canvas.width / 2 - 12 + x,
 			canvas.height / 2,
-			'white',
+			color[randomColor].front,
 			600 / canvas.width,
 			45
 		);
@@ -173,7 +183,7 @@ const Game = () => {
 			countDown.toString(),
 			canvas.width / 2,
 			canvas.height / 2,
-			'white',
+			color[randomColor].front,
 			600 / canvas.width,
 			45
 		);
@@ -193,7 +203,7 @@ const Game = () => {
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
 						<canvas
 							ref={canvasRef}
-							style={{ border: '1px solid #c3c3c3', backgroundColor: 'black' }}
+							style={{ border: '1px solid #c3c3c3', backgroundColor: color[randomColor].back }}
 						></canvas>
 					</div>
 				</div>

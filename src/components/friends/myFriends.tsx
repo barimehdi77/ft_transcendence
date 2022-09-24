@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '../getData';
 import { unfriendUser } from './unfriendUser';
+import { socket } from '../../socket';
 
 const MyFriends = ({
 	friendRequests,
@@ -10,6 +11,8 @@ const MyFriends = ({
 	setFriendsList,
 }: any) => {
 	let plural = '';
+	const [users, setUsers] = useState();
+
 	useEffect(() => {
 		async function fillData() {
 			setFriendsList(await getData('http://localhost:8080/api/friends'));
@@ -30,6 +33,11 @@ const MyFriends = ({
 	console.log(friendsList);
 
 	if (friendsList) friendsList.data.length !== 1 ? (plural = 's') : null;
+
+	const getUsers = () => {
+		// socket.emit('getUsers', (ret: any) => setUsers(ret))
+		// console.log("users: ", users);
+	}
 
 	return (
 		<>
@@ -61,7 +69,7 @@ const MyFriends = ({
 									>
 										Unfriend
 									</button>
-									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
+									<button onClick={getUsers} className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
 										Play Game
 									</button>
 									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
