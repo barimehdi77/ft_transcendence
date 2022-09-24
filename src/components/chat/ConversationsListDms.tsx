@@ -20,7 +20,9 @@ const ConversationsListDms = ({
   const { setMessages, setSelectedConversation, selectedConversation } =
     useContext<IConversationContext>(SocketContext);
 
-  const handleClickConversation = async (conversation: IConversation | null) => {
+  const handleClickConversation = async (
+    conversation: IConversation | null
+  ) => {
     try {
       setSelectedConversation(null);
       const res: any = await getConversationMessagesDm(
@@ -77,7 +79,10 @@ const ConversationsListDms = ({
 
           <div className="flex space-x-2">
             <div className="flex-1">
-              <button onClick={() => setStartDmOpen(true)} className="bg-sky-800 w-10 h-10 rounded-full inline-block transition duration-100 hover:scale-110 hover:bg-sky-700">
+              <button
+                onClick={() => setStartDmOpen(true)}
+                className="bg-sky-800 w-10 h-10 rounded-full inline-block transition duration-100 hover:scale-110 hover:bg-sky-700"
+              >
                 <span className="inline-block align-text-center mt-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

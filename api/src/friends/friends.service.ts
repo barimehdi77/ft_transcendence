@@ -107,6 +107,7 @@ export class FriendsService {
               intra_id: intra_id === request.to ? request.from : request.to,
             },
             select: {
+              intra_id: true,
               user_name: true,
               image_url: true,
               profile: {

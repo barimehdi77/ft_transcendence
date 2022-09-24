@@ -12,13 +12,6 @@ import SocketContext from "./socket_context/context";
 import { leaveConversation } from "../../services/conversations";
 import { getMember } from "../../helpers";
 
-// This temporary, before link user to chat
-// let userId: number | null;
-// if (typeof window !== "undefined") {
-//   userId = parseInt(localStorage.getItem("userId_temp") as string, 10);
-// }
-////////////////////////////////////////////////////
-
 const ChatAreaDm = ({
   conversation,
   loading,
@@ -93,8 +86,6 @@ const ChatAreaDm = ({
                   <div className="w-12 h-12 relative">
                     <img
                       className="w-12 h-12 rounded-full mx-auto"
-                      // src="https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A"
-                      // src={user.image_url}
                       src={getMember(user.intra_id, conversation.members)?.image_url}
                       alt="chat-user"
                     />
