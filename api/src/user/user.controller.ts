@@ -68,6 +68,11 @@ export class UserController {
           status: 'failure',
           message: 'Username already taken',
         });
+      } else if (user === 'NOTVALID') {
+        return res.status(409).json({
+          status: 'failure',
+          message: 'Username Not Valid',
+        });
       } else {
         return res.status(200).json({
           status: 'success',

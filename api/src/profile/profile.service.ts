@@ -75,7 +75,6 @@ export class ProfileService {
   }
 
   async findOne(user_name: string, auth: string): Promise<UserProfile> {
-    console.log('hehr');
     const intra_id = this.userService.decode(auth).intra_id;
     const user = await this.prisma.user.findUnique({
       where: {
