@@ -1,10 +1,8 @@
-import { BadRequestException, Injectable, Req } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { ConfigService } from '@nestjs/config';
-import { Request } from 'express';
-import { jwtInfo } from './dto/jwt.dto';
 import { CreateJwt, SetupUser, UserAuth, UserDecoder } from 'src/auth/dto/User.dto';
 import { UpdateUserInfo } from './dto/User.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
@@ -207,19 +205,6 @@ export class UserService {
       },
     });
   }
-
-  // update(where: Prisma.UserWhereUniqueInput, data: Prisma.UserUpdateInput) {
-  //   return this.prisma.user.update({
-  //     where,
-  //     data,
-  //   });
-  // }
-
-  // remove(where: Prisma.UserWhereUniqueInput) {
-  //   return this.prisma.user.delete({
-  //     where,
-  //   });
-  // }
 
   findUsers(intra_id: number) {
     return this.prisma.user.findMany({

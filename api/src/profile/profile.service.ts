@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { FriendStatus } from '@prisma/client';
 import { PrismaService } from 'src/app/prisma.service';
 import { UserProfile } from 'src/auth/dto/User.dto';
@@ -67,7 +66,6 @@ export class ProfileService {
         }
       }
     });
-    console.log(user);
     return ({
       ...user,
       isFriends: null
@@ -149,7 +147,6 @@ export class ProfileService {
         ],
       }
     });
-    console.log(`the user ${username} played `,matches)
     const matchsHistory: matchDetails[] = matches.map(match => {
       return ({
         player_one: {
@@ -166,24 +163,4 @@ export class ProfileService {
     return (matchsHistory);
   }
 
-  // async ProfileLayout(user_name: string) : Promise<ReadProfileLayout> {
-  //   const user = await this.prisma.user.findUnique({
-  //     where: {
-  //       user_name: user_name.toLocaleLowerCase(),
-  //     },
-  //     select: {
-  //       user_name: true,
-  //       image_url: true,
-  //     }
-  //   });
-  //   return (user);
-  // }
-
-  // update(id: number, updateProfileDto: UpdateProfileDto) {
-  //   return `This action updates a #${id} profile`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} profile`;
-  // }
 }
