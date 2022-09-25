@@ -12,6 +12,7 @@ import Utils from '../helpers/utils';
 import * as argon from 'argon2';
 import { BanMemberDto } from './dto/ban-member.dto';
 import * as moment from 'moment-timezone';
+import { FriendStatus } from '@prisma/client';
 
 @Injectable()
 export class ConversationService {
