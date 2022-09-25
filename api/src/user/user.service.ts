@@ -165,6 +165,10 @@ export class UserService {
   }
 
   async accountSetup(data: UpdateUserInfo, auth: string) {
+    if(!data.user_name.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/)) {
+      console.log("UserName not valid");
+      return ('NOTVALID')
+    }
     const User = await this.findUserName(data.user_name as string);
     if (User !== null) return null;
 

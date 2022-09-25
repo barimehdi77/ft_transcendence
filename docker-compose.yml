@@ -14,7 +14,7 @@ services:
     #         POSTGRES_PASSWORD: password
     #         POSTGRES_DB: db
     #     ports:
-    #         - "8080:8080" # the port number is for dev only prud port is == 8080
+    #         - "8080:8080"
     #     restart: on-failure
     #     networks:
     #         network:
@@ -26,7 +26,7 @@ services:
         depends_on:
             - postgres
         ports:
-            - "80:80" # the port number is for dev only prud port is == 8080
+            - "80:80"
         restart: on-failure
         networks:
             network:
