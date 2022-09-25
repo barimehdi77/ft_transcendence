@@ -51,7 +51,7 @@ const Dropdown = () => {
 					{profileData.data ? (
 						<UserImage
 							image_url={userInfo.image_url}
-							status={profileData.data.profile.status}
+							status={profileData.data?.profile?.status}
 						/>
 					) : (
 						<UserImage image_url={userInfo.image_url} status='online' />

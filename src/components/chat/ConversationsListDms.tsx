@@ -1,7 +1,8 @@
 import moment from "moment";
+import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getMember } from "../../helpers";
+import { getMember, getStatus } from "../../helpers";
 import { getConversationMessagesDm } from "../../services/conversations";
 import { joinConversation } from "../../socket/emit";
 import {
@@ -20,7 +21,9 @@ const ConversationsListDms = ({
   const { setMessages, setSelectedConversation, selectedConversation } =
     useContext<IConversationContext>(SocketContext);
 
-  const handleClickConversation = async (conversation: IConversation | null) => {
+  const handleClickConversation = async (
+    conversation: IConversation | null
+  ) => {
     try {
       setSelectedConversation(null);
       const res: any = await getConversationMessagesDm(
@@ -49,14 +52,16 @@ const ConversationsListDms = ({
           <div className="flex">
             <div className="flex-2">
               <div className="w-12 h-12 relative">
-                <img
-                  className="w-12 h-12 rounded-full mx-auto object-cover"
-                  src={user.image_url}
-                  alt="chat-user"
-                />
+                <Link href={`/profile/${user.user_name}`}>
+                  <img
+                    className="w-12 h-12 rounded-full mx-auto object-cover cursor-pointer"
+                    src={user.image_url}
+                    alt="chat-user"
+                  />
+                </Link>
                 <span
                   className={`absolute w-4 h-4 ${
-                    user ? "bg-green-400" : "bg-gray-400"
+                    getStatus(user?.profile?.status).color
                   } rounded-full right-0 bottom-0 border-2 border-white`}
                 ></span>
               </div>
@@ -69,7 +74,7 @@ const ConversationsListDms = ({
               </div>
               <div>
                 <small className="text-gray-600">
-                  {user ? "Online" : "Offline"}
+                  {getStatus(user?.profile?.status).text}
                 </small>
               </div>
             </div>
@@ -77,7 +82,10 @@ const ConversationsListDms = ({
 
           <div className="flex space-x-2">
             <div className="flex-1">
-              <button onClick={() => setStartDmOpen(true)} className="bg-sky-800 w-10 h-10 rounded-full inline-block transition duration-100 hover:scale-110 hover:bg-sky-700">
+              <button
+                onClick={() => setStartDmOpen(true)}
+                className="bg-sky-800 w-10 h-10 rounded-full inline-block transition duration-100 hover:scale-110 hover:bg-sky-700"
+              >
                 <span className="inline-block align-text-center mt-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +124,10 @@ const ConversationsListDms = ({
                   />
                   <span
                     className={`absolute w-4 h-4 ${
-                      user ? "bg-green-400" : "bg-gray-400"
+                      getStatus(
+                        getMember(user.intra_id, conversation.members)?.profile
+                          ?.status
+                      ).color
                     } rounded-full right-0 bottom-0 border-2 border-white`}
                   ></span>
                 </div>
@@ -132,7 +143,7 @@ const ConversationsListDms = ({
                 <div>
                   <small className="text-gray-600">
                     {conversation.last_message?.body
-                      ? conversation.last_message?.body
+                      ? conversation.last_message?.body.substring(0, 20)
                       : "No message yet"}
                   </small>
                 </div>
@@ -146,11 +157,11 @@ const ConversationsListDms = ({
                   </small>
                 </div>
                 {/* {conversation.not_read_messages > 0 && ( */}
-                <div>
+                {/* <div>
                   <small className="text-xs bg-red-500 text-white rounded-full h-6 w-6 leading-6 text-center inline-block">
                     8
                   </small>
-                </div>
+                </div> */}
                 {/* )} */}
               </div>
             </div>

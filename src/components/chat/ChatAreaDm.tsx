@@ -9,15 +9,8 @@ import {
   IMessageBody,
 } from "../../typings";
 import SocketContext from "./socket_context/context";
-import { leaveConversation } from "../../services/conversations";
-import { getMember } from "../../helpers";
-
-// This temporary, before link user to chat
-// let userId: number | null;
-// if (typeof window !== "undefined") {
-//   userId = parseInt(localStorage.getItem("userId_temp") as string, 10);
-// }
-////////////////////////////////////////////////////
+import { getMember, getStatus } from "../../helpers";
+import Link from "next/link";
 
 const ChatAreaDm = ({
   conversation,
@@ -39,18 +32,22 @@ const ChatAreaDm = ({
 
   const submitMessage = (e: any) => {
     e.preventDefault();
-    const body: IMessageBody = {
-      conversationId: conversation?.conversation_id,
-      body: message,
-      type: 'dm',
-    };
-    sendMessage(body)
-      .then((res) => {
-        setMessage("");
-      })
-      .catch((error: string) => {
-        toast.error(error);
-      });
+    if (message.trim() !== "" && message.length <= 1000) {
+      const body: IMessageBody = {
+        conversationId: conversation?.conversation_id,
+        body: message,
+        type: "dm",
+      };
+      sendMessage(body)
+        .then((res) => {
+          setMessage("");
+        })
+        .catch((error: string) => {
+          toast.error(error);
+        });
+    } else {
+      toast.error("Message must be not empty & less than 1000 characters");
+    }
   };
 
   if (!conversation) {
@@ -73,9 +70,17 @@ const ChatAreaDm = ({
         <div className="flex-3">
           <h2 className="text-xl py-1 mb-8 border-b-2 border-gray-200">
             User:{" "}
-            <b className="uppercase">{`${
-              getMember(user.intra_id, conversation.members)?.first_name
-            } ${getMember(user.intra_id, conversation.members)?.last_name}`}</b>
+            <Link
+              href={`/profile/${
+                getMember(user.intra_id, conversation.members)?.user_name
+              }`}
+            >
+              <b className="uppercase cursor-pointer">{`${
+                getMember(user.intra_id, conversation.members)?.first_name
+              } ${
+                getMember(user.intra_id, conversation.members)?.last_name
+              }`}</b>
+            </Link>
           </h2>
         </div>
       </div>
@@ -91,25 +96,29 @@ const ChatAreaDm = ({
               {!isMe ? (
                 <div className="flex-2">
                   <div className="w-12 h-12 relative">
-                    <img
-                      className="w-12 h-12 rounded-full mx-auto"
-                      // src="https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A"
-                      // src={user.image_url}
-                      src={getMember(user.intra_id, conversation.members)?.image_url}
-                      alt="chat-user"
-                    />
-                    <span className="absolute w-4 h-4 bg-gray-400 rounded-full right-0 bottom-0 border-2 border-white"></span>
+                    <Link href={`/profile/${message.sent_by.user_name}`}>
+                      <img
+                        className="w-12 h-12 rounded-full mx-auto object-cover cursor-pointer"
+                        src={message.sent_by.image_url}
+                        alt="chat-user"
+                      />
+                    </Link>
+                    <span
+                      className={`absolute w-4 h-4 ${
+                        getStatus(message.sent_by.profile?.status).color
+                      } rounded-full right-0 bottom-0 border-2 border-white`}
+                    ></span>
                   </div>
                 </div>
               ) : null}
 
               <div className="flex-1 px-2">
                 <div
-                  className={`inline-block  rounded-full p-2 px-6 ${
+                  className={`break-words inline-block text-center rounded-full ${message.body.length <= 300 ? 'p-2 px-6' : 'p-5 px-14'} ${
                     isMe ? "bg-sky-800 text-white" : "bg-gray-300 text-gray-700"
                   }`}
                 >
-                  <span>{message.body}</span>
+                  <p className="break-words">{message.body}</p>
                 </div>
                 <div className={`${isMe ? "pr-4" : "pl-4"}`}>
                   <small className="text-gray-500">

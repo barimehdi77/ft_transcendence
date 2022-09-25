@@ -31,9 +31,7 @@ export class AuthService {
         }
       })
     }
-    // console.log("from GenerateJWT", user);
     return (user);
-    // res.redirect('http://localhost/setup');
   }
 
 

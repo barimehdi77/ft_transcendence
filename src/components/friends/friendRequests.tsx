@@ -61,8 +61,8 @@ const FriendRequests = ({
 					{friendRequests.data.map((request: any, key: number) => {
 						const user = request.to;
 						let color = 'bg-green-500';
-						if (user.status === 'OFFLINE') color = 'bg-red-600';
-						else if (user.status === 'INGAME') color = 'bg-amber-500';
+						if (user.profile.status === 'OFFLINE') color = 'bg-red-600';
+						else if (user.profile.status === 'INGAME') color = 'bg-amber-500';
 
 						return (
 							<div key={key} className='mt-4 flex items-center'>

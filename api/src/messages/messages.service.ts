@@ -4,6 +4,7 @@ import { SendMessageDto } from './dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConversationService } from 'src/conversation/conversation.service';
 import * as moment from 'moment-timezone';
+import { FriendStatus } from '@prisma/client';
 
 @Injectable()
 export class MessagesService {
@@ -15,9 +16,12 @@ export class MessagesService {
 
   async sendMessage(dto: SendMessageDto, intra_id: number) {
     try {
-      if (!dto.body || !dto.body.trim().length) {
+      if (!dto.body || !dto.body.trim().length)
         throw new Error('error: Message is empty');
-      }
+
+      if (dto.body.length > 1000)
+        throw new Error('error: Message is too long, must be less than 1000');
+
       let conversations = [];
       if (dto.type === 'room') {
         conversations = await this.conversationService.getConversationByIdRoom(
@@ -29,6 +33,29 @@ export class MessagesService {
           intra_id,
           dto.type,
         );
+        const isBlocked = await this.prisma.friendsList.findFirst({
+          where: {
+            OR: [
+              {
+                from: conversations[0].members[0].intra_id,
+                to: conversations[0].members[1].intra_id,
+                status: FriendStatus.BLOCKED
+              },
+              {
+                from: conversations[0].members[1].intra_id,
+                to: conversations[0].members[0].intra_id,
+                status: FriendStatus.BLOCKED
+              }
+            ]
+          }
+        });
+
+        if (isBlocked) {
+          if (isBlocked.from === intra_id)
+            throw new Error('error: You blocked this user, you cannot send this message');
+          else
+            throw new Error('error: the user blocked you, you cannot send this message');
+        }
       }
 
       if (!conversations.length)
@@ -62,6 +89,8 @@ export class MessagesService {
           body: dto.body,
         },
       });
+
+      console.log("the MEssage: ", message);
 
       // get Message
       const messageData = await this.prisma.message.findUnique({

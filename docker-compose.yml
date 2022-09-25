@@ -54,8 +54,3 @@ networks:
         driver: default
         config:
             - subnet: "192.168.77.0/24"
-
-# networks:
-#   default:
-#     external:
-#       name: external-example

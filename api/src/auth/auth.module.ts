@@ -4,7 +4,6 @@ import { AuthController } from './auth.controller';
 import { FortyTwoStrategy } from './strategies/FortyTwo.strategy';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/app/prisma.service';
-// import { SessionSerializer } from './auth.serializer';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';

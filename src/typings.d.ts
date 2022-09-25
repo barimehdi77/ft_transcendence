@@ -52,6 +52,9 @@ export interface IMembers {
   last_name: string;
   user_name: string;
   image_url: string;
+  profile: {
+    status: string;
+  }
 }
 
 export interface IConversationContext {
