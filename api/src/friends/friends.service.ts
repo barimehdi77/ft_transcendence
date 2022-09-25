@@ -190,13 +190,19 @@ export class FriendsService {
     createFriendRequestDto: CreateFriendRequestDto,
   ) {
     const fromIntra_id = this.userService.decode(auth).intra_id;
-    const findFriendRequest = await this.prisma.friendsList.findUnique({
+    const findFriendRequest = await this.prisma.friendsList.findFirst({
       where: {
-        from_to: {
-          from: fromIntra_id,
-          to: createFriendRequestDto.to,
-        },
-      },
+        OR: [
+          {
+            from: fromIntra_id,
+            to: createFriendRequestDto.to
+          },
+          {
+            from: createFriendRequestDto.to,
+            to: fromIntra_id
+          }
+        ]
+      }
     });
     if (findFriendRequest === null) {
       const blockedUser = await this.prisma.friendsList.create({
