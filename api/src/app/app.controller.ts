@@ -6,9 +6,9 @@ import { AppService } from "./app.service";
 export class AppController {
 	constructor (private readonly appservice: AppService) {
 	}
-	
+
 	@Get()
-	test() {
-		return ("I got it");
+	run() {
+		return ("Server Is running on port 8080");
 	}
 }

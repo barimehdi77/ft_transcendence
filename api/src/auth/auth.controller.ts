@@ -3,17 +3,10 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   Res,
   UseGuards,
   Req,
-  Redirect,
-  HttpStatus,
   Headers,
-  UnauthorizedException,
-  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
@@ -214,7 +207,6 @@ export class AuthController {
    * This will Retrieve the auth status
    */
   @Get('status')
-  // @UseGuards(AuthenticatedGuard)
   @UseGuards(AuthGuard('jwt'))
   status(@Req() req: Request) {
     console.log(req);

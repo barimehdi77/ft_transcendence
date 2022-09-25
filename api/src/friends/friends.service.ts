@@ -6,8 +6,6 @@ import {
   CreateFriendRequestDto,
   FriendRequest,
   GetFriendRequestDto,
-  UpdateFriendRequest,
-  UserInfo,
 } from './dto/friend.dto';
 
 @Injectable()
@@ -43,11 +41,9 @@ export class FriendsService {
           status: true,
         },
       });
-    console.log(`requests from user ${intra_id} in db`, getRequestFromDB);
     if (getRequestFromDB !== null) {
       const parseReq: GetFriendRequestDto[] = await Promise.all(
         getRequestFromDB.map(async (request) => {
-          console.log('req', request);
           const req = await this.prisma.user.findUnique({
             where: {
               intra_id: request.from,
@@ -97,11 +93,9 @@ export class FriendsService {
           status: true,
         },
       });
-    console.log(`requests from user ${intra_id} in db`, getAllFriendsFromDB);
     if (getAllFriendsFromDB !== null) {
       const parseReq: GetFriendRequestDto[] = await Promise.all(
         getAllFriendsFromDB.map(async (request) => {
-          console.log('req', request);
           const req = await this.prisma.user.findUnique({
             where: {
               intra_id: intra_id === request.to ? request.from : request.to,
