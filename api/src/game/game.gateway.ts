@@ -30,13 +30,13 @@ export class GameGateway {
   //   console.log('Websocket Server Started,Listening on Port:8080');
   // }
 
-  handleConnection(client: Socket) {
-    console.log(
-      `Client game connected: ${client.id}`,
-      ' length: ',
-      this.server.engine.clientsCount,
-    );
-  }
+  // handleConnection(client: Socket) {
+  //   console.log(
+  //     `Client game connected: ${client.id}`,
+  //     ' length: ',
+  //     this.server.engine.clientsCount,
+  //   );
+  // }
 
   handleDisconnect(client: Socket) {
     // console.log(`Client disconnected: ${client.id}`);
@@ -112,8 +112,25 @@ export class GameGateway {
     // return (this.gameService.playersPlaying);
   }
 
-  @SubscribeMessage('users')
+  @SubscribeMessage('connected')
   handleUsers(@MessageBody() userInfo: any, @ConnectedSocket() client: Socket) {
     this.gameService.users[userInfo.user_name] = client.id;
+    console.log("connected", this.gameService.users);
   }
+  
+  @SubscribeMessage('question')
+  question(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+    this.gameService.handlQuestion(this.server, data)
+  }
+
+
+  @SubscribeMessage('friendAccepted')
+  handlAccepted(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+    this.gameService.handlAccepted(this.server, client, data)
+  }
+
+    // @SubscribeMessage('connected')
+    // rejected(@MessageBody() userInfo: string, @ConnectedSocket() client: Socket) {
+
+    // }
 }
