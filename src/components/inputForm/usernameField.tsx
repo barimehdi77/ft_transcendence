@@ -9,7 +9,7 @@ const UsernameField = ({ login, setUsername }: any) => {
 				id='username'
 				placeholder={login}
 				onChange={(e) => {
-					const result = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+					const result = e.target.value.replace(/[^a-zA-Z0-9-_]/g, '');
 					e.target.value = result;
 					setUsername(result);
 				}}
