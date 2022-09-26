@@ -49,11 +49,11 @@ const FriendRequests = ({
 
 	console.log(friendRequests);
 
-	if (friendRequests) friendRequests.data.length !== 1 ? (plural = 's') : null;
+	if (friendRequests) friendRequests.data?.length !== 1 ? (plural = 's') : null;
 
 	return (
 		<>
-			{friendRequests ? (
+			{friendRequests && friendRequests.data ? (
 				<div>
 					<p>
 						{friendRequests.data.length} friend request{plural}

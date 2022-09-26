@@ -27,13 +27,13 @@ const MyFriends = ({
 		}
 	}
 
-	console.log(friendsList);
+	console.log('friends', friendsList);
 
-	if (friendsList) friendsList.data.length !== 1 ? (plural = 's') : null;
+	if (friendsList) friendsList.data?.length !== 1 ? (plural = 's') : null;
 
 	return (
 		<>
-			{friendsList ? (
+			{friendsList && friendsList.data ? (
 				<div>
 					<p>
 						{friendsList.data.length} friend{plural}
