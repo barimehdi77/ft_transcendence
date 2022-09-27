@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { socket } from '../socket';
+<<<<<<< HEAD
 import { paintGame, drawRect } from '../components/drawing/drawing';
+=======
+import { paintGame, drawRect, drawText } from './drawing';
+import Head from 'next/head';
+>>>>>>> 4cd5d211e3ea876b107183c899f931d13017adfe
 
 const Spectate = () => {
 	const [data, setData]: any = useState(null);
@@ -99,6 +104,9 @@ const Spectate = () => {
 
 	return (
 		<>
+			<Head>
+				<title>Spectate</title>
+			</Head>
 			{table ? (
 				<div className='min-h-screen flex flex-col items-center justify-center'>
 					<h1 className='font-bold text-2xl mb-2'>Live Games:</h1>

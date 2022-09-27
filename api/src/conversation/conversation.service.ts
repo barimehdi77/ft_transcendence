@@ -12,6 +12,7 @@ import Utils from '../helpers/utils';
 import * as argon from 'argon2';
 import { BanMemberDto } from './dto/ban-member.dto';
 import * as moment from 'moment-timezone';
+import { FriendStatus } from '@prisma/client';
 
 @Injectable()
 export class ConversationService {
@@ -88,7 +89,7 @@ export class ConversationService {
         return { type: 'exist', conversation };
       }
 
-      const conversation = await this.prisma.conversation.create({
+      const conversationCreated = await this.prisma.conversation.create({
         data: {
           name: 'Direct Message',
           status: 'private',
@@ -102,9 +103,14 @@ export class ConversationService {
           },
         },
       });
-      delete conversation.password;
 
-      return { type: 'new', conversation };
+      const conversation = await this.getConversationById(
+        conversationCreated.conversation_id,
+        userId,
+        'dm',
+      );
+
+      return { type: 'new', conversation: conversation[0] };
     } catch (error) {
       throw new Error(
         error.message && error.message.startsWith('error: ')
@@ -434,7 +440,6 @@ export class ConversationService {
 
       return conversation;
     } catch (error) {
-      console.log(error);
       throw new Error(
         error.message && error.message.startsWith('error: ')
           ? error.message
@@ -486,7 +491,6 @@ export class ConversationService {
       delete conversation.password;
       return conversation;
     } catch (error) {
-      // console.log(error);
       throw new Error(
         error.message && error.message.startsWith('error: ')
           ? error.message
@@ -604,6 +608,11 @@ export class ConversationService {
               last_name: true,
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                },
+              },
             },
           },
         },
@@ -646,6 +655,11 @@ export class ConversationService {
                   last_name: true,
                   user_name: true,
                   image_url: true,
+                  profile: {
+                    select: {
+                      status: true,
+                    },
+                  },
                 },
               },
               body: true,
@@ -659,6 +673,11 @@ export class ConversationService {
               last_name: true,
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                },
+              },
             },
           },
           admins: {
@@ -668,6 +687,11 @@ export class ConversationService {
               last_name: true,
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                },
+              },
             },
           },
         },
@@ -687,6 +711,9 @@ export class ConversationService {
               last_name: 'last_name',
               user_name: 'user_name',
               image_url: 'image_url',
+              profile: {
+                status: 'OFFLINE',
+              },
             },
             body: 'No message yet',
             sentAt: conversation.createdAt,
@@ -732,13 +759,17 @@ export class ConversationService {
     }
   }
 
-  async getConversationMessages(conversationId: string, intra_id: number, type: string) {
+  async getConversationMessages(
+    conversationId: string,
+    intra_id: number,
+    type: string,
+  ) {
     try {
       // check conversation exist
       const conversations = await this.getConversationByIdMember(
         conversationId,
         intra_id,
-        type
+        type,
       );
 
       if (!conversations.length)
@@ -760,6 +791,11 @@ export class ConversationService {
               last_name: true,
               user_name: true,
               image_url: true,
+              profile: {
+                select: {
+                  status: true,
+                }
+              },
             },
           },
           body: true,
@@ -802,6 +838,23 @@ export class ConversationService {
       },
       select: {
         conversation_id: true,
+        name: true,
+        type: true,
+        status: true,
+        members: {
+          select: {
+            intra_id: true,
+            first_name: true,
+            last_name: true,
+            user_name: true,
+            image_url: true,
+            profile: {
+              select: {
+                status: true,
+              }
+            },
+          },
+        },
       },
     });
 
@@ -894,6 +947,11 @@ export class ConversationService {
             last_name: true,
             user_name: true,
             image_url: true,
+            profile: {
+              select: {
+                status: true,
+              }
+            },
           },
         },
         admins: {
@@ -903,6 +961,11 @@ export class ConversationService {
             last_name: true,
             user_name: true,
             image_url: true,
+            profile: {
+              select: {
+                status: true,
+              }
+            },
           },
         },
       },

@@ -3,7 +3,7 @@ import Api from "./api";
 export const getAllUsers = () =>
   new Promise((resolve, reject) => {
     Api()
-      .get("friends")
+      .get("/user/find")
       .then((response) => {
         resolve(response.data);
       })

@@ -1,36 +1,36 @@
 version: '3.8'
 services:
-    # api:
-    #     build: api/
-    #     container_name: api
-    #     depends_on:
-    #         - postgres
-    #         - front-end
-    #     environment:
-    #         DATABASE_URL: postgresql://user:password@192.168.77.4:5432/db?schema=public
-    #         NODE_ENV: development
-    #         PORT: 8080
-    #         POSTGRES_USER: user
-    #         POSTGRES_PASSWORD: password
-    #         POSTGRES_DB: db
-    #     ports:
-    #         - "8080:8080" # the port number is for dev only prud port is == 8080
-    #     restart: on-failure
-    #     networks:
-    #         network:
-    #             ipv4_address: 192.168.77.3
+    api:
+        build: api/
+        container_name: api
+        depends_on:
+            - postgres
+            - front-end
+        environment:
+            DATABASE_URL: postgresql://user:password@192.168.77.4:5432/db?schema=public
+            NODE_ENV: development
+            PORT: 8080
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: db
+        ports:
+            - "8080:8080"
+        restart: on-failure
+        networks:
+            network:
+                ipv4_address: 192.168.77.3
 
-    # front-end:
-    #     build: src/
-    #     container_name: front-end
-    #     depends_on:
-    #         - postgres
-    #     ports:
-    #         - "80:80" # the port number is for dev only prud port is == 8080
-    #     restart: on-failure
-    #     networks:
-    #         network:
-    #             ipv4_address: 192.168.77.2
+    front-end:
+        build: src/
+        container_name: front-end
+        depends_on:
+            - postgres
+        ports:
+            - "80:80"
+        restart: on-failure
+        networks:
+            network:
+                ipv4_address: 192.168.77.2
 
 
     postgres:
@@ -43,19 +43,14 @@ services:
             POSTGRES_USER: user
             POSTGRES_PASSWORD: password
             POSTGRES_DB: db
-        # networks:
-        #     network:
-        #         ipv4_address: 192.168.77.4
-        # restart: unless-stopped
+        networks:
+            network:
+                ipv4_address: 192.168.77.4
+        restart: unless-stopped
 
-# networks:
-#   network:
-#     ipam:
-#         driver: default
-#         config:
-#             - subnet: "192.168.77.0/24"
-
-# networks:
-#   default:
-#     external:
-#       name: external-example
+networks:
+  network:
+    ipam:
+        driver: default
+        config:
+            - subnet: "192.168.77.0/24"

@@ -49,25 +49,32 @@ const FriendRequests = ({
 
 	console.log(friendRequests);
 
-	if (friendRequests) friendRequests.data.length !== 1 ? (plural = 's') : null;
+	if (friendRequests) friendRequests.data?.length !== 1 ? (plural = 's') : null;
 
 	return (
 		<>
-			{friendRequests ? (
+			{friendRequests && friendRequests.data ? (
 				<div>
 					<p>
 						{friendRequests.data.length} friend request{plural}
 					</p>
 					{friendRequests.data.map((request: any, key: number) => {
 						const user = request.to;
+						let color = 'bg-green-500';
+						if (user.profile.status === 'OFFLINE') color = 'bg-red-600';
+						else if (user.profile.status === 'INGAME') color = 'bg-amber-500';
+
 						return (
 							<div key={key} className='mt-4 flex items-center'>
 								<Link href={`/profile/${user.user_name}`}>
-									<img
-										src={user.image_url}
-										alt='User Avatar'
-										className='w-16 h-16 object-cover rounded-full cursor-pointer'
-									/>
+									<div className='flex items-end'>
+										<img
+											src={user.image_url}
+											alt='User Avatar'
+											className='w-16 h-16 object-cover rounded-full cursor-pointer'
+										/>
+										<div className={`w-5 h-5 rounded-full ${color} -ml-4 border-2`}></div>
+									</div>
 								</Link>
 								<div className='ml-4'>
 									<Link href={`/profile/${user.user_name}`}>
@@ -98,3 +105,14 @@ const FriendRequests = ({
 };
 
 export default FriendRequests;
+
+{
+	/* <div className='flex items-end'>
+	<img
+		src={user.image_url}
+		alt='User Avatar'
+		className='w-16 h-16 object-cover rounded-full cursor-pointer'
+	/>
+	<div className='w-4 h-4 rounded-full bg-green-500 -ml-4 border-2'></div>
+</div>; */
+}

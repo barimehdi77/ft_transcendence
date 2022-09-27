@@ -12,10 +12,8 @@ import {
   Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-// import { Prisma } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-// import { jwtInfo } from './dto/jwt.dto';
 import { UpdateUserInfo } from './dto/User.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GetUser } from 'src/auth/decorator';
@@ -26,7 +24,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  // @UseGuards(AuthGuard('jwt'))
   async findUser(
     @Req() req: Request,
     @Res() res: Response,
@@ -67,6 +64,11 @@ export class UserController {
         return res.status(409).json({
           status: 'failure',
           message: 'Username already taken',
+        });
+      } else if (user === 'NOTVALID') {
+        return res.status(409).json({
+          status: 'failure',
+          message: 'Username Not Valid',
         });
       } else {
         return res.status(200).json({

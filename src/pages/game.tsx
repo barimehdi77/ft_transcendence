@@ -4,6 +4,7 @@ import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 const Game = () => {
 	const { userInfo }: any = useContext(UserContext);
@@ -198,6 +199,9 @@ const Game = () => {
 
 	return (
 		<div className='min-h-screen flex justify-center items-center'>
+			<Head>
+				<title>Game</title>
+			</Head>
 			<div>
 				<div id='gameScreen'>
 					<div style={{ display: 'flex', justifyContent: 'center' }}>

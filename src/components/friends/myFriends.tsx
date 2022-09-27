@@ -32,10 +32,8 @@ const MyFriends = ({
 			console.log(error);
 		}
 	}
-
-	// console.log(friendsList);
-
-	if (friendsList) friendsList.data.length !== 1 ? (plural = 's') : null;
+	
+	if (friendsList) friendsList.data?.length !== 1 ? (plural = 's') : null;
 
 	const playGame = (user: any) => {
 		socket.emit('question', {
@@ -57,21 +55,30 @@ const MyFriends = ({
 
 	return (
 		<>
-			{friendsList ? (
+			{friendsList && friendsList.data ? (
 				<div>
 					<p>
 						{friendsList.data.length} friend{plural}
 					</p>
 					{friendsList.data.map((request: any, key: number) => {
 						const user = request.to;
+						let color = 'bg-green-500';
+						if (user.profile.status === 'OFFLINE') color = 'bg-red-600';
+						else if (user.profile.status === 'INGAME') color = 'bg-amber-500';
+
 						return (
 							<div key={key} className='mt-4 flex items-center'>
 								<Link href={`/profile/${user.user_name}`}>
-									<img
-										src={user.image_url}
-										alt='User Avatar'
-										className='w-16 h-16 object-cover rounded-full cursor-pointer'
-									/>
+									<div className='flex items-end'>
+										<img
+											src={user.image_url}
+											alt='User Avatar'
+											className='w-16 h-16 object-cover rounded-full cursor-pointer'
+										/>
+										<div
+											className={`w-5 h-5 rounded-full ${color} -ml-4 border-2`}
+										></div>
+									</div>
 								</Link>
 								<div className='ml-4'>
 									<Link href={`/profile/${user.user_name}`}>
@@ -91,6 +98,23 @@ const MyFriends = ({
 									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
 										Message
 									</button>
+                  <Link
+                    href={{
+                      pathname: "/dms",
+                      query: { id: user.intra_id },
+                    }}
+                  >
+                    <a  className="bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700">Message</a>
+                  </Link>
+									{user.profile.status === 'ONLINE' ? (
+										<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
+											Play Game
+										</button>
+									) : (
+										<button className='bg-slate-500 text-white font-medium rounded-3xl py-2 px-4 mr-2 cursor-default'>
+											Unavailable
+										</button>
+									)}
 								</div>
 							</div>
 						);

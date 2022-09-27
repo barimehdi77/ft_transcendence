@@ -3,11 +3,8 @@ import { ReadProfile } from "src/profile/dto/read-profile.dto";
 
 export class SetupUser {
 	intra_id: number;
-	// first_name: string;
-	// last_name: string;
 	login: string;
 	user_name: string;
-	// email: string;
 	profile_done: boolean;
 	isTwoFactorAuthenticationEnabled: boolean;
 	token: string;
