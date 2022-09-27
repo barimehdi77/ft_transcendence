@@ -42,10 +42,10 @@ services:
             POSTGRES_USER: user
             POSTGRES_PASSWORD: password
             POSTGRES_DB: db
-        # networks:
-        #     network:
-        #         ipv4_address: 192.168.77.4
-        # restart: unless-stopped
+        networks:
+            network:
+                ipv4_address: 192.168.77.4
+        restart: unless-stopped
 
 networks:
   network:
