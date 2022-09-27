@@ -1,7 +1,11 @@
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { getData } from '../getData';
 import { unfriendUser } from './unfriendUser';
+import { socket } from '../../socket';
+
+import { UserContext } from '../../contexts/userContext';
+import Router from 'next/router';
 
 const MyFriends = ({
 	friendRequests,
@@ -9,7 +13,9 @@ const MyFriends = ({
 	friendsList,
 	setFriendsList,
 }: any) => {
+	const { userInfo }: any = useContext(UserContext);
 	let plural = '';
+
 	useEffect(() => {
 		async function fillData() {
 			setFriendsList(await getData('http://localhost:8080/api/friends'));
@@ -27,9 +33,25 @@ const MyFriends = ({
 		}
 	}
 
-	console.log('friends', friendsList);
-
 	if (friendsList) friendsList.data?.length !== 1 ? (plural = 's') : null;
+
+	const playGame = (user: any) => {
+		socket.emit('question', {
+			sender: { name: userInfo.user_name },
+			to: { name: user.user_name }
+		}, (ret: string) => {
+			// if (ret == "yes") {
+			// 	socket.emit('playWithFriend');
+			// }
+			console.log("return: ", ret);
+		})
+		// console.log("user ", user.user_name, " want to play with: ", userInfo.user_name);
+	}
+
+	const accept = () => {
+		Router.push('/game');
+	}
+	socket.off('goToPlay').on('goToPlay', accept)
 
 	return (
 		<>
@@ -69,6 +91,12 @@ const MyFriends = ({
 										onClick={() => handleUnfriend(request.id)}
 									>
 										Unfriend
+									</button>
+									<button onClick={() => {playGame(user)}} className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
+										Play Game
+									</button>
+									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
+										Message
 									</button>
                   <Link
                     href={{
