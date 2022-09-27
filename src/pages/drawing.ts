@@ -1,10 +1,3 @@
-const color = [
-    { back: "#000000", front: "#ffffff" },
-    { back: "#003459", front: "#d9d9d9" },
-    { back: "#461220", front: "#fed0bb" },
-    { back: "#590d22", front: "#ffccd5" },
-    { back: "#184e77", front: "#d9ed92" },
-];
 // draw rect
 const drawRect = (ctx: any, x: number, y: number, w: number, h: number, color: string) => {
     if (ctx) {
@@ -45,13 +38,13 @@ const paintGame = (ctx: any, gameState: any, canvWidth: number, canvHeight: numb
     ball.x = ball.x / percentage;
     ball.y = ball.y / percentage;
 
-    drawRect(ctx, 0, 0, canvWidth, canvHeight, color[gameState.color].back);
+    drawRect(ctx, 0, 0, canvWidth, canvHeight, "black");
     drawNet(ctx, canvWidth, canvHeight);
-    drawCircle(ctx, ball.x, ball.y, ball.radius, color[gameState.color].front);
-    paintPlayers(ctx, gameState, percentage, gameState.color);
+    drawCircle(ctx, ball.x, ball.y, ball.radius, ball.color);
+    paintPlayers(ctx, gameState, percentage);
 }
 
-const paintPlayers = (ctx: any, gameState: any, percentage: number, random: number) => {
+const paintPlayers = (ctx: any, gameState: any, percentage: number) => {
     const pOne = gameState.playerOne;
     const pTwo = gameState.playerTwo;
     pOne.x = pOne.x / percentage;
@@ -63,13 +56,13 @@ const paintPlayers = (ctx: any, gameState: any, percentage: number, random: numb
     pTwo.width = pTwo.width / percentage;
     pTwo.height = pTwo.height / percentage;
 
-    drawRect(ctx, pOne.x, pOne.y, pOne.width, pOne.height, color[random].front);
-    drawRect(ctx, pTwo.x, pTwo.y, pTwo.width, pTwo.height, color[random].front);
-    drawText(ctx, pOne.score.toString(), (600 / 4) / percentage, (300 / 5) / percentage, color[random].front, percentage, 45);
-    drawText(ctx, pTwo.score.toString(), ((600 / 4) * 3) / percentage, (300 / 5) / percentage, color[random].front, percentage, 45);
-
-    drawText(ctx, pOne.name, 10 / percentage, ((300 / 5) / percentage) - 300 / 8, color[random].front, percentage, 20);
-    drawText(ctx, pTwo.name, ((600 / 1.9)) / percentage, ((300 / 5) / percentage) - 300 / 8, color[random].front, percentage, 20);
+    drawRect(ctx, pOne.x, pOne.y, pOne.width, pOne.height, pOne.color);
+    drawRect(ctx, pTwo.x, pTwo.y, pTwo.width, pTwo.height, pTwo.color);
+    drawText(ctx, pOne.score.toString(), (600 / 4) / percentage, (300 / 5) / percentage, "white", percentage, 45);
+    drawText(ctx, pTwo.score.toString(), ((600 / 4) * 3) / percentage, (300 / 5) / percentage, "white", percentage, 45);
+    
+    drawText(ctx, pOne.name, 10 / percentage, ((300 / 5) / percentage) - 300 / 8, "white", percentage, 20);
+    drawText(ctx, pTwo.name, ((600 / 1.9)) / percentage, ((300 / 5) / percentage) - 300 / 8, "white", percentage, 20);
 }
 
 export { drawRect, drawText, drawNet, drawCircle, paintGame, paintPlayers }
