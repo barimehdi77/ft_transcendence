@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GameStatus, Prisma, PrismaClient, ProfileStatus } from '@prisma/client';
-import { GetPlayingGames } from './dto/get-playing-games.dto';
 import { ProfileService } from 'src/profile/profile.service';
 
 @Injectable()
@@ -445,10 +444,12 @@ export class GameService {
 
   async prismaUpdate(roomName: string, p1: number, p2: number, disconnect: boolean) {
     const stateRoom = this.state[roomName];
+    console.log("state roim",stateRoom);
+    console.log("idPrisma",this.idPrisma[stateRoom]);
     if (!disconnect) {
       const matchData =  await this.prisma.match.update({
         where: {
-          id: this.idPrisma[stateRoom].id
+          id: this.idPrisma[roomName].id
         },
         data: {
           player_one_score: stateRoom.playerOne.score,
@@ -461,7 +462,7 @@ export class GameService {
     else {
       const matchDate = await this.prisma.match.update({
         where: {
-          id: this.idPrisma[stateRoom].id
+          id: this.idPrisma[roomName].id
         },
         data: {
           player_one_score: p1,
