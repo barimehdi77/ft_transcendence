@@ -444,8 +444,6 @@ export class GameService {
 
   async prismaUpdate(roomName: string, p1: number, p2: number, disconnect: boolean) {
     const stateRoom = this.state[roomName];
-    console.log("state roim",stateRoom);
-    console.log("idPrisma",this.idPrisma[stateRoom]);
     if (!disconnect) {
       const matchData =  await this.prisma.match.update({
         where: {
