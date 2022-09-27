@@ -1,4 +1,4 @@
-import React , { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
 import ChatArea from "../../components/chat/ChatArea";
 import {
@@ -12,6 +12,7 @@ import {
   IMembers,
   IMessage,
 } from "../../typings";
+import { useRouter } from "next/router";
 import SocketContext from "../../components/chat/socket_context/context";
 import { socket } from "../../socket";
 import ConversationsListDms from "../../components/chat/ConversationsListDms";
@@ -19,26 +20,14 @@ import ChatAreaDm from "../../components/chat/ChatAreaDm";
 import NewDm from "../../components/chat/NewDm";
 import { getAllUsers } from "../../services/users";
 import { joinConversation } from "../../socket/emit";
-
-import { UserContext } from '../../contexts/userContext';
-
-// This temporary, before link user to chat
-let userId: number | null = 39523;
-if (typeof window !== "undefined") {
-  userId = parseInt(localStorage.getItem("userId_temp") as string, 10);
-}
-
-// const user: IMembers = {
-//   intra_id: userId,
-//   first_name: "Erraghay",
-//   last_name: "Ayoub",
-//   user_name: "aerragha",
-//   image_url:
-//     "https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A",
-// };
+import { UserContext } from "../../contexts/userContext";
+import Head from "next/head";
+import { getStatus } from "../../helpers";
 
 const dm = () => {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo }: any = useContext(UserContext);
+  const router = useRouter();
+  const query = router.query;
 
   const {
     conversations,
@@ -54,8 +43,10 @@ const dm = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    setSelectedConversation(null);
-    getConversationsList();
+    if (!query.id) {
+      setSelectedConversation(null);
+      getConversationsList();
+    }
     findUsers();
   }, []);
 
@@ -88,6 +79,30 @@ const dm = () => {
     };
   }),
     [];
+
+  useEffect(() => {
+    if (query.id) {
+      getConversationFromUrl(parseInt(query.id as string));
+    }
+    router.replace("/dms", undefined, { shallow: true });
+  }, []);
+
+  const getConversationFromUrl = async (userId: number) => {
+    try {
+      const res: any = await createDmCOnversation(userId);
+      if (res.status === "success") {
+        getMessagesDm(res.conversation.conversation_id);
+        setSelectedConversation(res.conversation);
+        joinConversation(res.conversation?.conversation_id);
+        getConversationsList();
+      } else {
+        toast.error("user not found");
+      }
+    } catch (error) {
+      console.log("user not found");
+      toast.error("user not found");
+    }
+  };
 
   const findUsers = async () => {
     try {
@@ -174,6 +189,9 @@ const dm = () => {
 
   return (
     <div className="w-full h-screen">
+      <Head>
+        <title>Direct messages</title>
+      </Head>
       <div className="flex h-full">
         <div className="flex-1 bg-gray-100 w-full h-full">
           <div className="main-body container m-auto w-11/12 h-full flex flex-col">
@@ -217,8 +235,14 @@ const dm = () => {
               <div className="flex-1 text-right">
                 <span className="inline-block text-gray-700">
                   Status:{" "}
-                  <span className="inline-block align-middle w-4 h-4 bg-green-400 rounded-full border-2 border-white"></span>{" "}
-                  <b>Online</b>
+                  <span
+                    className={`inline-block align-middle w-4 h-4 ${
+                      getStatus(userInfo?.profile?.status).color
+                    } rounded-full border-2 border-white`}
+                  ></span>{" "}
+                  <b>{
+                      getStatus(userInfo?.profile?.status).text
+                    }</b>
                 </span>
               </div>
             </div>

@@ -1,7 +1,9 @@
 import moment from "moment";
+import Link from "next/link";
 import { useContext, useState } from "react";
 import Avatar from "react-avatar";
 import { toast } from "react-toastify";
+import { getStatus } from "../../helpers";
 import {
   checkConversationPassword,
   getConversationMessages,
@@ -113,14 +115,16 @@ const ConversationsList = ({
           <div className="flex">
             <div className="flex-2">
               <div className="w-12 h-12 relative">
-                <img
-                  className="w-12 h-12 rounded-full mx-auto"
-                  src={user.image_url}
-                  alt="chat-user"
-                />
+                <Link href={`/profile/${user.user_name}`}>
+                  <img
+                    className="w-12 h-12 rounded-full mx-auto object-cover cursor-pointer"
+                    src={user.image_url}
+                    alt="chat-user"
+                  />
+                </Link>
                 <span
                   className={`absolute w-4 h-4 ${
-                    user ? "bg-green-400" : "bg-gray-400"
+                    getStatus(user?.profile?.status).color
                   } rounded-full right-0 bottom-0 border-2 border-white`}
                 ></span>
               </div>
@@ -133,7 +137,7 @@ const ConversationsList = ({
               </div>
               <div>
                 <small className="text-gray-600">
-                  {user ? "Online" : "Offline"}
+                  {getStatus(user?.profile?.status).text}
                 </small>
               </div>
             </div>
@@ -200,11 +204,11 @@ const ConversationsList = ({
               <div className="flex-2">
                 <div className="w-12 h-12 relative">
                   <Avatar size="45" name={conversation.name} round={true} />
-                  <span
+                  {/* <span
                     className={`absolute w-4 h-4 ${
                       user ? "bg-green-400" : "bg-gray-400"
                     } rounded-full right-0 bottom-0 border-2 border-white`}
-                  ></span>
+                  ></span> */}
                 </div>
               </div>
               <div className="flex-1 px-2">
@@ -228,11 +232,11 @@ const ConversationsList = ({
                   </small>
                 </div>
                 {/* {conversation.not_read_messages > 0 && ( */}
-                <div>
+                {/* <div>
                   <small className="text-xs bg-red-500 text-white rounded-full h-6 w-6 leading-6 text-center inline-block">
                     8
                   </small>
-                </div>
+                </div> */}
                 {/* )} */}
               </div>
             </div>

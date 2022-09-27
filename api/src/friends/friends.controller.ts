@@ -15,7 +15,6 @@ import { FriendsService } from './friends.service';
 import {
   CreateFriendRequestDto,
   GetFriendRequestDto,
-  UpdateFriendRequest,
 } from './dto/friend.dto';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
@@ -30,7 +29,6 @@ export class FriendsController {
     @Res() res: Response,
     @Headers('Authorization') auth: string,
   ) {
-    // return this.friendsService.listAllFriends(auth);
 
     try {
       const Friends = (await this.friendsService.listAllFriends(
@@ -95,7 +93,6 @@ export class FriendsController {
         });
       }
     } catch (error: any) {
-      console.log(error);
       return res.status(500).json({
         status: 'error',
         message: 'Error Removing Friend',
@@ -110,13 +107,10 @@ export class FriendsController {
     @Res() res: Response,
     @Headers('Authorization') auth: string,
   ) {
-    // return this.friendsService.findAll(auth);
-
     try {
       const AllFriendRequests = (await this.friendsService.findAll(
         auth,
       )) as GetFriendRequestDto[];
-      console.log('return from service', AllFriendRequests);
       if (AllFriendRequests) {
         return res.status(200).json({
           status: 'success',
@@ -125,7 +119,6 @@ export class FriendsController {
         });
       }
     } catch (error: any) {
-      console.log(error);
       return res.status(500).json({
         status: 'error',
         message: 'Error Sending Friend Request',
@@ -141,11 +134,8 @@ export class FriendsController {
     @Param('id') id: string,
     @Headers('Authorization') auth: string,
   ) {
-    // return this.friendsService.update(+id, updateFriendRequest);
-
     try {
       const update = await this.friendsService.update(+id, auth);
-      console.log('return from service', update);
       if (update) {
         return res.status(200).json({
           status: 'success',
@@ -154,7 +144,6 @@ export class FriendsController {
         });
       }
     } catch (error: any) {
-      console.log(error);
       return res.status(500).json({
         status: 'error',
         message: 'Error Sending updating Friend Request',
@@ -172,7 +161,6 @@ export class FriendsController {
   ) {
     try {
       const removed = await this.friendsService.removeFriendRequest(+id, auth);
-      console.log('return from service', removed);
       if (removed) {
         return res.status(200).json({
           status: 'success',
@@ -181,7 +169,6 @@ export class FriendsController {
         });
       }
     } catch (error: any) {
-      console.log(error);
       return res.status(500).json({
         status: 'error',
         message: 'Error Sending Deleting Friend Request',

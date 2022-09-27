@@ -1,6 +1,6 @@
 import { Injectable, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient, ProfileStatus } from '@prisma/client';
 import { Request, Response } from 'express';
 import { authenticator } from 'otplib';
 import { UserService } from 'src/user/user.service';
@@ -11,14 +11,27 @@ import { toFileStream } from 'qrcode';
 export class AuthService {
 
   constructor(private readonly userService: UserService,
-              private readonly configService: ConfigService) {}
+              private readonly configService: ConfigService,
+              private readonly prisma: PrismaClient) {}
 
 
   async GenirateJWT(@Req() req: Request, @Res() res: Response): Promise<SetupUser> {
     const user = await this.userService.validateUser(req.user as Prisma.UserUncheckedCreateInput);
-    // console.log("from GenerateJWT", user);
+    if (user) {
+      const updatestatus = await this.prisma.user.update({
+        where: {
+          intra_id: user.intra_id
+        },
+        data: {
+          profile: {
+            update: {
+              status: ProfileStatus.ONLINE,
+            }
+          }
+        }
+      })
+    }
     return (user);
-    // res.redirect('http://localhost/setup');
   }
 
 
@@ -42,6 +55,23 @@ export class AuthService {
       token: twoFactorAuthenticationCode,
       secret: user.twoFactorAuthenticationSecret
     })
+  }
+
+  async logout(auth: string) {
+    const intra_id = this.userService.decode(auth).intra_id;
+    const user = await this.prisma.user.update({
+      where: {
+        intra_id: intra_id,
+      },
+      data: {
+        profile: {
+          update: {
+            status: ProfileStatus.OFFLINE
+          }
+        }
+      }
+    });
+    return (user);
   }
 
 }

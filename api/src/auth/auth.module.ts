@@ -4,7 +4,6 @@ import { AuthController } from './auth.controller';
 import { FortyTwoStrategy } from './strategies/FortyTwo.strategy';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/app/prisma.service';
-// import { SessionSerializer } from './auth.serializer';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -12,6 +11,7 @@ import { PassportModule } from '@nestjs/passport';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UserModule } from 'src/user/user.module';
 import { AppModule } from 'src/app/app.module';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -23,6 +23,7 @@ import { AppModule } from 'src/app/app.module';
     UserService,
     ConfigService,
     PrismaService,
+    PrismaClient,
     CloudinaryService,
   ],
 })
