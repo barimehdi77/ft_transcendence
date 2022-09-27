@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { socket } from '../socket';
+<<<<<<< HEAD
+import { paintGame, drawRect } from '../components/drawing/drawing';
+=======
 import { paintGame, drawRect, drawText } from './drawing';
 import Head from 'next/head';
+>>>>>>> 4cd5d211e3ea876b107183c899f931d13017adfe
 
 const Spectate = () => {
 	const [data, setData]: any = useState(null);
+	// const [code, setCode] = useState(false);
 	const [table, setTable] = useState(true);
 	const canvasRef = useRef(null);
 	const [gameActive, setActive] = useState(false);
@@ -12,7 +17,7 @@ const Spectate = () => {
 	let ctx: any;
 
 	if (typeof window !== 'undefined') {
-		console.log(window.innerWidth, ' ', window.innerHeight);
+		// console.log(window.innerWidth, ' ', window.innerHeight);
 		window.onresize = () => {
 			if (canvasRef.current) {
 				if (window.innerWidth > 1300) {
@@ -45,7 +50,7 @@ const Spectate = () => {
 	}
 
 	const updateplayers = (msg: string) => {
-		console.log('update: ', msg);
+		// console.log('update: ', msg);
 		setData(JSON.parse(msg));
 		setTable(true);
 		setActive(false);
@@ -53,17 +58,15 @@ const Spectate = () => {
 	socket.off('updateplayers').on('updateplayers', updateplayers);
 
 	const listOfPlayersPlaying = (msg: string) => {
-		console.log('listOfPlayersPlaying: ', msg);
+		// console.log('listOfPlayersPlaying: ', msg);
 		setData(JSON.parse(msg));
 	};
-	socket
-		.off('listOfPlayersPlaying')
-		.on('listOfPlayersPlaying', listOfPlayersPlaying);
+	socket.off('listOfPlayersPlaying').on('listOfPlayersPlaying', listOfPlayersPlaying);
 
 	useEffect(() => {
 		const getData = () => {
 			socket.emit('listOfPlayersPlaying', (ret: any) => {
-				console.log(ret);
+				// console.log(ret);
 				setData(ret);
 			});
 		};
@@ -71,30 +74,32 @@ const Spectate = () => {
 	}, [table]);
 
 	const handlSpectateState = (state: string) => {
-		if (gameActive) {
-			if (canvasRef.current) {
-				// if (ctx?.clearRect)
-				ctx?.clearRect(0, 0, canvas.width, canvas.height);
-				drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
-				let StateTemp = JSON.parse(state);
-				requestAnimationFrame(() =>
-					paintGame(ctx, StateTemp, canvas.width, canvas.height)
-				);
-			}
-			console.log('hana');
+		if (canvasRef.current) {
+			ctx?.clearRect(0, 0, canvas.width, canvas.height);
+			drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
+			if (!gameActive)
+				return;
+			let StateTemp = JSON.parse(state);
+			requestAnimationFrame(() =>
+				paintGame(ctx, StateTemp, canvas.width, canvas.height)
+			);
 		}
+		// console.log('handlSpectateState');
 	};
 	socket.off('spectateState').on('spectateState', handlSpectateState);
 
 	const showGame = (gamecode: string) => {
 		setTable(false);
 		setActive(true);
+		// console.log("gamecode ", gamecode);
 		socket.emit('spectateGame', gamecode);
 	};
 
 	const ShowList = () => {
 		setTable(true);
 		setActive(false);
+		socket.emit('stop');
+		// emit stop 			create var stop play
 	};
 
 	return (
@@ -107,23 +112,23 @@ const Spectate = () => {
 					<h1 className='font-bold text-2xl mb-2'>Live Games:</h1>
 					{data
 						? Object.keys(data).map((elem: any) => {
-								return (
-									<div className='flex justify-between items-center'>
-										<h2 className='font-semibold text-xl mr-4'>
-											{data[elem].p1}
-										</h2>
-										<h2 className='font-semibold text-xl mr-8'>
-											{data[elem].p2}
-										</h2>
-										<button
-											className='bg-sky-800 px-4 py-2 text-white font-semibold rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-sky-700 hover:scale-105'
-											onClick={() => showGame(elem)}
-										>
-											Watch
-										</button>
-									</div>
-								);
-						  })
+							return (
+								<div className='flex justify-between items-center'>
+									<h2 className='font-semibold text-xl mr-4'>
+										{data[elem].p1}
+									</h2>
+									<h2 className='font-semibold text-xl mr-8'>
+										{data[elem].p2}
+									</h2>
+									<button
+										className='bg-sky-800 px-4 py-2 text-white font-semibold rounded-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-sky-700 hover:scale-105'
+										onClick={() => showGame(elem)}
+									>
+										Watch
+									</button>
+								</div>
+							);
+						})
 						: null}
 				</div>
 			) : (

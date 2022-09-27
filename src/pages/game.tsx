@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from 'react';
-import { paintGame, drawRect, drawText } from './drawing';
+import { paintGame, drawText } from '../components/drawing/drawing';
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
@@ -12,10 +12,19 @@ const Game = () => {
 	let canvas: HTMLCanvasElement;
 	let ctx: any;
 
-	const [gameCodeInput, setGameCodeInput] = useState('');
-	const [gameCodeDisplay, setGameCodeDisplay] = useState('');
+	// const [gameCodeInput, setGameCodeInput] = useState('');
+	// const [gameCodeDisplay, setGameCodeDisplay] = useState('');
 	const [gameActive, setGameActive] = useState(false);
 	const [playerNamber, setPlayerNamber] = useState(0);
+	const [randomColor, setRandomColor] = useState(0);
+
+	const color = [
+		{ back: "#000000", front: "#ffffff" },
+		{ back: "#003459", front: "#d9d9d9" },
+		{ back: "#461220", front: "#fed0bb" },
+		{ back: "#590d22", front: "#ffccd5" },
+		{ back: "#184e77", front: "#d9ed92" },
+	];
 
 	const init = (player: number) => {
 		setGameActive(true);
@@ -23,7 +32,7 @@ const Game = () => {
 	};
 
 	if (typeof window !== 'undefined') {
-		console.log(window.innerWidth, ' ', window.innerHeight);
+		// console.log(window.innerWidth, ' ', window.innerHeight);
 		window.onresize = () => {
 			if (gameActive) {
 				if (canvasRef.current) {
@@ -58,34 +67,35 @@ const Game = () => {
 	}
 
 	const playGame = () => {
-		socket.emit('playGame', userInfo);
+		socket.emit('playGame', userInfo, (ret: number) => setRandomColor(ret));
 		setGameActive(true);
 	};
 
 	useEffect(() => {
 		playGame();
+		// setRandomColor(Math.floor(Math.random() * 4));
 	}, []);
 
-	const spectateGame = () => {
-		// setinitialScreen(true);
-		socket.emit('spectateGame', gameCodeInput.toString());
-		init(0);
-	};
+	// const spectateGame = () => {
+	// 	// setinitialScreen(true);
+	// 	socket.emit('spectateGame', gameCodeInput.toString());
+	// 	init(0);
+	// };
 
-	const handlSpectateState = (state: string) => {
-		if (canvasRef.current) {
-			if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
-			drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
-			if (!gameActive) {
-				return;
-			}
-			let StateTemp = JSON.parse(state);
-			requestAnimationFrame(() =>
-				paintGame(ctx, StateTemp, canvas.width, canvas.height)
-			);
-		}
-	};
-	socket.off('spectateState').on('spectateState', handlSpectateState);
+	// const handlSpectateState = (state: string) => {
+	// 	if (canvasRef.current) {
+	// 		if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
+	// 		drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
+	// 		if (!gameActive) {
+	// 			return;
+	// 		}
+	// 		let StateTemp = JSON.parse(state);
+	// 		requestAnimationFrame(() =>
+	// 			paintGame(ctx, StateTemp, canvas.width, canvas.height)
+	// 		);
+	// 	}
+	// };
+	// socket.off('spectateState').on('spectateState', handlSpectateState);
 
 	// PAGE GAME
 	const keydown = (e: any) => {
@@ -101,7 +111,7 @@ const Game = () => {
 	const handlGameState = (gameState: string) => {
 		if (canvasRef.current) {
 			if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
-			drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
+			// drawRect(ctx, 0, 0, canvas.width, canvas.height, '#2ec4b6');
 			document.addEventListener('keydown', keydown);
 			if (!gameActive) {
 				return;
@@ -114,13 +124,13 @@ const Game = () => {
 	};
 	socket.off('gameState').on('gameState', handlGameState);
 
-	const handleGameOver = (data: any) => {
-		console.log('gameA: ', gameActive);
+	const handleGameOver = (data: number) => {
+		// console.log('gameA: ', gameActive);
 
 		if (!gameActive) return;
-		data = JSON.parse(data);
+		// data = JSON.parse(data);
 		setGameActive(false);
-		console.log('d: ', data, ' p: ', playerNamber);
+		// console.log('d: ', data, ' p: ', playerNamber);
 
 		if (data === playerNamber) {
 			alert('You Win!');
@@ -134,19 +144,18 @@ const Game = () => {
 	socket.off('gameOver').on('gameOver', handleGameOver);
 
 	const handlePlayerDisconnected = (player: number) => {
+		// console.log(player, " !== ", playerNamber);
 		if (player !== playerNamber) {
 			alert('Your opponent disconnected. You win!');
 			Router.push('/');
 		}
 	};
-	socket
-		.off('playerDisconnected')
-		.on('playerDisconnected', handlePlayerDisconnected);
+	socket.off('playerDisconnected').on('playerDisconnected', handlePlayerDisconnected);
 
-	const handleGameCode = (gameCode: string) => {
-		setGameCodeDisplay(gameCode);
-	};
-	socket.off('gameCode').on('gameCode', handleGameCode);
+	// const handleGameCode = (gameCode: string) => {
+	// 	setGameCodeDisplay(gameCode);
+	// };
+	// socket.off('gameCode').on('gameCode', handleGameCode);
 
 	let x = 0;
 	const handleWaiting = () => {
@@ -155,7 +164,7 @@ const Game = () => {
 			'. ',
 			canvas.width / 2 - 12 + x,
 			canvas.height / 2,
-			'white',
+			color[randomColor].front,
 			600 / canvas.width,
 			45
 		);
@@ -175,7 +184,7 @@ const Game = () => {
 			countDown.toString(),
 			canvas.width / 2,
 			canvas.height / 2,
-			'white',
+			color[randomColor].front,
 			600 / canvas.width,
 			45
 		);
@@ -198,7 +207,7 @@ const Game = () => {
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
 						<canvas
 							ref={canvasRef}
-							style={{ border: '1px solid #c3c3c3', backgroundColor: 'black' }}
+							style={{ border: '1px solid #c3c3c3', backgroundColor: color[randomColor].back }}
 						></canvas>
 					</div>
 				</div>

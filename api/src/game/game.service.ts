@@ -3,15 +3,15 @@ import { Server, Socket } from 'socket.io';
 import { GameStatus, Prisma, PrismaClient, ProfileStatus } from '@prisma/client';
 import { GetPlayingGames } from './dto/get-playing-games.dto';
 import { ProfileService } from 'src/profile/profile.service';
-import { UserProfile } from 'src/auth/dto/User.dto';
 
 @Injectable()
 export class GameService {
   constructor(private prisma: PrismaClient,
     private profileService: ProfileService) { }
 
+  users: any = {}
 
-  FRAMERATE = 30;
+  FRAMERATE = 10;
   state: any = {};
   clientRooms: any = {};
   clientSpectating: any = {};
@@ -27,6 +27,7 @@ export class GameService {
 
   createGameState() {
     return {
+      color: Math.floor(Math.random() * 4),
       playerOne: {
         id: 'playerOne',
         name: '',
@@ -34,7 +35,7 @@ export class GameService {
         y: (this.canvasHeight - 100) / 2,
         width: 10,
         height: 100,
-        color: 'white',
+        // color: 'white',
         score: 0,
       },
       playerTwo: {
@@ -44,7 +45,7 @@ export class GameService {
         y: (this.canvasHeight - 100) / 2,
         width: 10,
         height: 100,
-        color: 'white',
+        // color: 'white',
         score: 0,
       },
       ball: {
@@ -54,7 +55,7 @@ export class GameService {
         speed: 7,
         velocityX: 7,
         velocityY: 7,
-        color: 'white',
+        // color: 'white',
       },
     };
   }
@@ -139,8 +140,8 @@ export class GameService {
       ball.speed += 0.1;
       // update the score;
     }
-    if (playerOne.score == 15) return 1;
-    if (playerTwo.score == 15) return 2;
+    if (playerOne.score == 2) return 1;
+    if (playerTwo.score == 2) return 2;
     return false;
   }
 
@@ -192,11 +193,11 @@ export class GameService {
 
   starting = (server: Server, state: any, roomName: string) => {
     let count = 3;
-    const int = setInterval(() => {
+    const interval = setInterval(() => {
       server.in(roomName).emit('start');
       count--;
       if (count === 0) {
-        clearInterval(int);
+        clearInterval(interval);
         server.emit('listOfPlayersPlaying', JSON.stringify(this.playersPlaying))
         // this.updateplayers(server, roomName);
         this.startGameInterval(server, state, roomName);
@@ -215,20 +216,19 @@ export class GameService {
         } else {
           clearInterval(interval);
           this.gameActive[roomName] = false;
+          // console.log("winner: ", winner);
           this.emitGameOver(server, roomName, winner);
           return;
         }
       } else {
-        this.emitPlayerDesconnected(
-          server,
-          roomName,
-          this.playerDisconnected[roomName],
-        );
-        clearInterval(interval);
+        // console.log("emit disconn");
+
+        this.emitPlayerDesconnected(server, roomName, this.playerDisconnected[roomName]);
         if (this.playerDisconnected[roomName] === 1)
           this.prismaUpdate(roomName, 0, 10, true);
         else if (this.playerDisconnected[roomName] === 2)
           this.prismaUpdate(roomName, 10, 0, true);
+        clearInterval(interval);
         return;
       }
     }, 1000 / this.FRAMERATE);
@@ -241,10 +241,12 @@ export class GameService {
     client.emit('gameCode', roomName);
 
     this.state[roomName] = this.createGameState();
+
     this.state[roomName].playerOne.id = client.id;
     this.state[roomName].playerOne.name = userInfo.user_name;
     client.join(roomName.toString());
-    client.in(roomName.toString()).emit('init', 1);
+    client.emit('init', 1);
+    // client.in(roomName.toString()).emit('init', 1);
   }
 
   //client.on('joinGame', handleJoinGame);
@@ -282,9 +284,11 @@ export class GameService {
     this.state[gameCode].playerTwo.id = client.id;
     this.state[gameCode].playerTwo.name = userInfo.user_name;
     this.playersPlaying[gameCode] = { p1: this.state[gameCode].playerOne.name, p2: this.state[gameCode].playerTwo.name };
-    client.in(gameCode).emit('init', 2);
+    // client.in(gameCode).emit('init', 2);
+    client.emit('init', 2);
     const stateRoom = this.state[gameCode];
-    this.idPrisma[stateRoom] = await this.prisma.match.create({
+    // console.log("joinGame", this.state);
+    this.idPrisma[gameCode] = await this.prisma.match.create({
       data: {
         player_one: stateRoom.playerOne.name,
         player_two: stateRoom.playerTwo.name,
@@ -323,6 +327,7 @@ export class GameService {
   wait = false;
   name: string;
   handlePlayGame(server: Server, client: Socket, userInfo: any) {
+    // console.log("handlePlayGame: ", client.id);
     if (!this.waitlist) {
       this.name = userInfo.user_name;
       this.waitlist = true;
@@ -337,21 +342,38 @@ export class GameService {
       this.handleJoinGame(server, client, this.roomName.toString(), userInfo);
       this.wait = false;
     }
+    return this.state[this.roomName].color;
   }
 
+  start = {};
   handleSpectateGame(server: Server, client: Socket, gameCode: string) {
-    let room: string;
-    if (!gameCode) return;
-    server.sockets.adapter.rooms
-      .get(gameCode)
-      .forEach((value) => (room = value));
-    this.clientSpectating[client.id] = gameCode;
-    const interval = setInterval(() => {
-      const state = this.state[gameCode];
-      server.emit('spectateState', JSON.stringify(state));
-      if (!this.gameActive[gameCode])
-        clearInterval(interval);
-    }, 1000 / this.FRAMERATE);
+    if (this.start[client.id] === true) {
+      // console.log("start ", client.id, "    ", this.start);
+
+      // let room: string;
+      if (!gameCode) return;
+      // server.sockets.adapter.rooms
+      //   .get(gameCode)
+      //   .forEach((value) => (room = value));
+      // console.log("clientSpectating: ", this.clientSpectating[client.id]);
+
+      // if (!this.clientSpectating[client.id]) {
+      // this.clientSpectating[client.id] = gameCode;
+      // client.join(client.id);
+      const interval = setInterval(() => {
+        const state = this.state[gameCode];
+        // server.in(gameCode).emit('spectateState', JSON.stringify(state));
+        server.to(client.id).emit('spectateState', JSON.stringify(state));
+        if (!this.gameActive[gameCode] || !this.start[client.id])
+          clearInterval(interval);
+      }, 1000 / this.FRAMERATE);
+      // }
+      return true;
+    }
+  }
+
+  emitGameState(server: Server, gameState: any, roomName: string) {
+    server.sockets.in(roomName).emit('gameState', JSON.stringify(gameState));
   }
 
   async updatePlayerPoints(matchGame: any) {
@@ -451,10 +473,6 @@ export class GameService {
     }
   }
 
-  emitGameState(server: Server, gameState: any, roomName: string) {
-    server.sockets.in(roomName).emit('gameState', JSON.stringify(gameState));
-  }
-
   async emitGameOver(server: Server, roomName: string, winner: any) {
     delete this.playersPlaying[roomName];
     this.updateplayers(server, roomName);
@@ -464,14 +482,14 @@ export class GameService {
 
   emitPlayerDesconnected(server: Server, roomName: string, winner: number) {
     // delete this.state[roomName];
-      delete this.playersPlaying[roomName];
-      this.updateplayers(server, roomName);
-      server.in(roomName).emit('playerDisconnected', JSON.stringify(winner));
+    delete this.playersPlaying[roomName];
+    this.updateplayers(server, roomName);
+    server.in(roomName).emit('playerDisconnected', JSON.stringify(winner));
   }
 
   updateplayers(server: Server, roomName: string) {
     if (!this.gameActive[roomName])
-      server.emit('updateplayers', JSON.stringify(this.playersPlaying));
+      server.in(roomName).emit('updateplayers', JSON.stringify(this.playersPlaying));
   }
 
   ListOfPlayersPlaying() {
@@ -496,5 +514,78 @@ export class GameService {
       });
     });
     return (Promise.all(returnPlayedGames));
+  }
+
+  handlQuestion = (server: Server, data: any) => {
+    console.log(data.to.name, "  ", this.users[data.to.name], this.users);
+    if (this.users[data.to.name]) {
+      console.log(data.to.name, "  ", this.users[data.to.name]);
+      server.to(this.users[data.to.name]).emit('invitation', data.sender.name);
+    }
+    else
+      console.log("ur friend not exist");
+  }
+
+  handlAccepted = async (server: Server, client: Socket, data: any) => {
+    console.log("emit: ", this.users[data.sender]);
+
+    server.to(this.users[data.sender]).emit('goToPlay');
+    const roomName = Math.floor(Math.random() * 1000000);
+    this.clientRooms[client.id] = roomName;
+    this.roomName = roomName;
+    // client.emit('gameCode', roomName);
+
+    this.state[roomName] = this.createGameState();
+
+    this.state[roomName].playerOne.id = client.id;
+    this.state[roomName].playerOne.name = data.user;
+    client.join(roomName.toString());
+    client.emit('init', 1);
+
+
+    // join game
+    let room: string;
+    let gameCode = roomName.toString();
+    if (!gameCode) return;
+    this.gameActive[gameCode] = true;
+    server.sockets.adapter.rooms
+      .get(gameCode)
+      .forEach((value) => (room = value));
+    let allUsers;
+    if (room) {
+      allUsers = server.sockets;
+    }
+
+    let numClients = 0;
+    if (allUsers) {
+      // numClients = Object.keys(allUsers).length;
+      numClients = server.engine.clientsCount;
+      // console.log("length: ", numClients, " length2: ", server.engine.length);
+    }
+
+    if (numClients === 0) {
+      client.emit('unknownGame');
+      return;
+    }
+    this.clientRooms[client.id] = gameCode;
+
+    client.join(gameCode);
+    this.state[gameCode].playerTwo.id = client.id;
+    this.state[gameCode].playerTwo.name = data.sender;
+    this.playersPlaying[gameCode] = { p1: this.state[gameCode].playerOne.name, p2: this.state[gameCode].playerTwo.name };
+    // client.in(gameCode).emit('init', 2);
+    client.emit('init', 2);
+    const stateRoom = this.state[gameCode];
+    // console.log("joinGame", this.state);
+    // this.idPrisma[gameCode] = await this.prisma.match.create({
+    //   data: {
+    //     player_one: stateRoom.playerOne.name,
+    //     player_two: stateRoom.playerTwo.name,
+    //     player_one_score: stateRoom.playerOne.score,
+    //     player_two_score: stateRoom.playerTwo.score,
+    //     status: GameStatus.PLAYING
+    //   },
+    // });
+    this.starting(server, this.state, gameCode);
   }
 }
