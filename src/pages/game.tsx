@@ -67,16 +67,14 @@ const Game = () => {
 	}
 
 	const playGame = (type: string) => {
-		if (type === "random")
-		{
-			
-			
-			socket.emit('playGame', {userInfo, type: "random"}, (ret: number) => setRandomColor(ret));
+		if (type === "random") {
+
+
+			socket.emit('playGame', { userInfo, type: "random" }, (ret: number) => setRandomColor(ret));
 		}
-		else
-		{
+		else {
 			// console.log("friend: ", type);
-			socket.emit('playGame', {userInfo, type: "friend"}, (ret: number) => setRandomColor(ret));
+			socket.emit('playGame', { userInfo, type: "friend" }, (ret: number) => setRandomColor(ret));
 		}
 		setGameActive(true);
 	};
@@ -142,17 +140,22 @@ const Game = () => {
 		// console.log('gameA: ', gameActive);
 
 		if (!gameActive) return;
-		// data = JSON.parse(data);
+		// const dataa = data.toString();
 		setGameActive(false);
-		// console.log('d: ', data, ' p: ', playerNamber);
+		console.log('d: ', data, " ", typeof (data), ' p: ', playerNamber, " ", typeof (playerNamber));
 
-		if (data === playerNamber) {
-			alert('You Win!');
+		if (playerNamber == 0) {
+			alert('Game Over');
 			Router.push('/');
-		}
-		if (data !== playerNamber) {
-			alert('You Lose :(');
-			Router.push('/');
+		} else {
+			if (data == playerNamber) {
+				alert('You Win!');
+				Router.push('/');
+			}
+			if (data != playerNamber) {
+				alert('You Lose :(');
+				Router.push('/');
+			}
 		}
 	};
 	socket.off('gameOver').on('gameOver', handleGameOver);

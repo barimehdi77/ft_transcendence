@@ -324,43 +324,50 @@ export class GameService {
   friendList = {};
   roomNameFriend: number;
   handlePlayGame(server: Server, client: Socket, userInfo: any) {
-    console.log("handlePlayGame: ", userInfo);
     if (userInfo.type === "random") {
-      console.log("random: ", userInfo.type);
-      if (!this.waitlist) {
-        this.name = userInfo.userInfo.user_name;
-        this.waitlist = true;
-        this.roomName = this.handleNewGame(client, userInfo.userInfo)
-        this.wait = true;
-        const interval = setInterval(() => {
-          server.in(this.roomName.toString()).emit('waiting');
-          if (!this.wait) clearInterval(interval);
-        }, 500);
-      } else if (this.name !== userInfo.userInfo.user_name) {
-        this.waitlist = false;
-        this.handleJoinGame(server, client, this.roomName.toString(), userInfo.userInfo);
-        this.wait = false;
+      // console.log("=> ", !this.gameActive[this.roomName]);
+      if (!this.gameActive[this.roomName]) {
+        if (!this.waitlist) {
+          console.log("1-NewGame gameActive: ", this.gameActive);
+
+          this.name = userInfo.userInfo.user_name;
+          this.waitlist = true;
+          this.roomName = this.handleNewGame(client, userInfo.userInfo)
+          console.log("2-NewGame gameActive: ", this.gameActive);
+          this.wait = true;
+          const interval = setInterval(() => {
+            server.in(this.roomName.toString()).emit('waiting');
+            if (!this.wait) clearInterval(interval);
+          }, 500);
+        } else if (this.name !== userInfo.userInfo.user_name) {
+          console.log("1-JoinGame gameActive: ", this.gameActive);
+          this.waitlist = false;
+          this.handleJoinGame(server, client, this.roomName.toString(), userInfo.userInfo);
+          console.log("2-JoinGame gameActive: ", this.gameActive);
+          this.wait = false;
+        }
+        return this.state[this.roomName].color;
       }
-      return this.state[this.roomName].color;
     }
     else if (userInfo.type === "friend") {
-      console.log("friend: ", userInfo.type);
-      if (!this.waitlistF) {
-        this.name = userInfo.userInfo.user_name;
-        this.waitlistF = true;
-        this.roomNameFriend = this.handleNewGame(client, userInfo.userInfo)
-        // this.friendList[this.roomName.toString()] = 
-        this.waitF = true;
-        const interval = setInterval(() => {
-          server.in(this.roomNameFriend.toString()).emit('waiting');
-          if (!this.waitF) clearInterval(interval);
-        }, 500);
-      } else if (this.name !== userInfo.userInfo.user_name) {
-        this.waitlistF = false;
-        this.handleJoinGame(server, client, this.roomNameFriend.toString(), userInfo.userInfo);
-        this.waitF = false;
+      if (!this.gameActive[this.roomNameFriend]) {
+        if (!this.waitlistF) {
+          this.name = userInfo.userInfo.user_name;
+          this.waitlistF = true;
+          this.roomNameFriend = this.handleNewGame(client, userInfo.userInfo)
+          // this.friendList[this.roomName.toString()] = 
+          this.waitF = true;
+          const interval = setInterval(() => {
+            server.in(this.roomNameFriend.toString()).emit('waiting');
+            if (!this.waitF) clearInterval(interval);
+          }, 500);
+        } else if (this.name !== userInfo.userInfo.user_name) {
+          this.waitlistF = false;
+          this.handleJoinGame(server, client, this.roomNameFriend.toString(), userInfo.userInfo);
+          this.waitF = false;
+        }
+        return this.state[this.roomNameFriend].color;
       }
-      return this.state[this.roomNameFriend].color;
     }
   }
 
@@ -500,7 +507,6 @@ export class GameService {
   }
 
   emitPlayerDesconnected(server: Server, roomName: string, winner: number) {
-    // delete this.state[roomName];
     delete this.playersPlaying[roomName];
     this.updateplayers(server, roomName);
     server.in(roomName).emit('playerDisconnected', JSON.stringify(winner));
@@ -546,9 +552,9 @@ export class GameService {
   }
 
   handlAccepted = async (server: Server, client: Socket, data: any) => {
-    console.log("user: ", this.users);
-    console.log("data: ", data);
-    console.log("this.users[data.sender]: ", this.users[data.data.sender]);
+    // console.log("user: ", this.users);
+    // console.log("data: ", data);
+    // console.log("this.users[data.sender]: ", this.users[data.data.sender]);
 
     if (this.users[data.data.sender]) {
       // console.log(data.to.name, "  ", this.users[data.to.name]);

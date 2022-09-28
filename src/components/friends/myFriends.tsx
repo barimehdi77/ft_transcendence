@@ -36,6 +36,8 @@ const MyFriends = ({
 	if (friendsList) friendsList.data?.length !== 1 ? (plural = 's') : null;
 
 	const playGame = (user: any) => {
+		console.log("botton clicked");
+		
 		socket.emit('question', {
 			sender: { name: userInfo.user_name },
 			to: { name: user.user_name },
