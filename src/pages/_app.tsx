@@ -53,7 +53,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 		let text = sender + " want's to play with you !!";
 		if (confirm(text) == true) {
 			socket.emit('friendAccepted', { data: { user: userInfo.user_name, sender: sender }})
-			Router.push('/game');
+			// socket.emit('accepted', Math.floor(Math.random() * 1000000));
+			Router.push({
+				pathname: "/game",
+				query: { name: "friends"}
+			});
 			return "accepted";
 		} else {
 			// socket.emit('rejected', userInfo.user_name);

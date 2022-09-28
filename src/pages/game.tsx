@@ -3,7 +3,7 @@ import { paintGame, drawText } from '../components/drawing/drawing';
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
-import Router from 'next/router';
+import Router, { withRouter } from 'next/router';
 import Head from 'next/head';
 
 const Game = () => {
@@ -66,13 +66,20 @@ const Game = () => {
 		}
 	}
 
-	const playGame = () => {
-		socket.emit('playGame', userInfo, (ret: number) => setRandomColor(ret));
+	const playGame = (type: string) => {
+		if (type === "random")
+			socket.emit('playGame', {userInfo, type: "random"}, (ret: number) => setRandomColor(ret));
+		else
+			socket.emit('playGame', {userInfo, type: "friend"}, (ret: number) => setRandomColor(ret));
 		setGameActive(true);
 	};
 
 	useEffect(() => {
-		playGame();
+		if (Router.query.name === "friends")
+			playGame("friend");
+		else
+			playGame("random");
+		// console.log("withRouter: ", );// withRouter.name);
 		// setRandomColor(Math.floor(Math.random() * 4));
 	}, []);
 

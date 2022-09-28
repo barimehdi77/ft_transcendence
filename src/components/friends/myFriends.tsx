@@ -38,20 +38,27 @@ const MyFriends = ({
 	const playGame = (user: any) => {
 		socket.emit('question', {
 			sender: { name: userInfo.user_name },
-			to: { name: user.user_name }
-		}, (ret: string) => {
-			// if (ret == "yes") {
-			// 	socket.emit('playWithFriend');
-			// }
-			console.log("return: ", ret);
-		})
+			to: { name: user.user_name },
+			// roomName: Math.floor(Math.random() * 1000000)
+		// }, (ret: string) => {
+		// 	// if (ret == "yes") {
+		// 	// 	socket.emit('playWithFriend');
+		// 	// }
+		// 	console.log("return: ", ret);
+		});
+		// Router.push('/game');
 		// console.log("user ", user.user_name, " want to play with: ", userInfo.user_name);
+
 	}
 
 	const accept = () => {
-		Router.push('/game');
+		// Router.push('/game');
+		Router.push({
+			pathname: "/game",
+			query: { name: "friends"}
+		});
 	}
-	socket.off('goToPlay').on('goToPlay', accept)
+	socket.off('urFriendAccepted').on('urFriendAccepted', accept)
 
 	return (
 		<>
