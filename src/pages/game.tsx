@@ -68,9 +68,16 @@ const Game = () => {
 
 	const playGame = (type: string) => {
 		if (type === "random")
+		{
+			
+			
 			socket.emit('playGame', {userInfo, type: "random"}, (ret: number) => setRandomColor(ret));
+		}
 		else
+		{
+			// console.log("friend: ", type);
 			socket.emit('playGame', {userInfo, type: "friend"}, (ret: number) => setRandomColor(ret));
+		}
 		setGameActive(true);
 	};
 
