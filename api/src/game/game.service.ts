@@ -325,8 +325,8 @@ export class GameService {
   roomNameFriend: number;
   handlePlayGame(server: Server, client: Socket, userInfo: any) {
     if (userInfo.type === "random") {
-      // console.log("=> ", !this.gameActive[this.roomName]);
-      if (!this.gameActive[this.roomName]) {
+      // console.log(this.roomName, "=> ", !this.gameActive[this.roomName]);
+      // if (!this.gameActive[this.roomName]) {
         if (!this.waitlist) {
           console.log("1-NewGame gameActive: ", this.gameActive);
 
@@ -347,10 +347,10 @@ export class GameService {
           this.wait = false;
         }
         return this.state[this.roomName].color;
-      }
+      // }
     }
     else if (userInfo.type === "friend") {
-      if (!this.gameActive[this.roomNameFriend]) {
+      // if (!this.gameActive[this.roomNameFriend]) {
         if (!this.waitlistF) {
           this.name = userInfo.userInfo.user_name;
           this.waitlistF = true;
@@ -368,7 +368,7 @@ export class GameService {
         }
         return this.state[this.roomNameFriend].color;
       }
-    }
+    // }
   }
 
   start = {};
