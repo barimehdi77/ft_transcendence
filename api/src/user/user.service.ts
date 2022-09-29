@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma } from '@prisma/client';
+import { FriendStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { CreateJwt, SetupUser, UserAuth, UserDecoder } from 'src/auth/dto/User.dto';
@@ -115,6 +115,15 @@ export class UserService {
   async FindUser(
     auth: string,
   ): Promise<UserAuth> {
+    const block = await this.prisma.friendsList.findMany({
+      where: {
+          from: this.decode(auth).intra_id,
+          status: FriendStatus.BLOCKED,
+      },
+      select: {
+        to: true,
+      }
+    });
     const user = await this.prisma.user.findUnique({
       where: {
         intra_id: this.decode(auth).intra_id,
@@ -137,7 +146,10 @@ export class UserService {
         },
       },
     });
-    return user;
+    return {
+      ...user,
+      blockedUsers: block.map(b => {return (b.to)})
+    };
   }
 
   async create(
@@ -206,7 +218,16 @@ export class UserService {
     });
   }
 
-  findUsers(intra_id: number) {
+  async findUsers(intra_id: number) {
+    const block = await this.prisma.friendsList.findMany({
+      where: {
+        from: intra_id,
+        status: FriendStatus.BLOCKED,
+      },
+      select: {
+        to: true,
+      }
+    });
     return this.prisma.user.findMany({
       where: {
         profile_done: true,

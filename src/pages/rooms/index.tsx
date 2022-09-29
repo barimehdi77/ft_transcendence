@@ -129,27 +129,32 @@ const rooms = () => {
   }, []);
 
   useEffect(() => {
+    console.log("userInfo: ", userInfo);
     socket.on("receiveMessage", (data) => {
       console.log("data received from socket", data);
-      if (data.conversation_id === selectedConversation?.conversation_id) {
-        setMessages((prevMessages: IMessage[]) => [...prevMessages, data]);
+      if (userInfo.blockedUsers.includes(data.sent_by.intra_id)) {
+        return;
+      } else {
+        if (data.conversation_id === selectedConversation?.conversation_id) {
+          setMessages((prevMessages: IMessage[]) => [...prevMessages, data]);
+        }
+        setConversations((prevConversations: IConversation[]) => {
+          const newConversations = prevConversations
+            .map((conversation) => {
+              if (conversation.conversation_id === data.conversation_id) {
+                conversation.last_message = data;
+              }
+              return conversation;
+            })
+            .sort((a: any, b: any) => {
+              return (
+                new Date(b.last_message?.sentAt).getTime() -
+                new Date(a.last_message?.sentAt).getTime()
+              );
+            });
+          return newConversations;
+        });
       }
-      setConversations((prevConversations: IConversation[]) => {
-        const newConversations = prevConversations
-          .map((conversation) => {
-            if (conversation.conversation_id === data.conversation_id) {
-              conversation.last_message = data;
-            }
-            return conversation;
-          })
-          .sort((a: any, b: any) => {
-            return (
-              new Date(b.last_message?.sentAt).getTime() -
-              new Date(a.last_message?.sentAt).getTime()
-            );
-          });
-        return newConversations;
-      });
     });
 
     return () => {

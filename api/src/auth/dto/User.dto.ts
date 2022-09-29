@@ -46,4 +46,5 @@ export class UserAuth {
 	profile_done: boolean;
 	isTwoFactorAuthenticationEnabled: boolean;
 	twoFactorAuthenticationSecret: string;
+	blockedUsers: number[];
 }

@@ -629,8 +629,35 @@ export class ConversationService {
 
   async getMyConversations(intra_id: number, type: string) {
     try {
+
+      const block = await this.prisma.friendsList.findMany({
+        where: {
+          // AND: [
+
+          //   {
+          //     to: intra_id,
+          //     status: FriendStatus.BLOCKED,
+          //   }
+          //]
+            from: intra_id,
+            status: FriendStatus.BLOCKED,
+        },
+        select: {
+          to: true,
+        }
+      });
+      console.log("blocked: ", block);
       const conversations = await this.prisma.conversation.findMany({
         where: {
+          messages: {
+            some: {
+              NOT: {
+                sent_by_id: {
+                  in: (type === 'dm') ? block.map((b) => {return b.to}) : []
+                },
+              },
+            },
+          },
           members: {
             some: {
               intra_id,
@@ -777,9 +804,24 @@ export class ConversationService {
           'error: Conversation not found or you are not allowed!',
         );
 
+        const block = await this.prisma.friendsList.findMany({
+          where: {
+            from: intra_id,
+            status: FriendStatus.BLOCKED,
+          },
+          select: {
+            to: true,
+          }
+        });
+
       const messages = await this.prisma.message.findMany({
         where: {
           conversation_id: conversationId,
+          NOT: {
+            sent_by_id: {
+              in: block.map((b) => {return b.to})
+            },
+          },
         },
         select: {
           message_id: true,

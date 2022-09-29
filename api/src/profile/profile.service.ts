@@ -38,7 +38,7 @@ export class ProfileService {
     });
     return ({
       ...user,
-      isFriends: null
+      isFriends: null,
     });
   };
 

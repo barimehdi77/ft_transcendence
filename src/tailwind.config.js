@@ -5,9 +5,9 @@ module.exports = {
 		'./components/**/*.{js,ts,jsx,tsx}',
 	],
 	theme: {
-		screens: {
-			navbar: '980px',
-		},
+		// screens: {
+		// 	navbar: '980px',
+		// },
 		extend: {
 			backgroundImage: (theme) => ({
 				'hero-pattern': "url('/bg-pattern.png')",

@@ -51,6 +51,7 @@ const dm = () => {
   }, []);
 
   useEffect(() => {
+    console.log("userInfo: ", userInfo);
     socket.on("receiveMessage", (data) => {
       console.log("data received from socket", data);
       if (data.conversation_id === selectedConversation?.conversation_id) {
