@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from 'react';
-import { paintGame, drawText } from '../components/drawing/drawing';
+import { paintGame, drawText, paintGameOver } from '../components/drawing/drawing';
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
@@ -68,8 +68,6 @@ const Game = () => {
 
 	const playGame = (type: string) => {
 		if (type === "random") {
-
-
 			socket.emit('playGame', { userInfo, type: "random" }, (ret: number) => setRandomColor(ret));
 		}
 		else {
@@ -83,11 +81,15 @@ const Game = () => {
 		if (Router.query.name === "friends")
 			playGame("friend");
 		else
+		{
+			// console.log("button random");
+			
 			playGame("random");
-		// socket.close();
-		return () => {
-			socket.close();
 		}
+		// socket.close();
+		// return () => {
+		// 	socket.close();
+		// }
 		// console.log("withRouter: ", );// withRouter.name);
 		// setRandomColor(Math.floor(Math.random() * 4));
 	}, []);
@@ -140,34 +142,73 @@ const Game = () => {
 	};
 	socket.off('gameState').on('gameState', handlGameState);
 
-	const handleGameOver = (data: number) => {
+	const handleGameOver = (data: any) => {
 		// console.log('gameA: ', gameActive);
 		if (!gameActive) return;
-		// const dataa = data.toString();
+		data = JSON.parse(data);
 		setGameActive(false);
 		console.log('d: ', data, " ", typeof (data), ' p: ', playerNamber, " ", typeof (playerNamber));
 
 		if (playerNamber == 0) {
-			alert('Game Over');
-			Router.push('/');
+			// alert('Game Over');
+			// paintGameOver(ctx, "Game Over", data.stateRoom, canvas.width, canvas.height)
+			let temp = 3;
+			const interval = setInterval(() => {
+				temp--;
+					paintGameOver(ctx, "You Win!", data.stateRoom, canvas.width, canvas.height);
+
+				if (temp === 0) {
+					clearInterval(interval);
+					Router.push('/');
+				}
+			}, 500);
 		} else {
-			if (data == playerNamber) {
-				alert('You Win!');
-				Router.push('/');
+			if (data.winner == playerNamber) {
+				// paintGameOver(ctx, "You Win!", data.stateRoom, canvas.width, canvas.height);
+				let temp = 3;
+				const interval = setInterval(() => {
+					paintGameOver(ctx, "You Win!", data.stateRoom, canvas.width, canvas.height);
+					temp--;
+					if (temp === 0) {
+						clearInterval(interval);
+						Router.push('/');
+					}
+				}, 1000);
+				// alert('You Win!');
 			}
-			if (data != playerNamber) {
-				alert('You Lose :(');
-				Router.push('/');
+			if (data.winner != playerNamber) {
+				// paintGameOver(ctx, "You Lose", data.stateRoom, canvas.width, canvas.height)
+				let temp = 3;
+				const interval = setInterval(() => {
+					paintGameOver(ctx, "You Lose", data.stateRoom, canvas.width, canvas.height)
+					temp--;
+					if (temp === 0) {
+						clearInterval(interval);
+						Router.push('/');
+					}
+				}, 1000);
+				// alert('You Lose :(');
 			}
 		}
 	};
 	socket.off('gameOver').on('gameOver', handleGameOver);
 
-	const handlePlayerDisconnected = (player: number) => {
+	const handlePlayerDisconnected = (player: any) => {
 		// console.log(player, " !== ", playerNamber);
-		if (player !== playerNamber) {
-			alert('Your opponent disconnected. You win!');
-			Router.push('/');
+		player = JSON.parse(player);
+		if (player.winner !== playerNamber) {
+			let temp = 3;
+			const interval = setInterval(() => {
+				temp--;
+					// paintGameOver(ctx, "Your opponent disconnected. You win!", player.stateRoom, canvas.width, canvas.height);
+					paintGameOver(ctx, "You win!", player.stateRoom, canvas.width, canvas.height);
+				if (temp === 0) {
+					clearInterval(interval);
+					Router.push('/');
+				}
+			}, 1000);
+			// alert('Your opponent disconnected. You win!');
+			// Router.push('/');
 		}
 	};
 	socket.off('playerDisconnected').on('playerDisconnected', handlePlayerDisconnected);

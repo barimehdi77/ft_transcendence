@@ -38,6 +38,15 @@ const drawText = (ctx: any, text: string, x: number, y: number, color: string, p
     }
 }
 
+const paintGameOver = (ctx: any, text: string, index: number, canvWidth: number, canvHeight: number) => {
+    let percentage = 600 / canvWidth;
+    console.log("paintGameOver: ", index);
+    
+    drawRect(ctx, 0, 0, canvWidth, canvHeight, color[index].back);
+    // drawText(ctx, pOne.score.toString(), (600 / 4) / percentage, (300 / 5) / percentage, color[random].front, percentage, 45);
+    drawText(ctx, text, (600 / 3) / percentage, (300 / 2) / percentage, color[index].front, percentage, 45);
+
+}
 const paintGame = (ctx: any, gameState: any, canvWidth: number, canvHeight: number) => {
     let percentage = 600 / canvWidth;
     const ball = gameState.ball;
@@ -72,4 +81,4 @@ const paintPlayers = (ctx: any, gameState: any, percentage: number, random: numb
     drawText(ctx, pTwo.name, ((600 / 1.9)) / percentage, ((300 / 5) / percentage) - 300 / 8, color[random].front, percentage, 20);
 }
 
-export { drawRect, drawText, drawNet, drawCircle, paintGame, paintPlayers }
+export { drawRect, drawText, drawNet, drawCircle, paintGame, paintPlayers, paintGameOver }
