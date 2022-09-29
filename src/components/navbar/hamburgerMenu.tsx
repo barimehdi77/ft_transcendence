@@ -19,7 +19,7 @@ const HamburgerMenu = () => {
 	};
 
 	return (
-		<div className='navbar:hidden'>
+		<div className='lg:hidden'>
 			<Button
 				id='basic-button'
 				aria-controls={openDropdown ? 'basic-menu' : undefined}

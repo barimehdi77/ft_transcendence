@@ -7,7 +7,7 @@ const Navbar = () => {
 	return (
 		<nav className='bg-sky-800 flex justify-between items-center w-screen px-32 py-2 fixed z-10'>
 			<HamburgerMenu />
-			<h1 className='text-3xl text-white uppercase font-bold hidden navbar:inline'>
+			<h1 className='text-3xl text-white uppercase font-bold hidden lg:inline'>
 				<Link href='/'>king pong</Link>
 			</h1>
 			<div className='items'>

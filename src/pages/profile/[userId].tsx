@@ -32,7 +32,7 @@ const Profile = () => {
 					/>
 				</>
 			);
-		else if (profileData.status! === 'success')
+		else if (profileData.status! === 'failure')
 			return (
 				<main className='min-h-screen flex flex-col items-center justify-center'>
 					<Head>
