@@ -140,8 +140,8 @@ export class GameService {
       ball.speed += 0.1;
       // update the score;
     }
-    if (playerOne.score == 2) return 1;
-    if (playerTwo.score == 2) return 2;
+    if (playerOne.score == 1) return 1;
+    if (playerTwo.score == 1) return 2;
     return false;
   }
 
@@ -217,13 +217,13 @@ export class GameService {
           clearInterval(interval);
           this.gameActive[roomName] = false;
           // console.log("winner: ", winner);
-          this.emitGameOver(server, roomName, winner);
+          this.emitGameOver(server, roomName, winner, stateRoom);
           return;
         }
       } else {
         // console.log("emit disconn");
 
-        this.emitPlayerDesconnected(server, roomName, this.playerDisconnected[roomName]);
+        this.emitPlayerDesconnected(server, roomName, this.playerDisconnected[roomName], stateRoom);
         if (this.playerDisconnected[roomName] === 1)
           this.prismaUpdate(roomName, 0, 10, true);
         else if (this.playerDisconnected[roomName] === 2)
@@ -325,25 +325,21 @@ export class GameService {
   roomNameFriend: number;
   handlePlayGame(server: Server, client: Socket, userInfo: any) {
     if (userInfo.type === "random") {
+      
       // console.log(this.roomName, "=> ", !this.gameActive[this.roomName]);
       // if (!this.gameActive[this.roomName]) {
         if (!this.waitlist) {
-          console.log("1-NewGame gameActive: ", this.gameActive);
-
           this.name = userInfo.userInfo.user_name;
           this.waitlist = true;
           this.roomName = this.handleNewGame(client, userInfo.userInfo)
-          console.log("2-NewGame gameActive: ", this.gameActive);
           this.wait = true;
           const interval = setInterval(() => {
             server.in(this.roomName.toString()).emit('waiting');
             if (!this.wait) clearInterval(interval);
           }, 500);
         } else if (this.name !== userInfo.userInfo.user_name) {
-          console.log("1-JoinGame gameActive: ", this.gameActive);
           this.waitlist = false;
           this.handleJoinGame(server, client, this.roomName.toString(), userInfo.userInfo);
-          console.log("2-JoinGame gameActive: ", this.gameActive);
           this.wait = false;
         }
         return this.state[this.roomName].color;
@@ -499,17 +495,27 @@ export class GameService {
     }
   }
 
-  async emitGameOver(server: Server, roomName: string, winner: any) {
+  async emitGameOver(server: Server, roomName: string, winner: any, stateRoom: any) {
     delete this.playersPlaying[roomName];
+    delete this.clientRooms[roomName];
     this.updateplayers(server, roomName);
     const matchGame = await this.prismaUpdate(roomName, 0, 0, false);
-    server.in(roomName).emit('gameOver', JSON.stringify(winner));
+    let obj = {
+      winner,
+      stateRoom: stateRoom.color
+    }
+    server.in(roomName).emit('gameOver', JSON.stringify(obj));
   }
 
-  emitPlayerDesconnected(server: Server, roomName: string, winner: number) {
+  emitPlayerDesconnected(server: Server, roomName: string, winner: number, stateRoom: any) {
     delete this.playersPlaying[roomName];
+    delete this.clientRooms[roomName];
     this.updateplayers(server, roomName);
-    server.in(roomName).emit('playerDisconnected', JSON.stringify(winner));
+    let obj = {
+      winner,
+      stateRoom: stateRoom.color
+    }
+    server.in(roomName).emit('playerDisconnected', JSON.stringify(obj));
   }
 
   updateplayers(server: Server, roomName: string) {
