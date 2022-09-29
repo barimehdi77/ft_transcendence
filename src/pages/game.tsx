@@ -138,7 +138,6 @@ const Game = () => {
 
 	const handleGameOver = (data: number) => {
 		// console.log('gameA: ', gameActive);
-
 		if (!gameActive) return;
 		// const dataa = data.toString();
 		setGameActive(false);
