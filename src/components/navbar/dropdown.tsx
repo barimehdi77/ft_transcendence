@@ -33,8 +33,6 @@ const Dropdown = () => {
 		setAnchorEl(null);
 	};
 
-	console.log('profile', profileData);
-
 	return (
 		<>
 			<Button
@@ -75,12 +73,14 @@ const Dropdown = () => {
 					'aria-labelledby': 'basic-button',
 				}}
 			>
-				<MenuItem
-					onKeyDown={(e) => e.stopPropagation()}
-					onClick={handleCloseDropdown}
-				>
-					<Link href='/profile'>View Profile</Link>
-				</MenuItem>
+				<Link href='/profile'>
+					<MenuItem
+						onKeyDown={(e) => e.stopPropagation()}
+						onClick={handleCloseDropdown}
+					>
+						View Profile
+					</MenuItem>
+				</Link>
 				<MenuItem onKeyDown={(e) => e.stopPropagation()}>
 					<EditUserInfo />
 				</MenuItem>

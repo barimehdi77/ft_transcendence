@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { socket } from '../socket';
-import { drawRect, paintGame } from '../components/drawing/drawing';
+import { paintGame, drawRect } from '../components/drawing/drawing';
 import Head from 'next/head';
 
 const Spectate = () => {

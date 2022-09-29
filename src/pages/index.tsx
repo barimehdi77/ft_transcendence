@@ -10,22 +10,31 @@ import {
 
 const Home = () => {
 	return (
-		<main className='min-h-screen flex flex-col items-center justify-center'>
+		<main
+			className='h-screen flex flex-col items-center justify-center'
+			style={{ minHeight: '620px' }}
+		>
 			<Head>
 				<title>Home</title>
 			</Head>
-			<button className='bg-sky-800 text-7xl text-white uppercase font-bold rounded-full py-10 px-20 mt-10 mb-10 hover:bg-sky-700 hover:scale-105'>
-				<FontAwesomeIcon icon={faTableTennisPaddleBall} className='mr-5' />
-				<Link href='/game'>play</Link>
-			</button>
-			<button className='bg-sky-800 text-5xl text-white uppercase font-semibold rounded-full py-6 px-16  mb-10 hover:bg-sky-700 hover:scale-105'>
-				<FontAwesomeIcon icon={faDisplay} className='mr-5' />
-				<Link href='/spectate'>Spectate</Link>
-			</button>
-			<button className='bg-sky-800 text-5xl text-white uppercase font-semibold rounded-full py-6 px-16 hover:bg-sky-700 hover:scale-105'>
-				<FontAwesomeIcon icon={faCommentDots} className='mr-5' />
-				<Link href='/chat'>chat</Link>
-			</button>
+			<Link href='/game'>
+				<button className='bg-sky-800 text-7xl text-white uppercase font-bold rounded-full py-8 px-20 my-4 hover:bg-sky-700 hover:scale-105'>
+					<FontAwesomeIcon icon={faTableTennisPaddleBall} className='mr-5' />
+					play
+				</button>
+			</Link>
+			<Link href='/spectate'>
+				<button className='bg-sky-800 text-5xl text-white uppercase font-semibold rounded-full py-6 px-16 my-4 hover:bg-sky-700 hover:scale-105'>
+					<FontAwesomeIcon icon={faDisplay} className='mr-5' />
+					spectate
+				</button>
+			</Link>
+			<Link href='/chat'>
+				<button className='bg-sky-800 text-5xl text-white uppercase font-semibold rounded-full py-6 px-16 my-4 hover:bg-sky-700 hover:scale-105'>
+					<FontAwesomeIcon icon={faCommentDots} className='mr-5' />
+					chat
+				</button>
+			</Link>
 		</main>
 	);
 };

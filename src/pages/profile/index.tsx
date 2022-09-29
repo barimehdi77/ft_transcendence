@@ -18,7 +18,7 @@ const Profile = () => {
 			<Head>
 				<title>My Profile</title>
 			</Head>
-			<ProfileView profileData={profileData} />;
+			<ProfileView profileData={profileData} />
 		</>
 	);
 };

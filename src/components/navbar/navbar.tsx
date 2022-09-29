@@ -1,14 +1,13 @@
 import Link from 'next/link';
 import NavbarItem from './navbarItem';
 import Dropdown from './dropdown';
+import HamburgerMenu from './hamburgerMenu';
 
 const Navbar = () => {
 	return (
-		<nav
-			className='bg-sky-800 flex justify-between items-center w-screen px-32 py-2 fixed z-10'
-			style={{ minWidth: '920px' }}
-		>
-			<h1 className='text-3xl text-white uppercase font-bold'>
+		<nav className='bg-sky-800 flex justify-between items-center w-screen px-32 py-2 fixed z-10'>
+			<HamburgerMenu />
+			<h1 className='text-3xl text-white uppercase font-bold hidden navbar:inline'>
 				<Link href='/'>king pong</Link>
 			</h1>
 			<div className='items'>
