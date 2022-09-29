@@ -31,35 +31,34 @@ const MyFriends = ({
 			console.log(error);
 		}
 	}
-	
+
 	if (friendsList) friendsList.data?.length !== 1 ? (plural = 's') : null;
 
 	const playGame = (user: any) => {
-		console.log("botton clicked");
-		
+		console.log('botton clicked');
+
 		socket.emit('question', {
 			sender: { name: userInfo.user_name },
 			to: { name: user.user_name },
 			// roomName: Math.floor(Math.random() * 1000000)
-		// }, (ret: string) => {
-		// 	// if (ret == "yes") {
-		// 	// 	socket.emit('playWithFriend');
-		// 	// }
-		// 	console.log("return: ", ret);
+			// }, (ret: string) => {
+			// 	// if (ret == "yes") {
+			// 	// 	socket.emit('playWithFriend');
+			// 	// }
+			// 	console.log("return: ", ret);
 		});
 		// Router.push('/game');
 		// console.log("user ", user.user_name, " want to play with: ", userInfo.user_name);
-
-	}
+	};
 
 	const accept = () => {
 		// Router.push('/game');
 		Router.push({
-			pathname: "/game",
-			query: { name: "friends"}
+			pathname: '/game',
+			query: { name: 'friends' },
 		});
-	}
-	socket.off('urFriendAccepted').on('urFriendAccepted', accept)
+	};
+	socket.off('urFriendAccepted').on('urFriendAccepted', accept);
 
 	return (
 		<>
@@ -100,22 +99,23 @@ const MyFriends = ({
 									>
 										Unfriend
 									</button>
-									<button onClick={() => {playGame(user)}} className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
-										Play Game
-									</button>
-									<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
-										Message
-									</button>
-                  <Link
-                    href={{
-                      pathname: "/dms",
-                      query: { id: user.intra_id },
-                    }}
-                  >
-                    <a  className="bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700">Message</a>
-                  </Link>
+									<Link
+										href={{
+											pathname: '/dms',
+											query: { id: user.intra_id },
+										}}
+									>
+										<a className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
+											Message
+										</a>
+									</Link>
 									{user.profile.status === 'ONLINE' ? (
-										<button className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'>
+										<button
+											onClick={() => {
+												playGame(user);
+											}}
+											className='bg-sky-800 text-white font-medium rounded-3xl py-2 px-4 mr-2 hover:bg-sky-700'
+										>
 											Play Game
 										</button>
 									) : (

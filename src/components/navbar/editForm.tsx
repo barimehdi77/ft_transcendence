@@ -5,6 +5,7 @@ import UsernameField from '../inputForm/usernameField';
 import axios from 'axios';
 
 import { getData } from '../getData';
+import Router from 'next/router';
 
 const EditForm = ({ handleCloseModal }: any) => {
 	const { userInfo, setUserInfo }: any = useContext(UserContext);
@@ -30,6 +31,7 @@ const EditForm = ({ handleCloseModal }: any) => {
 			);
 			if (res.status === 200) {
 				setUserInfo(await getData('http://localhost:8080/api/user'));
+				Router.reload();
 				handleCloseModal();
 			}
 		} catch (error: any) {
