@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { socket } from '../socket';
-<<<<<<< HEAD
 import { paintGame, drawRect } from '../components/drawing/drawing';
-=======
-import { paintGame, drawRect, drawText } from './drawing';
 import Head from 'next/head';
->>>>>>> 4cd5d211e3ea876b107183c899f931d13017adfe
 
 const Spectate = () => {
 	const [data, setData]: any = useState(null);

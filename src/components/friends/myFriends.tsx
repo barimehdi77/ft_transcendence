@@ -25,9 +25,8 @@ const MyFriends = ({
 
 	async function handleUnfriend(id: number) {
 		try {
-			const res = await unfriendUser(id);
+			await unfriendUser(id);
 			setFriendsList(await getData('http://localhost:8080/api/friends'));
-			console.log('unfriend', res);
 		} catch (error) {
 			console.log(error);
 		}

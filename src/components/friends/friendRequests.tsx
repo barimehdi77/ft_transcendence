@@ -23,12 +23,11 @@ const FriendRequests = ({
 
 	const handleAccept = async (id: number) => {
 		try {
-			const res = await acceptRequest(id);
+			await acceptRequest(id);
 			setFriendRequests(
 				await getData('http://localhost:8080/api/friends/request')
 			);
 			setFriendsList(await getData('http://localhost:8080/api/friends'));
-			console.log('accepted', res);
 		} catch (error) {
 			console.log(error);
 		}
@@ -36,18 +35,15 @@ const FriendRequests = ({
 
 	const handleDecline = async (id: number) => {
 		try {
-			const res = await declineRequest(id);
+			await declineRequest(id);
 			setFriendRequests(
 				await getData('http://localhost:8080/api/friends/request')
 			);
 			setFriendsList(await getData('http://localhost:8080/api/friends'));
-			console.log('declined', res);
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
-	console.log(friendRequests);
 
 	if (friendRequests) friendRequests.data?.length !== 1 ? (plural = 's') : null;
 

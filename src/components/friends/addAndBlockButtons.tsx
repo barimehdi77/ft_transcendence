@@ -43,8 +43,6 @@ const AddAndBlockButtons = ({ profileData, setProfileData }: any) => {
 		}
 	};
 
-	console.log(profileData);
-
 	return (
 		<div className='flex items-center justify-start'>
 			{profileData.isFriends === null ? (
