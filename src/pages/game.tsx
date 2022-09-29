@@ -84,6 +84,10 @@ const Game = () => {
 			playGame("friend");
 		else
 			playGame("random");
+		// socket.close();
+		return () => {
+			socket.close();
+		}
 		// console.log("withRouter: ", );// withRouter.name);
 		// setRandomColor(Math.floor(Math.random() * 4));
 	}, []);
