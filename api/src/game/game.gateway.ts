@@ -67,13 +67,13 @@ export class GameGateway {
     this.gameService.updatePlayer(client, this.gameService.state, ret);
   }
 
-  @SubscribeMessage('newGame')
-  handleNewGame(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() name: string,
-  ) {
-    this.gameService.handleNewGame(client, name);
-  }
+  // @SubscribeMessage('newGame')
+  // handleNewGame(
+  //   @ConnectedSocket() client: Socket,
+  //   @MessageBody() name: string,
+  // ) {
+  //   this.gameService.handleNewGame(client, name, 0);
+  // }
 
   @SubscribeMessage('joinGame')
   handleJoinGame(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
@@ -129,8 +129,4 @@ export class GameGateway {
     this.gameService.handlAccepted(this.server, client, data)
   }
 
-    // @SubscribeMessage('connected')
-    // rejected(@MessageBody() userInfo: string, @ConnectedSocket() client: Socket) {
-
-    // }
 }

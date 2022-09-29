@@ -3,7 +3,7 @@ import { paintGame, drawText } from '../components/drawing/drawing';
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
-import Router from 'next/router';
+import Router, { withRouter } from 'next/router';
 import Head from 'next/head';
 
 const Game = () => {
@@ -66,13 +66,25 @@ const Game = () => {
 		}
 	}
 
-	const playGame = () => {
-		socket.emit('playGame', userInfo, (ret: number) => setRandomColor(ret));
+	const playGame = (type: string) => {
+		if (type === "random") {
+
+
+			socket.emit('playGame', { userInfo, type: "random" }, (ret: number) => setRandomColor(ret));
+		}
+		else {
+			// console.log("friend: ", type);
+			socket.emit('playGame', { userInfo, type: "friend" }, (ret: number) => setRandomColor(ret));
+		}
 		setGameActive(true);
 	};
 
 	useEffect(() => {
-		playGame();
+		if (Router.query.name === "friends")
+			playGame("friend");
+		else
+			playGame("random");
+		// console.log("withRouter: ", );// withRouter.name);
 		// setRandomColor(Math.floor(Math.random() * 4));
 	}, []);
 
@@ -126,19 +138,23 @@ const Game = () => {
 
 	const handleGameOver = (data: number) => {
 		// console.log('gameA: ', gameActive);
-
 		if (!gameActive) return;
-		// data = JSON.parse(data);
+		// const dataa = data.toString();
 		setGameActive(false);
-		// console.log('d: ', data, ' p: ', playerNamber);
+		console.log('d: ', data, " ", typeof (data), ' p: ', playerNamber, " ", typeof (playerNamber));
 
-		if (data === playerNamber) {
-			alert('You Win!');
+		if (playerNamber == 0) {
+			alert('Game Over');
 			Router.push('/');
-		}
-		if (data !== playerNamber) {
-			alert('You Lose :(');
-			Router.push('/');
+		} else {
+			if (data == playerNamber) {
+				alert('You Win!');
+				Router.push('/');
+			}
+			if (data != playerNamber) {
+				alert('You Lose :(');
+				Router.push('/');
+			}
 		}
 	};
 	socket.off('gameOver').on('gameOver', handleGameOver);
