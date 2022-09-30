@@ -37,6 +37,7 @@ const ChatArea = ({
     e.preventDefault();
     if (message.trim() !== "" && message.length <= 1000) {
       const body: IMessageBody = {
+        sent_by: user.intra_id,
         conversationId: conversation?.conversation_id,
         body: message,
         type: "room",

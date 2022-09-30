@@ -75,15 +75,15 @@ export class GameGateway {
   //   this.gameService.handleNewGame(client, name, 0);
   // }
 
-  @SubscribeMessage('joinGame')
-  handleJoinGame(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
-    this.gameService.handleJoinGame(
-      this.server,
-      client,
-      data.gameCode,
-      data.name,
-    );
-  }
+  // @SubscribeMessage('joinGame')
+  // handleJoinGame(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+  //   this.gameService.handleJoinGame(
+  //     this.server,
+  //     client,
+  //     data.gameCode,
+  //     data.name,
+  //   );
+  // }
 
   @SubscribeMessage('spectateGame')
   handleSpectateGame(
@@ -107,15 +107,11 @@ export class GameGateway {
   @SubscribeMessage('stop')
   stop(@ConnectedSocket() client: Socket) {
     this.gameService.start[client.id] = false;
-    console.log("stop ", client.id, "    ", this.gameService.start);
-
-    // return (this.gameService.playersPlaying);
   }
 
   @SubscribeMessage('connected')
   handleUsers(@MessageBody() userInfo: any, @ConnectedSocket() client: Socket) {
     this.gameService.users[userInfo.user_name] = client.id;
-    console.log("connected", this.gameService.users);
   }
   
   @SubscribeMessage('question')
