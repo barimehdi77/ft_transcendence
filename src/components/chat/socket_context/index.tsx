@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import SocketContext from "./context";
 import { initSockets } from "../../../socket";
 import { IConversation } from "../../../typings";
-//       ^ initSockets is shown later on
+
+
 const SocketProvider = (props: any) => {
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] =
@@ -21,7 +22,7 @@ const SocketProvider = (props: any) => {
       }),
     [initSockets]
   );
-  // Note, we are passing setValue ^ to initSockets
+
   return (
     <SocketContext.Provider
       value={{

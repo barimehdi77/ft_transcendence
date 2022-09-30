@@ -14,8 +14,9 @@ export class MessagesService {
     private conversationService: ConversationService,
   ) {}
 
-  async sendMessage(dto: SendMessageDto, intra_id: number) {
+  async sendMessage(dto: SendMessageDto, intra_id_param: number) {
     try {
+      const intra_id: number = intra_id_param === 0 ? dto.sent_by : intra_id_param;
       if (!dto.body || !dto.body.trim().length)
         throw new Error('error: Message is empty');
 
@@ -90,8 +91,6 @@ export class MessagesService {
         },
       });
 
-      console.log("the MEssage: ", message);
-
       // get Message
       const messageData = await this.prisma.message.findUnique({
         where: {
@@ -116,7 +115,6 @@ export class MessagesService {
 
       return messageData;
     } catch (error) {
-      console.log('------error---', error);
 
       throw new Error(
         error.message && error.message.startsWith('error: ')
@@ -128,8 +126,11 @@ export class MessagesService {
 
   // this is a temp function
   decode(token: string): number {
-    const jwt = token.replace('Bearer ', '');
-    const decode = this.jwt.decode(jwt, { json: true }) as { intra_id: number };
-    return decode.intra_id;
+    if (!token.includes('null')) {
+      const jwt = token?.replace('Bearer ', '');
+      const decode = this.jwt.decode(jwt, { json: true }) as { intra_id: number };
+      return decode.intra_id;
+    }
+    return 0;
   }
 }

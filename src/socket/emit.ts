@@ -1,4 +1,3 @@
-import { resolve } from "path";
 import { IMessageBody } from "../typings";
 import { socket } from "./index";
 
@@ -11,7 +10,6 @@ export const joinConversation = (conversationId: string | undefined) => {
 export const sendMessage = (body: IMessageBody) => {
   return new Promise((resolve, reject) => {
     socket.emit("sendMessage", body, (data: any) => {
-      console.log("Message sent: ", data);
       if (data.status === "success") {
         resolve(data.message);
       } else reject(data.msg);
