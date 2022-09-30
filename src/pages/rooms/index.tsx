@@ -564,7 +564,7 @@ const rooms = () => {
         <title>Chat rooms</title>
       </Head>
       <div className="flex h-full">
-        <div className="flex-1 bg-gray-100 w-full h-full">
+        <div className="flex-1 bg-gray-100 w-full h-5/6 mt-20">
           <div className="main-body container m-auto w-11/12 h-full flex flex-col">
             <div className="py-4 flex-2 flex flex-row">
               <div className="flex-1">
