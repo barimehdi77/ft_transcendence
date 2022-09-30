@@ -75,6 +75,7 @@ export interface IMessage {
 }
 
 export interface IMessageBody {
+  sent_by: number;
   conversationId: string | undefined;
   body: string;
   type: string;

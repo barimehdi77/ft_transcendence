@@ -1,6 +1,8 @@
 import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
 
 export class  SendMessageDto{
+  sent_by: number;
+
   @IsUUID('all', { message: 'Invalid conversation id' })
   @IsString()
   @IsNotEmpty()

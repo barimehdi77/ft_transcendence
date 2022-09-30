@@ -49,15 +49,6 @@ const options = [
   { value: "locked", label: "Locked" },
 ];
 
-// const user: IMembers = {
-//   intra_id: userId,
-//   first_name: "Erraghay",
-//   last_name: "Ayoub",
-//   user_name: 'aerragha',
-//   image_url:
-//     "https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A",
-// };
-
 const rooms = () => {
   const { userInfo }: any = useContext(UserContext);
   const {
@@ -129,8 +120,7 @@ const rooms = () => {
   }, []);
 
   useEffect(() => {
-    console.log("userInfo: ", userInfo);
-    socket.on("receiveMessage", (data) => {
+    socket.on("receiveMessage", (data: any) => {
       console.log("data received from socket", data);
       if (userInfo.blockedUsers.includes(data.sent_by.intra_id)) {
         return;
