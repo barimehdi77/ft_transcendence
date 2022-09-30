@@ -10,7 +10,7 @@ export class GameService {
 
   users: any = {}
 
-  FRAMERATE = 10;
+  FRAMERATE = 35;
   state: any = {};
   clientRooms: any = {};
   clientSpectating: any = {};
@@ -35,7 +35,6 @@ export class GameService {
         y: (this.canvasHeight - 100) / 2,
         width: 10,
         height: 100,
-        // color: 'white',
         score: 0,
       },
       playerTwo: {
@@ -45,7 +44,6 @@ export class GameService {
         y: (this.canvasHeight - 100) / 2,
         width: 10,
         height: 100,
-        // color: 'white',
         score: 0,
       },
       ball: {
@@ -54,8 +52,7 @@ export class GameService {
         radius: this.canvasHeight * 0.02,
         speed: 7,
         velocityX: 7,
-        velocityY: 7,
-        // color: 'white',
+        velocityY: 7
       },
     };
   }
@@ -140,8 +137,8 @@ export class GameService {
       ball.speed += 0.1;
       // update the score;
     }
-    if (playerOne.score == 1) return 1;
-    if (playerTwo.score == 1) return 2;
+    if (playerOne.score == 5) return 1;
+    if (playerTwo.score == 5) return 2;
     return false;
   }
 
@@ -553,8 +550,8 @@ export class GameService {
       // console.log(data.to.name, "  ", this.users[data.to.name]);
       server.to(this.users[data.to.name]).emit('invitation', data.sender.name);
     }
-    else
-      console.log("ur friend not exist");
+    // else
+      // console.log("ur friend not exist");
   }
 
   handlAccepted = async (server: Server, client: Socket, data: any) => {
@@ -566,7 +563,7 @@ export class GameService {
       // console.log(data.to.name, "  ", this.users[data.to.name]);
       server.to(this.users[data.data.sender]).emit('urFriendAccepted', data.data.user);
     }
-    else
-      console.log("ur friend not exist");
+    // else
+    //   console.log("ur friend not exist");
   }
 }

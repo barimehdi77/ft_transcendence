@@ -3,7 +3,7 @@ import { paintGame, drawText, paintGameOver } from '../components/drawing/drawin
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
-import Router, { withRouter } from 'next/router';
+import Router from 'next/router';
 import Head from 'next/head';
 
 const Game = () => {
@@ -86,13 +86,16 @@ const Game = () => {
 			
 			playGame("random");
 		}
+		// window.onhashchange = function() {
+		// 	console.log("ana tbdlt");
+			
+		//    }
 		// socket.close();
-		// return () => {
-		// 	socket.close();
-		// }
 		// console.log("withRouter: ", );// withRouter.name);
 		// setRandomColor(Math.floor(Math.random() * 4));
 	}, []);
+
+	
 
 	// const spectateGame = () => {
 	// 	// setinitialScreen(true);
@@ -147,15 +150,13 @@ const Game = () => {
 		if (!gameActive) return;
 		data = JSON.parse(data);
 		setGameActive(false);
-		console.log('d: ', data, " ", typeof (data), ' p: ', playerNamber, " ", typeof (playerNamber));
-
 		if (playerNamber == 0) {
 			// alert('Game Over');
 			// paintGameOver(ctx, "Game Over", data.stateRoom, canvas.width, canvas.height)
 			let temp = 3;
 			const interval = setInterval(() => {
 				temp--;
-					paintGameOver(ctx, "You Win!", data.stateRoom, canvas.width, canvas.height);
+					paintGameOver(ctx, "You Win", data.stateRoom, canvas.width, canvas.height);
 
 				if (temp === 0) {
 					clearInterval(interval);
@@ -167,7 +168,7 @@ const Game = () => {
 				// paintGameOver(ctx, "You Win!", data.stateRoom, canvas.width, canvas.height);
 				let temp = 3;
 				const interval = setInterval(() => {
-					paintGameOver(ctx, "You Win!", data.stateRoom, canvas.width, canvas.height);
+					paintGameOver(ctx, "You Win", data.stateRoom, canvas.width, canvas.height);
 					temp--;
 					if (temp === 0) {
 						clearInterval(interval);
@@ -252,12 +253,7 @@ const Game = () => {
 		countDown--;
 	};
 	socket.off('start').on('start', handleStarting);
-
-	const handlPlayers = (players: string) => {
-		console.log('3iiiw', JSON.parse(players));
-	};
-	socket.off('handlPlayers').on('handlPlayers', handlPlayers);
-
+	
 	return (
 		<div className='min-h-screen flex justify-center items-center'>
 			<Head>
