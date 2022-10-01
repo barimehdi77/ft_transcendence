@@ -134,32 +134,37 @@ export class ProfileService {
   }
 
 
-  async getMatches(username: string): Promise<matchDetails[]> {
+  async getMatches(login: string): Promise<matchDetails[]> {
     const matches = await this.prisma.match.findMany({
       where: {
         OR: [
           {
-            player_one: username,
+            player_one: login,
           },
           {
-            player_two: username
+            player_two: login
           }
         ],
       }
     });
-    const matchsHistory: matchDetails[] = matches.map(match => {
-      return ({
-        player_one: {
-          name: match.player_one,
-          score: match.player_one_score,
-        },
-        player_two: {
-          name: match.player_two,
-          score: match.player_two_score
-        },
-        winner: (match.player_one_score > match.player_two_score) ? winner.PLAYER_ONE : winner.PLAYER_TWO
-      });
-    });
+    console.log("matches: ", matches);
+    const matchsHistory: matchDetails[] = await Promise.all(
+      matches.map(async match => {
+        const playerOneUsername = await this.prisma.user.findUnique({where: {login: match.player_one}});
+        const playerTwoUsername = await this.prisma.user.findUnique({where: {login: match.player_two}});
+        return ({
+          player_one: {
+            name: playerOneUsername.user_name,
+            score: match.player_one_score,
+          },
+          player_two: {
+            name: playerTwoUsername.user_name,
+            score: match.player_two_score
+          },
+          winner: (match.player_one_score > match.player_two_score) ? winner.PLAYER_ONE : winner.PLAYER_TWO
+        });
+      })
+    )
     return (matchsHistory);
   }
 
