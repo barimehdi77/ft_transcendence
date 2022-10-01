@@ -77,8 +77,8 @@ const paintPlayers = (ctx: any, gameState: any, percentage: number, random: numb
     drawText(ctx, pOne.score.toString(), (600 / 4) / percentage, (300 / 5) / percentage, color[random].front, percentage, 45);
     drawText(ctx, pTwo.score.toString(), ((600 / 4) * 3) / percentage, (300 / 5) / percentage, color[random].front, percentage, 45);
 
-    drawText(ctx, pOne.name, 10 / percentage, ((300 / 5) / percentage) - 300 / 8, color[random].front, percentage, 20);
-    drawText(ctx, pTwo.name, ((600 / 1.9)) / percentage, ((300 / 5) / percentage) - 300 / 8, color[random].front, percentage, 20);
+    drawText(ctx, pOne.displayName, 10 / percentage, ((300 / 5) / percentage) - 300 / 8, color[random].front, percentage, 20);
+    drawText(ctx, pTwo.displayName, ((600 / 1.9)) / percentage, ((300 / 5) / percentage) - 300 / 8, color[random].front, percentage, 20);
 }
 
 export { drawRect, drawText, drawNet, drawCircle, paintGame, paintPlayers, paintGameOver }

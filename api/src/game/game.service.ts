@@ -31,6 +31,7 @@ export class GameService {
       playerOne: {
         id: 'playerOne',
         name: '',
+        displayName: '',
         x: 0,
         y: (this.canvasHeight - 100) / 2,
         width: 10,
@@ -40,6 +41,7 @@ export class GameService {
       playerTwo: {
         id: 'playerTwo',
         name: '',
+        displayName: '',
         x: this.canvasWidth - 10,
         y: (this.canvasHeight - 100) / 2,
         width: 10,
@@ -241,6 +243,7 @@ export class GameService {
 
     this.state[roomName].playerOne.id = client.id;
     this.state[roomName].playerOne.name = userInfo.login;
+    this.state[roomName].playerOne.displayName = userInfo.user_name;
     client.join(roomName.toString());
     client.emit('init', 1);
     return roomName;
@@ -274,6 +277,7 @@ export class GameService {
     client.join(gameCode);
     this.state[gameCode].playerTwo.id = client.id;
     this.state[gameCode].playerTwo.name = userInfo.login;
+    this.state[gameCode].playerTwo.displayName = userInfo.user_name;
     this.playersPlaying[gameCode] = { p1: this.state[gameCode].playerOne.name, p2: this.state[gameCode].playerTwo.name };
     // client.in(gameCode).emit('init', 2);
     client.emit('init', 2);
