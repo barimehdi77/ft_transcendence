@@ -36,7 +36,7 @@ const Invite = ({ img, sender, name }) => {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle className={"text-3xl"} id="alert-dialog-title">
-        "Freind Invitation"
+        Game Invitation
       </DialogTitle>
 
       <DialogContent
@@ -53,7 +53,7 @@ const Invite = ({ img, sender, name }) => {
           alt="image"
         />
         <DialogContentText className={"text-2xl"} id="alert-dialog-description">
-          {name} want to be freind with you!
+          {sender} want to play with you!
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -67,7 +67,7 @@ const Invite = ({ img, sender, name }) => {
             return "rejected";
           }}
         >
-          Disagree
+          DECLINE
         </Button>
         <Button
           size={"large"}
@@ -89,7 +89,7 @@ const Invite = ({ img, sender, name }) => {
           }}
           autoFocus
         >
-          Agree
+          PLAY
         </Button>
       </DialogActions>
     </Dialog>

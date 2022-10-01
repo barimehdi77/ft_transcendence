@@ -629,35 +629,8 @@ export class ConversationService {
 
   async getMyConversations(intra_id: number, type: string) {
     try {
-
-      const block = await this.prisma.friendsList.findMany({
-        where: {
-          // AND: [
-
-          //   {
-          //     to: intra_id,
-          //     status: FriendStatus.BLOCKED,
-          //   }
-          //]
-            from: intra_id,
-            status: FriendStatus.BLOCKED,
-        },
-        select: {
-          to: true,
-        }
-      });
-      console.log("blocked: ", block);
       const conversations = await this.prisma.conversation.findMany({
         where: {
-          messages: {
-            some: {
-              NOT: {
-                sent_by_id: {
-                  in: (type === 'dm') ? block.map((b) => {return b.to}) : []
-                },
-              },
-            },
-          },
           members: {
             some: {
               intra_id,
