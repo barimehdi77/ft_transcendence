@@ -3,7 +3,7 @@ import { socket } from "./index";
 
 export const joinConversation = (conversationId: string | undefined) => {
   socket.emit("joinConversation", { conversationId }, (data: any) => {
-    console.log("Joined: ", data);
+    
   });
 };
 

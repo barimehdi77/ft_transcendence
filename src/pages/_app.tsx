@@ -49,8 +49,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 	}, [userInfo])
 
 	const handleInvitation = (sender: any) => {
-		console.log("invitation", sender.data.image_url);
-
 		Router.push({
 			pathname: "/invite",
 			query: { name: userInfo.user_name, img: sender.data.image_url, sender:  sender.data.name }

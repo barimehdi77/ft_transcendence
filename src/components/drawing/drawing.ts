@@ -40,10 +40,7 @@ const drawText = (ctx: any, text: string, x: number, y: number, color: string, p
 
 const paintGameOver = (ctx: any, text: string, index: number, canvWidth: number, canvHeight: number) => {
     let percentage = 600 / canvWidth;
-    console.log("paintGameOver: ", index);
-    
     drawRect(ctx, 0, 0, canvWidth, canvHeight, color[index].back);
-    // drawText(ctx, pOne.score.toString(), (600 / 4) / percentage, (300 / 5) / percentage, color[random].front, percentage, 45);
     drawText(ctx, text, (600 / 3) / percentage, (300 / 2) / percentage, color[index].front, percentage, 45);
 
 }

@@ -5,7 +5,6 @@ import Head from 'next/head';
 
 const Spectate = () => {
 	const [data, setData]: any = useState(null);
-	// const [code, setCode] = useState(false);
 	const [table, setTable] = useState(true);
 	const canvasRef = useRef(null);
 	const [gameActive, setActive] = useState(false);
@@ -13,7 +12,6 @@ const Spectate = () => {
 	let ctx: any;
 
 	if (typeof window !== 'undefined') {
-		// console.log(window.innerWidth, ' ', window.innerHeight);
 		window.onresize = () => {
 			if (canvasRef.current) {
 				if (window.innerWidth > 1300) {
@@ -46,7 +44,6 @@ const Spectate = () => {
 	}
 
 	const updateplayers = (msg: string) => {
-		// console.log('update: ', msg);
 		setData(JSON.parse(msg));
 		setTable(true);
 		setActive(false);
@@ -54,7 +51,6 @@ const Spectate = () => {
 	socket.off('updateplayers').on('updateplayers', updateplayers);
 
 	const listOfPlayersPlaying = (msg: string) => {
-		// console.log('listOfPlayersPlaying: ', msg);
 		setData(JSON.parse(msg));
 	};
 	socket.off('listOfPlayersPlaying').on('listOfPlayersPlaying', listOfPlayersPlaying);
@@ -62,7 +58,6 @@ const Spectate = () => {
 	useEffect(() => {
 		const getData = () => {
 			socket.emit('listOfPlayersPlaying', (ret: any) => {
-				// console.log(ret);
 				setData(ret);
 			});
 		};
@@ -80,14 +75,12 @@ const Spectate = () => {
 				paintGame(ctx, StateTemp, canvas.width, canvas.height)
 			);
 		}
-		// console.log('handlSpectateState');
 	};
 	socket.off('spectateState').on('spectateState', handlSpectateState);
 
 	const showGame = (gamecode: string) => {
 		setTable(false);
 		setActive(true);
-		// console.log("gamecode ", gamecode);
 		socket.emit('spectateGame', gamecode);
 	};
 
@@ -95,7 +88,6 @@ const Spectate = () => {
 		setTable(true);
 		setActive(false);
 		socket.emit('stop');
-		// emit stop 			create var stop play
 	};
 
 	return (

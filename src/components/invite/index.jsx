@@ -1,16 +1,12 @@
-import Head from "next/head";
-import Box from "@mui/material/Box";
+
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { socket } from "../../socket";
-import { useState, useContext } from "react";
-import { UserContext } from "../../contexts/userContext";
+import { useState } from "react";
 import useRouter from "next/router";
 const Invite = ({ img, sender, name }) => {
   // state
@@ -34,11 +30,8 @@ const Invite = ({ img, sender, name }) => {
     <Dialog
       PaperProps={{
         style: {
-          // backgroundColor: "transparent",
-          // boxShadow: "none",
           width: "40rem",
           height: "18rem",
-          // fontSize: "2rem",
         },
       }}
       open={open}
