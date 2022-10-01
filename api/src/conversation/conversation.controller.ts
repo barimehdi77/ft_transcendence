@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  // ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -19,7 +18,6 @@ import {
   EditRoomDto,
 } from './dto';
 import { AuthGuard } from '@nestjs/passport';
-// import { GetUser } from '../auth/decorator';
 import { BanMemberDto } from './dto/ban-member.dto';
 import { UserService } from 'src/user/user.service';
 

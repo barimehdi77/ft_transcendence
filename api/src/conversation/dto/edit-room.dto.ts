@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsString, MaxLength, IsIn, IsOptional, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  IsIn,
+  IsOptional,
+  MinLength,
+} from 'class-validator';
 
 export class EditRoomDto {
   @IsString()

@@ -25,7 +25,6 @@ ADD . .
 RUN npm run build
 
 EXPOSE 8080
-CMD [ "npm", "run", "start:prod" ]
 # A command to start the server
-# CMD npm start
-# CMD sleep 1000000000
+CMD [ "npm", "run", "start:prod" ]
+

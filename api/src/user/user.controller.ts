@@ -10,7 +10,6 @@ import {
   UseInterceptors,
   UploadedFile,
   Param,
-  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -59,7 +58,6 @@ export class UserController {
   ) {
     try {
       data.avatar = file;
-      console.log("in controller: ", data);
       const user = await this.userService.accountSetup(data, auth);
 
       if (user === null) {
@@ -96,5 +94,4 @@ export class UserController {
   ) {
     return this.userService.findUsersNotIn(conversationId, intra_id);
   }
-
 }

@@ -31,8 +31,6 @@ export class MessagesGateway {
     try {
       const { conversationId } = joinConversationDto;
       client.join(conversationId);
-      console.log('joined conversation', client.id);
-
       return {
         status: 'success',
         message: 'You have joined the conversation',
@@ -58,7 +56,6 @@ export class MessagesGateway {
     @ConnectedSocket() client: Socket,
   ) {
     try {
-   
       const intra_id: number = this.messagesService.decode(
         client.handshake.headers.authorization,
       );

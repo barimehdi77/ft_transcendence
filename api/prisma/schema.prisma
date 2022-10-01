@@ -47,7 +47,7 @@ model Profile {
 }
 
 model Match {
-  id               Int    @id @default(autoincrement())
+  id               Int        @id @default(autoincrement())
   player_one       String
   player_two       String
   player_one_score Int
@@ -67,9 +67,9 @@ model FriendsList {
 
 model Conversation {
   conversation_id String    @id @default(uuid())
-  type            String // dm or room
+  type            String
   name            String
-  status          String // public or private or locked (with password)
+  status          String
   last_message_at DateTime  @default(now())
   password        String?
   admins          User[]    @relation("admins")

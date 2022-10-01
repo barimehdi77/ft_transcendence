@@ -10,6 +10,12 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 @Module({
   imports: [UserModule],
   controllers: [ProfileController],
-  providers: [ProfileService, PrismaService, UserService, JwtService, CloudinaryService]
+  providers: [
+    ProfileService,
+    PrismaService,
+    UserService,
+    JwtService,
+    CloudinaryService,
+  ],
 })
 export class ProfileModule {}

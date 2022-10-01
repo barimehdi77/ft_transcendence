@@ -24,6 +24,6 @@ export class BanMemberDto {
   @IsInt()
   @Type(() => Number)
   @Min(1)
-  @Max(43800) // Max is 1 month
-  duration: number; // minutes
+  @Max(43800)
+  duration: number;
 }

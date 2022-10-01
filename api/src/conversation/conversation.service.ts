@@ -777,22 +777,24 @@ export class ConversationService {
           'error: Conversation not found or you are not allowed!',
         );
 
-        const block = await this.prisma.friendsList.findMany({
-          where: {
-            from: intra_id,
-            status: FriendStatus.BLOCKED,
-          },
-          select: {
-            to: true,
-          }
-        });
+      const block = await this.prisma.friendsList.findMany({
+        where: {
+          from: intra_id,
+          status: FriendStatus.BLOCKED,
+        },
+        select: {
+          to: true,
+        },
+      });
 
       const messages = await this.prisma.message.findMany({
         where: {
           conversation_id: conversationId,
           NOT: {
             sent_by_id: {
-              in: block.map((b) => {return b.to})
+              in: block.map((b) => {
+                return b.to;
+              }),
             },
           },
         },
@@ -809,7 +811,7 @@ export class ConversationService {
               profile: {
                 select: {
                   status: true,
-                }
+                },
               },
             },
           },
@@ -866,7 +868,7 @@ export class ConversationService {
             profile: {
               select: {
                 status: true,
-              }
+              },
             },
           },
         },
@@ -965,7 +967,7 @@ export class ConversationService {
             profile: {
               select: {
                 status: true,
-              }
+              },
             },
           },
         },
@@ -979,7 +981,7 @@ export class ConversationService {
             profile: {
               select: {
                 status: true,
-              }
+              },
             },
           },
         },
