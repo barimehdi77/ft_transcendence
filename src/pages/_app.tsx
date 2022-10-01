@@ -15,7 +15,6 @@ import { ToastContainer } from "react-toastify";
 function MyApp({ Component, pageProps }: AppProps) {
 	const token = cookie.get('token') as string;
 	const [userInfo, setUserInfo] :any = useState({});
-
 	useEffect(() => {
 		if (token && Router.pathname !== '/authenticate') {
 			localStorage.setItem('token', token);
@@ -50,19 +49,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 	}, [userInfo])
 
 	const handleInvitation = (sender: string) => {
-		let text = sender + " want's to play with you !!";
-		if (confirm(text) == true) {
-			socket.emit('friendAccepted', { data: { user: userInfo.user_name, sender: sender }})
-			// socket.emit('accepted', Math.floor(Math.random() * 1000000));
-			Router.push({
-				pathname: "/game",
-				query: { name: "friends"}
-			});
-			return "accepted";
-		} else {
-			// socket.emit('rejected', userInfo.user_name);
-			return "rejected";
-		}
+		Router.push({
+			pathname: "/invite",
+			query: { name: userInfo.user_name, sender: sender, img: userInfo.image_url }
+		})
 	}
 	socket.off('invitation').on('invitation', handleInvitation);
 
