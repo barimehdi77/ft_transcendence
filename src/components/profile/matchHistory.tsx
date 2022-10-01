@@ -4,12 +4,12 @@ import Score from './score';
 
 const MatchHistory = ({ profileData }: any) => {
 	const [matchHistory, setMatchHistory]: any = useState();
-	const { user_name } = profileData;
+	const { login } = profileData;
 
 	useEffect(() => {
 		async function getMatchHistory() {
 			setMatchHistory(
-				await getData(`http://localhost:8080/api/profile/${user_name}/matches`)
+				await getData(`http://localhost:8080/api/profile/${login}/matches`)
 			);
 		}
 		getMatchHistory();

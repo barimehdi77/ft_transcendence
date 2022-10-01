@@ -31,6 +31,7 @@ export class GameService {
       playerOne: {
         id: 'playerOne',
         name: '',
+        displayName: '',
         x: 0,
         y: (this.canvasHeight - 100) / 2,
         width: 10,
@@ -40,6 +41,7 @@ export class GameService {
       playerTwo: {
         id: 'playerTwo',
         name: '',
+        displayName: '',
         x: this.canvasWidth - 10,
         y: (this.canvasHeight - 100) / 2,
         width: 10,
@@ -240,7 +242,8 @@ export class GameService {
     this.state[roomName] = this.createGameState();
 
     this.state[roomName].playerOne.id = client.id;
-    this.state[roomName].playerOne.name = userInfo.user_name;
+    this.state[roomName].playerOne.name = userInfo.login;
+    this.state[roomName].playerOne.displayName = userInfo.user_name;
     client.join(roomName.toString());
     client.emit('init', 1);
     return roomName;
@@ -273,7 +276,8 @@ export class GameService {
 
     client.join(gameCode);
     this.state[gameCode].playerTwo.id = client.id;
-    this.state[gameCode].playerTwo.name = userInfo.user_name;
+    this.state[gameCode].playerTwo.name = userInfo.login;
+    this.state[gameCode].playerTwo.displayName = userInfo.user_name;
     this.playersPlaying[gameCode] = { p1: this.state[gameCode].playerOne.name, p2: this.state[gameCode].playerTwo.name };
     // client.in(gameCode).emit('init', 2);
     client.emit('init', 2);
@@ -290,7 +294,7 @@ export class GameService {
     });
     await this.prisma.user.update({
       where: {
-        user_name: stateRoom.playerOne.name
+        login: stateRoom.playerOne.name
       },
       data: {
         profile: {
@@ -302,7 +306,7 @@ export class GameService {
     });
     await this.prisma.user.update({
       where: {
-        user_name: stateRoom.playerTwo.name
+        login: stateRoom.playerTwo.name
       },
       data: {
         profile: {
@@ -326,7 +330,7 @@ export class GameService {
       // console.log(this.roomName, "=> ", !this.gameActive[this.roomName]);
       // if (!this.gameActive[this.roomName]) {
         if (!this.waitlist) {
-          this.name = userInfo.userInfo.user_name;
+          this.name = userInfo.userInfo.login;
           this.waitlist = true;
           this.roomName = this.handleNewGame(client, userInfo.userInfo)
           this.wait = true;
@@ -334,7 +338,7 @@ export class GameService {
             server.in(this.roomName.toString()).emit('waiting');
             if (!this.wait) clearInterval(interval);
           }, 500);
-        } else if (this.name !== userInfo.userInfo.user_name) {
+        } else if (this.name !== userInfo.userInfo.login) {
           this.waitlist = false;
           this.handleJoinGame(server, client, this.roomName.toString(), userInfo.userInfo);
           this.wait = false;
@@ -345,7 +349,7 @@ export class GameService {
     else if (userInfo.type === "friend") {
       // if (!this.gameActive[this.roomNameFriend]) {
         if (!this.waitlistF) {
-          this.name = userInfo.userInfo.user_name;
+          this.name = userInfo.userInfo.login;
           this.waitlistF = true;
           this.roomNameFriend = this.handleNewGame(client, userInfo.userInfo)
           // this.friendList[this.roomName.toString()] = 
@@ -354,7 +358,7 @@ export class GameService {
             server.in(this.roomNameFriend.toString()).emit('waiting');
             if (!this.waitF) clearInterval(interval);
           }, 500);
-        } else if (this.name !== userInfo.userInfo.user_name) {
+        } else if (this.name !== userInfo.userInfo.login) {
           this.waitlistF = false;
           this.handleJoinGame(server, client, this.roomNameFriend.toString(), userInfo.userInfo);
           this.waitF = false;
@@ -399,7 +403,7 @@ export class GameService {
     if (matchGame.player_one_score > matchGame.player_two_score) {
       await this.prisma.user.update({
         where: {
-          user_name: matchGame.player_one,
+          login: matchGame.player_one,
         },
         data: {
           profile: {
@@ -414,7 +418,7 @@ export class GameService {
       });
       await this.prisma.user.update({
         where: {
-          user_name: matchGame.player_two,
+          login: matchGame.player_two,
         },
         data: {
           profile: {
@@ -431,7 +435,7 @@ export class GameService {
     else {
       await this.prisma.user.update({
         where: {
-          user_name: matchGame.player_two,
+          login: matchGame.player_two,
         },
         data: {
           profile: {
@@ -446,7 +450,7 @@ export class GameService {
       });
       await this.prisma.user.update({
         where: {
-          user_name: matchGame.player_one,
+          login: matchGame.player_one,
         },
         data: {
           profile: {

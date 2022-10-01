@@ -61,10 +61,10 @@ export class ProfileController {
     }
   }
 
-  @Get(':user_name/matches')
-  async getMatches(@Param('user_name') user_name: string, @Req() req: Request, @Res() res: Response) {
+  @Get(':login/matches')
+  async getMatches(@Param('login') login: string, @Req() req: Request, @Res() res: Response) {
     try {
-      const matchsHistory = await this.profileService.getMatches(user_name);
+      const matchsHistory = await this.profileService.getMatches(login);
       if (matchsHistory === null) {
         return res.status(409).json({
           status: 'failure',
