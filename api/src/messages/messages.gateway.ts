@@ -28,14 +28,26 @@ export class MessagesGateway {
     @MessageBody() joinConversationDto: JoinConversationDto,
     @ConnectedSocket() client: Socket,
   ) {
-    const { conversationId } = joinConversationDto;
-    client.join(conversationId);
-    console.log('joined conversation', client.id);
-
-    return {
-      status: 'success',
-      message: 'You have joined the conversation',
-    };
+    try {
+      const { conversationId } = joinConversationDto;
+      client.join(conversationId);
+      return {
+        status: 'success',
+        message: 'You have joined the conversation',
+      };
+    } catch (error) {
+      let message = 'Somthing went wrong!';
+      if (error.message.includes('error:')) {
+        message =
+          error.message &&
+          error.message.replace('Error: ', '') &&
+          error.message.replace('error: ', '');
+      }
+      return {
+        status: 'failure',
+        msg: message,
+      };
+    }
   }
 
   @SubscribeMessage('sendMessage')
@@ -44,11 +56,9 @@ export class MessagesGateway {
     @ConnectedSocket() client: Socket,
   ) {
     try {
-      // this is temp
       const intra_id: number = this.messagesService.decode(
         client.handshake.headers.authorization,
       );
-      //////
 
       const message = await this.messagesService.sendMessage(
         sendMessageDto,
@@ -62,14 +72,21 @@ export class MessagesGateway {
         message: 'Message sent',
       };
     } catch (error) {
-      const message =
-        error.message &&
-        error.message.replace('Error: ', '') &&
-        error.message.replace('error: ', '');
+      let message = 'Somthing went wrong!';
+      if (error.message.includes('error:')) {
+        message =
+          error.message &&
+          error.message.replace('Error: ', '') &&
+          error.message.replace('error: ', '');
+      }
       return {
         status: 'failure',
         msg: message,
       };
     }
+  }
+
+  handleDisconnect(client: Socket) {
+    client.disconnect();
   }
 }

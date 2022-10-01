@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 services:
     api:
         build: api/
@@ -25,6 +25,7 @@ services:
         container_name: front-end
         depends_on:
             - postgres
+            - api
         ports:
             - "80:80"
         restart: on-failure

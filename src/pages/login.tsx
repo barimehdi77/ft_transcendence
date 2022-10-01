@@ -8,7 +8,7 @@ const Login = () => {
 			style={{ minWidth: '900px' }}
 		>
 			<Head>
-				<title>Logout</title>
+				<title>Login</title>
 			</Head>
 			<div>
 				<h1 className='text-center text-6xl font-extrabold uppercase'>

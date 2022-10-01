@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from 'react';
-import { paintGame, drawRect, drawText } from './drawing';
+import { paintGame, drawText, paintGameOver } from '../components/drawing/drawing';
 import { socket } from '../socket';
 import { UserContext } from '../contexts/userContext';
 
@@ -11,11 +11,17 @@ const Game = () => {
 	const canvasRef = useRef(null);
 	let canvas: HTMLCanvasElement;
 	let ctx: any;
-
-	const [gameCodeInput, setGameCodeInput] = useState('');
-	const [gameCodeDisplay, setGameCodeDisplay] = useState('');
 	const [gameActive, setGameActive] = useState(false);
 	const [playerNamber, setPlayerNamber] = useState(0);
+	const [randomColor, setRandomColor] = useState(0);
+
+	const color = [
+		{ back: "#000000", front: "#ffffff" },
+		{ back: "#003459", front: "#d9d9d9" },
+		{ back: "#461220", front: "#fed0bb" },
+		{ back: "#590d22", front: "#ffccd5" },
+		{ back: "#184e77", front: "#d9ed92" },
+	];
 
 	const init = (player: number) => {
 		setGameActive(true);
@@ -23,7 +29,6 @@ const Game = () => {
 	};
 
 	if (typeof window !== 'undefined') {
-		console.log(window.innerWidth, ' ', window.innerHeight);
 		window.onresize = () => {
 			if (gameActive) {
 				if (canvasRef.current) {
@@ -57,35 +62,24 @@ const Game = () => {
 		}
 	}
 
-	const playGame = () => {
-		socket.emit('playGame', userInfo);
+	const playGame = (type: string) => {
+		if (type === "random") {
+			socket.emit('playGame', { userInfo, type: "random" }, (ret: number) => setRandomColor(ret));
+		}
+		else {
+			socket.emit('playGame', { userInfo, type: "friend" }, (ret: number) => setRandomColor(ret));
+		}
 		setGameActive(true);
 	};
 
 	useEffect(() => {
-		playGame();
-	}, []);
-
-	const spectateGame = () => {
-		// setinitialScreen(true);
-		socket.emit('spectateGame', gameCodeInput.toString());
-		init(0);
-	};
-
-	const handlSpectateState = (state: string) => {
-		if (canvasRef.current) {
-			if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
-			drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
-			if (!gameActive) {
-				return;
-			}
-			let StateTemp = JSON.parse(state);
-			requestAnimationFrame(() =>
-				paintGame(ctx, StateTemp, canvas.width, canvas.height)
-			);
+		if (Router.query.name === "friends")
+			playGame("friend");
+		else
+		{
+			playGame("random");
 		}
-	};
-	socket.off('spectateState').on('spectateState', handlSpectateState);
+	}, []);
 
 	// PAGE GAME
 	const keydown = (e: any) => {
@@ -101,7 +95,6 @@ const Game = () => {
 	const handlGameState = (gameState: string) => {
 		if (canvasRef.current) {
 			if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
-			drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
 			document.addEventListener('keydown', keydown);
 			if (!gameActive) {
 				return;
@@ -115,78 +108,107 @@ const Game = () => {
 	socket.off('gameState').on('gameState', handlGameState);
 
 	const handleGameOver = (data: any) => {
-		console.log('gameA: ', gameActive);
-
 		if (!gameActive) return;
 		data = JSON.parse(data);
 		setGameActive(false);
-		console.log('d: ', data, ' p: ', playerNamber);
+		if (playerNamber == 0) {
+			let temp = 3;
+			const interval = setInterval(() => {
+				temp--;
+					paintGameOver(ctx, "You Win", data.stateRoom, canvas.width, canvas.height);
 
-		if (data === playerNamber) {
-			alert('You Win!');
-			Router.push('/');
-		}
-		if (data !== playerNamber) {
-			alert('You Lose :(');
-			Router.push('/');
+				if (temp === 0) {
+					clearInterval(interval);
+					Router.push('/');
+				}
+			}, 500);
+		} else {
+			if (data.winner == playerNamber) {
+				let temp = 3;
+				const interval = setInterval(() => {
+					paintGameOver(ctx, "You Win", data.stateRoom, canvas.width, canvas.height);
+					temp--;
+					if (temp === 0) {
+						clearInterval(interval);
+						Router.push('/');
+					}
+				}, 1000);
+			}
+			if (data.winner != playerNamber) {
+				let temp = 3;
+				const interval = setInterval(() => {
+					paintGameOver(ctx, "You Lose", data.stateRoom, canvas.width, canvas.height)
+					temp--;
+					if (temp === 0) {
+						clearInterval(interval);
+						Router.push('/');
+					}
+				}, 1000);
+			}
 		}
 	};
 	socket.off('gameOver').on('gameOver', handleGameOver);
 
-	const handlePlayerDisconnected = (player: number) => {
-		if (player !== playerNamber) {
-			alert('Your opponent disconnected. You win!');
-			Router.push('/');
+	const handlePlayerDisconnected = (player: any) => {
+		player = JSON.parse(player);
+		if (player.winner !== playerNamber) {
+			let temp = 3;
+			const interval = setInterval(() => {
+				temp--;
+					paintGameOver(ctx, "You win!", player.stateRoom, canvas.width, canvas.height);
+				if (temp === 0) {
+					clearInterval(interval);
+					Router.push('/');
+				}
+			}, 1000);
 		}
 	};
-	socket
-		.off('playerDisconnected')
-		.on('playerDisconnected', handlePlayerDisconnected);
-
-	const handleGameCode = (gameCode: string) => {
-		setGameCodeDisplay(gameCode);
-	};
-	socket.off('gameCode').on('gameCode', handleGameCode);
+	socket.off('playerDisconnected').on('playerDisconnected', handlePlayerDisconnected);
 
 	let x = 0;
 	const handleWaiting = () => {
-		drawText(
-			ctx,
-			'. ',
-			canvas.width / 2 - 12 + x,
-			canvas.height / 2,
-			'white',
-			600 / canvas.width,
-			45
-		);
+		drawText( ctx, '. ', canvas.width / 2 - 12 + x, canvas.height / 2,
+		color[randomColor].front, 600 / canvas.width, 45);
+
+		drawText(ctx, "W: up", 10, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
+		
+		drawText(ctx, "S: down", canvas.width / 3.3, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
+
+		drawText(ctx, "first to 5 wins", canvas.width / 1.55, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
 		x += 10;
 		if (x === 40) {
 			x = 0;
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.clearRect(0, 0, canvas.width, canvas.height - 50);
 		}
 	};
 	socket.off('waiting').on('waiting', handleWaiting);
 
 	let countDown = 3;
 	const handleStarting = () => {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height - 50);
 		drawText(
 			ctx,
 			countDown.toString(),
 			canvas.width / 2,
 			canvas.height / 2,
-			'white',
+			color[randomColor].front,
 			600 / canvas.width,
 			45
 		);
+		drawText(ctx, "W: up", 10, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
+		
+		drawText(ctx, "S: down", canvas.width / 3.3, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
+
+		drawText(ctx, "first to 5 wins", canvas.width / 1.55, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
 		countDown--;
 	};
 	socket.off('start').on('start', handleStarting);
-
-	const handlPlayers = (players: string) => {
-		console.log('3iiiw', JSON.parse(players));
-	};
-	socket.off('handlPlayers').on('handlPlayers', handlPlayers);
 
 	return (
 		<div className='min-h-screen flex justify-center items-center'>
@@ -198,7 +220,7 @@ const Game = () => {
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
 						<canvas
 							ref={canvasRef}
-							style={{ border: '1px solid #c3c3c3', backgroundColor: 'black' }}
+							style={{ border: '1px solid #c3c3c3', backgroundColor: color[randomColor].back }}
 						></canvas>
 					</div>
 				</div>

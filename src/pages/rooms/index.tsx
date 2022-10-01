@@ -49,15 +49,6 @@ const options = [
   { value: "locked", label: "Locked" },
 ];
 
-// const user: IMembers = {
-//   intra_id: userId,
-//   first_name: "Erraghay",
-//   last_name: "Ayoub",
-//   user_name: 'aerragha',
-//   image_url:
-//     "https://media-exp1.licdn.com/dms/image/C4D03AQGqS4EMHscvNA/profile-displayphoto-shrink_800_800/0/1582996860869?e=1665619200&v=beta&t=neltvz5Bmj1dNtLfjIvs48g4Cg3UBGsU1xGgDaq-76A",
-// };
-
 const rooms = () => {
   const { userInfo }: any = useContext(UserContext);
   const {
@@ -129,27 +120,30 @@ const rooms = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("receiveMessage", (data) => {
-      console.log("data received from socket", data);
-      if (data.conversation_id === selectedConversation?.conversation_id) {
-        setMessages((prevMessages: IMessage[]) => [...prevMessages, data]);
+    socket.on("receiveMessage", (data: any) => {
+      if (userInfo.blockedUsers.includes(data.sent_by.intra_id)) {
+        return;
+      } else {
+        if (data.conversation_id === selectedConversation?.conversation_id) {
+          setMessages((prevMessages: IMessage[]) => [...prevMessages, data]);
+        }
+        setConversations((prevConversations: IConversation[]) => {
+          const newConversations = prevConversations
+            .map((conversation) => {
+              if (conversation.conversation_id === data.conversation_id) {
+                conversation.last_message = data;
+              }
+              return conversation;
+            })
+            .sort((a: any, b: any) => {
+              return (
+                new Date(b.last_message?.sentAt).getTime() -
+                new Date(a.last_message?.sentAt).getTime()
+              );
+            });
+          return newConversations;
+        });
       }
-      setConversations((prevConversations: IConversation[]) => {
-        const newConversations = prevConversations
-          .map((conversation) => {
-            if (conversation.conversation_id === data.conversation_id) {
-              conversation.last_message = data;
-            }
-            return conversation;
-          })
-          .sort((a: any, b: any) => {
-            return (
-              new Date(b.last_message?.sentAt).getTime() -
-              new Date(a.last_message?.sentAt).getTime()
-            );
-          });
-        return newConversations;
-      });
     });
 
     return () => {
@@ -527,7 +521,6 @@ const rooms = () => {
         toast.error("Invalid duration: must be between 1 and 43800");
       else {
         setDurationLoader(true);
-        console.log("duration", duration);
         const res: any = await banUser(
           selectedUser?.intra_id,
           selectedConversation?.conversation_id,
@@ -559,7 +552,7 @@ const rooms = () => {
         <title>Chat rooms</title>
       </Head>
       <div className="flex h-full">
-        <div className="flex-1 bg-gray-100 w-full h-full">
+        <div className="flex-1 bg-gray-100 w-full h-5/6 mt-20">
           <div className="main-body container m-auto w-11/12 h-full flex flex-col">
             <div className="py-4 flex-2 flex flex-row">
               <div className="flex-1">

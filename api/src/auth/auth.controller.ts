@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from 'src/user/user.service';
-import { SetupUser, UserDecoder } from './dto/User.dto';
+import { UserDecoder } from './dto/User.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -209,7 +209,6 @@ export class AuthController {
   @Get('status')
   @UseGuards(AuthGuard('jwt'))
   status(@Req() req: Request) {
-    console.log(req);
     return 'You are authenticated';
   }
 

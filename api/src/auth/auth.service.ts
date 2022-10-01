@@ -9,52 +9,63 @@ import { toFileStream } from 'qrcode';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
+    private readonly prisma: PrismaClient,
+  ) {}
 
-  constructor(private readonly userService: UserService,
-              private readonly configService: ConfigService,
-              private readonly prisma: PrismaClient) {}
-
-
-  async GenirateJWT(@Req() req: Request, @Res() res: Response): Promise<SetupUser> {
-    const user = await this.userService.validateUser(req.user as Prisma.UserUncheckedCreateInput);
+  async GenirateJWT(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<SetupUser> {
+    const user = await this.userService.validateUser(
+      req.user as Prisma.UserUncheckedCreateInput,
+    );
     if (user) {
       const updatestatus = await this.prisma.user.update({
         where: {
-          intra_id: user.intra_id
+          intra_id: user.intra_id,
         },
         data: {
           profile: {
             update: {
               status: ProfileStatus.ONLINE,
-            }
-          }
-        }
-      })
+            },
+          },
+        },
+      });
     }
-    return (user);
+    return user;
   }
-
 
   async generateTwoFactorAuthenticationSecret(user: UserDecoder) {
     const secret = authenticator.generateSecret();
-    const otpauthUrl = authenticator.keyuri(user.email, this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'), secret);
+    const otpauthUrl = authenticator.keyuri(
+      user.email,
+      this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'),
+      secret,
+    );
     await this.userService.setTwoFactorAuthenticationSecret(secret, user.login);
     return {
       secret,
-      otpauthUrl
-    }
+      otpauthUrl,
+    };
   }
 
   async pipeQrCodeStream(stream: Response, otpauthUrl: string) {
     return toFileStream(stream, otpauthUrl);
   }
 
-  async isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, auth: string) {
-    const user = await this.userService.FindUser(auth) as UserAuth;
+  async isTwoFactorAuthenticationCodeValid(
+    twoFactorAuthenticationCode: string,
+    auth: string,
+  ) {
+    const user = (await this.userService.FindUser(auth)) as UserAuth;
     return authenticator.verify({
       token: twoFactorAuthenticationCode,
-      secret: user.twoFactorAuthenticationSecret
-    })
+      secret: user.twoFactorAuthenticationSecret,
+    });
   }
 
   async logout(auth: string) {
@@ -66,13 +77,11 @@ export class AuthService {
       data: {
         profile: {
           update: {
-            status: ProfileStatus.OFFLINE
-          }
-        }
-      }
+            status: ProfileStatus.OFFLINE,
+          },
+        },
+      },
     });
-    return (user);
+    return user;
   }
-
 }
-

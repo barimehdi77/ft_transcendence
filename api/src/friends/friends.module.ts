@@ -9,6 +9,12 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 @Module({
   exports: [FriendsModule],
   controllers: [FriendsController],
-  providers: [FriendsService, PrismaService, JwtService, UserService, CloudinaryService]
+  providers: [
+    FriendsService,
+    PrismaService,
+    JwtService,
+    UserService,
+    CloudinaryService,
+  ],
 })
 export class FriendsModule {}

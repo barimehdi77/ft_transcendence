@@ -52,7 +52,6 @@ const dm = () => {
 
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
-      console.log("data received from socket", data);
       if (data.conversation_id === selectedConversation?.conversation_id) {
         setMessages((prevMessages: IMessage[]) => [...prevMessages, data]);
       }
@@ -99,7 +98,6 @@ const dm = () => {
         toast.error("user not found");
       }
     } catch (error) {
-      console.log("user not found");
       toast.error("user not found");
     }
   };
@@ -193,7 +191,7 @@ const dm = () => {
         <title>Direct messages</title>
       </Head>
       <div className="flex h-full">
-        <div className="flex-1 bg-gray-100 w-full h-full">
+        <div className="flex-1 bg-gray-100 w-full h-5/6 mt-20">
           <div className="main-body container m-auto w-11/12 h-full flex flex-col">
             <div className="py-4 flex-2 flex flex-row">
               <div className="flex-1">

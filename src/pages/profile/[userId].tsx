@@ -20,7 +20,19 @@ const Profile = () => {
 	}, [username]);
 
 	if (profileData) {
-		if (profileData.status! === 'failure')
+		if (profileData.status! === 'success')
+			return (
+				<>
+					<Head>
+						<title>{profileData.data.user_name}</title>
+					</Head>
+					<ProfileView
+						profileData={profileData}
+						setProfileData={setProfileData}
+					/>
+				</>
+			);
+		else if (profileData.status! === 'failure')
 			return (
 				<main className='min-h-screen flex flex-col items-center justify-center'>
 					<Head>
@@ -36,18 +48,7 @@ const Profile = () => {
 					/>
 				</main>
 			);
-		else
-			return (
-				<>
-					<Head>
-						<title>{profileData.data.user_name}</title>
-					</Head>
-					<ProfileView
-						profileData={profileData}
-						setProfileData={setProfileData}
-					/>
-				</>
-			);
+		else return <></>;
 	}
 };
 

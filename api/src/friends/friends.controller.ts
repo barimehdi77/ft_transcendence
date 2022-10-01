@@ -12,10 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FriendsService } from './friends.service';
-import {
-  CreateFriendRequestDto,
-  GetFriendRequestDto,
-} from './dto/friend.dto';
+import { CreateFriendRequestDto, GetFriendRequestDto } from './dto/friend.dto';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 @UseGuards(AuthGuard('jwt'))
@@ -29,7 +26,6 @@ export class FriendsController {
     @Res() res: Response,
     @Headers('Authorization') auth: string,
   ) {
-
     try {
       const Friends = (await this.friendsService.listAllFriends(
         auth,

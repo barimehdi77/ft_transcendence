@@ -1,9 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma } from '@prisma/client';
+import { FriendStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { ConfigService } from '@nestjs/config';
-import { CreateJwt, SetupUser, UserAuth, UserDecoder } from 'src/auth/dto/User.dto';
+import {
+  CreateJwt,
+  SetupUser,
+  UserAuth,
+  UserDecoder,
+} from 'src/auth/dto/User.dto';
 import { UpdateUserInfo } from './dto/User.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
@@ -14,15 +19,13 @@ export class UserService {
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
     private readonly cloudinary: CloudinaryService,
-
   ) {}
 
-
   async uploadImageToCloudinary(file: Express.Multer.File): Promise<string> {
-    const image =  await this.cloudinary.uploadImage(file).catch(() => {
+    const image = await this.cloudinary.uploadImage(file).catch(() => {
       throw new BadRequestException('Invalid file type.');
     });
-    return image.url
+    return image.url;
   }
 
   async setTwoFactorAuthenticationSecret(secret: string, login: string) {
@@ -32,7 +35,7 @@ export class UserService {
       },
       data: {
         twoFactorAuthenticationSecret: secret,
-      }
+      },
     });
   }
 
@@ -43,7 +46,7 @@ export class UserService {
       },
       data: {
         isTwoFactorAuthenticationEnabled: true,
-      }
+      },
     });
   }
 
@@ -55,7 +58,7 @@ export class UserService {
       data: {
         isTwoFactorAuthenticationEnabled: false,
         twoFactorAuthenticationSecret: null,
-      }
+      },
     });
   }
 
@@ -96,7 +99,8 @@ export class UserService {
       login: NewUser.login,
       user_name: NewUser.user_name,
       profile_done: NewUser.profile_done,
-      isTwoFactorAuthenticationEnabled: NewUser.isTwoFactorAuthenticationEnabled,
+      isTwoFactorAuthenticationEnabled:
+        NewUser.isTwoFactorAuthenticationEnabled,
       token: await this.signToken({
         intra_id: NewUser.intra_id,
         login: NewUser.login,
@@ -109,12 +113,19 @@ export class UserService {
   decode(auth: string): UserDecoder {
     const jwt = auth.replace('Bearer ', '');
     const decode = this.jwt.decode(jwt, { json: true }) as UserDecoder;
-    return (decode);
+    return decode;
   }
 
-  async FindUser(
-    auth: string,
-  ): Promise<UserAuth> {
+  async FindUser(auth: string): Promise<UserAuth> {
+    const block = await this.prisma.friendsList.findMany({
+      where: {
+        from: this.decode(auth).intra_id,
+        status: FriendStatus.BLOCKED,
+      },
+      select: {
+        to: true,
+      },
+    });
     const user = await this.prisma.user.findUnique({
       where: {
         intra_id: this.decode(auth).intra_id,
@@ -133,11 +144,16 @@ export class UserService {
         profile: {
           select: {
             status: true,
-          }
+          },
         },
       },
     });
-    return user;
+    return {
+      ...user,
+      blockedUsers: block.map((b) => {
+        return b.to;
+      }),
+    };
   }
 
   async create(
@@ -147,8 +163,8 @@ export class UserService {
       data: {
         ...data,
         profile: {
-          create: {}
-        }
+          create: {},
+        },
       },
     });
     return user;
@@ -163,11 +179,10 @@ export class UserService {
   }
 
   async accountSetup(data: UpdateUserInfo, auth: string) {
-    if(data.user_name.match(/[!@#$%^&*()+\=\[\]{}; ':"\\|,.<>\/?]+/)) {
-      return ('NOTVALID')
-    }
     const User = await this.findUserName(data.user_name as string);
-    if (User !== null) return null;
+    if (User) {
+      if (User.user_name !== data.user_name) return null;
+    }
 
     if (data.avatar === undefined) {
       return await this.prisma.user.update({
@@ -206,7 +221,16 @@ export class UserService {
     });
   }
 
-  findUsers(intra_id: number) {
+  async findUsers(intra_id: number) {
+    const block = await this.prisma.friendsList.findMany({
+      where: {
+        from: intra_id,
+        status: FriendStatus.BLOCKED,
+      },
+      select: {
+        to: true,
+      },
+    });
     return this.prisma.user.findMany({
       where: {
         profile_done: true,
@@ -252,5 +276,4 @@ export class UserService {
       },
     });
   }
-
 }

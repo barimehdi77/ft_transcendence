@@ -14,8 +14,10 @@ export class MessagesService {
     private conversationService: ConversationService,
   ) {}
 
-  async sendMessage(dto: SendMessageDto, intra_id: number) {
+  async sendMessage(dto: SendMessageDto, intra_id_param: number) {
     try {
+      const intra_id: number =
+        intra_id_param === 0 ? dto.sent_by : intra_id_param;
       if (!dto.body || !dto.body.trim().length)
         throw new Error('error: Message is empty');
 
@@ -39,22 +41,26 @@ export class MessagesService {
               {
                 from: conversations[0].members[0].intra_id,
                 to: conversations[0].members[1].intra_id,
-                status: FriendStatus.BLOCKED
+                status: FriendStatus.BLOCKED,
               },
               {
                 from: conversations[0].members[1].intra_id,
                 to: conversations[0].members[0].intra_id,
-                status: FriendStatus.BLOCKED
-              }
-            ]
-          }
+                status: FriendStatus.BLOCKED,
+              },
+            ],
+          },
         });
 
         if (isBlocked) {
           if (isBlocked.from === intra_id)
-            throw new Error('error: You blocked this user, you cannot send this message');
+            throw new Error(
+              'error: You blocked this user, you cannot send this message',
+            );
           else
-            throw new Error('error: the user blocked you, you cannot send this message');
+            throw new Error(
+              'error: the user blocked you, you cannot send this message',
+            );
         }
       }
 
@@ -67,7 +73,6 @@ export class MessagesService {
       )
         throw new Error('error: You are not in this conversation!');
 
-      // TODO: check if the user banned from this conversation
       const banned =
         await this.conversationService.getBannedMemverWithConversation(
           intra_id,
@@ -89,8 +94,6 @@ export class MessagesService {
           body: dto.body,
         },
       });
-
-      console.log("the MEssage: ", message);
 
       // get Message
       const messageData = await this.prisma.message.findUnique({
@@ -116,8 +119,6 @@ export class MessagesService {
 
       return messageData;
     } catch (error) {
-      console.log('------error---', error);
-
       throw new Error(
         error.message && error.message.startsWith('error: ')
           ? error.message
@@ -128,8 +129,13 @@ export class MessagesService {
 
   // this is a temp function
   decode(token: string): number {
-    const jwt = token.replace('Bearer ', '');
-    const decode = this.jwt.decode(jwt, { json: true }) as { intra_id: number };
-    return decode.intra_id;
+    if (!token.includes('null')) {
+      const jwt = token?.replace('Bearer ', '');
+      const decode = this.jwt.decode(jwt, { json: true }) as {
+        intra_id: number;
+      };
+      return decode.intra_id;
+    }
+    return 0;
   }
 }

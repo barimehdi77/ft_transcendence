@@ -8,11 +8,6 @@ import {
 import { GameService } from './game.service';
 import { Server, Socket } from 'socket.io';
 
-// @WebSocketGateway({
-//   cors: {
-//     origin: '*',
-//   },
-// })
 @WebSocketGateway({
   cors: {
     origin: 'http://localhost',
@@ -24,30 +19,19 @@ import { Server, Socket } from 'socket.io';
 export class GameGateway {
   @WebSocketServer()
   server: Server;
-  constructor(private readonly gameService: GameService) {}
-
-  // afterInit() {
-  //   console.log('Websocket Server Started,Listening on Port:8080');
-  // }
-
-  // handleConnection(client: Socket) {
-  //   console.log(
-  //     `Client game connected: ${client.id}`,
-  //     ' length: ',
-  //     this.server.engine.clientsCount,
-  //   );
-  // }
+  constructor(private readonly gameService: GameService) { }
 
   handleDisconnect(client: Socket) {
-    // console.log(`Client disconnected: ${client.id}`);
     const roomName = this.gameService.clientRooms[client.id];
     if (this.gameService.state[roomName]) {
       this.gameService.waitlist = false;
-      this.gameService.gameActive[this.gameService.roomName] = false;
-      if (client.id === this.gameService.state[roomName].playerOne.id)
+      this.gameService.gameActive[roomName] = false;
+      if (client.id === this.gameService.state[roomName].playerOne.id) {
         this.gameService.playerDisconnected[roomName] = 1;
-      else if (client.id === this.gameService.state[roomName].playerTwo.id)
+      }
+      else if (client.id === this.gameService.state[roomName].playerTwo.id) {
         this.gameService.playerDisconnected[roomName] = 2;
+      }
     }
   }
 
@@ -60,40 +44,43 @@ export class GameGateway {
     this.gameService.updatePlayer(client, this.gameService.state, ret);
   }
 
-  @SubscribeMessage('newGame')
-  handleNewGame(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() name: string,
-  ) {
-    this.gameService.handleNewGame(client, name);
-  }
-
-  @SubscribeMessage('joinGame')
-  handleJoinGame(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
-    this.gameService.handleJoinGame(
-      this.server,
-      client,
-      data.gameCode,
-      data.name,
-    );
-  }
-
   @SubscribeMessage('spectateGame')
   handleSpectateGame(
     @MessageBody() gameCode: string,
     @ConnectedSocket() client: Socket,
   ) {
-    this.gameService.handleSpectateGame(this.server, client, gameCode);
+    this.gameService.start[client.id] = true;
+    return this.gameService.handleSpectateGame(this.server, client, gameCode);
   }
 
   @SubscribeMessage('playGame')
   handlePlayGame(@MessageBody() userInfo: any, @ConnectedSocket() client: Socket) {
-    this.gameService.handlePlayGame(this.server, client, userInfo);
+    return this.gameService.handlePlayGame(this.server, client, userInfo);
   }
 
   @SubscribeMessage('listOfPlayersPlaying')
   handleListOfPlayersPlaying() {
     return (this.gameService.ListOfPlayersPlaying());
-    // return (this.gameService.playersPlaying);
   }
+  @SubscribeMessage('stop')
+  stop(@ConnectedSocket() client: Socket) {
+    this.gameService.start[client.id] = false;
+  }
+
+  @SubscribeMessage('connected')
+  handleUsers(@MessageBody() userInfo: any, @ConnectedSocket() client: Socket) {
+    this.gameService.users[userInfo.user_name] = client.id;
+  }
+  
+  @SubscribeMessage('question')
+  question(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+    this.gameService.handlQuestion(this.server, data)
+  }
+
+
+  @SubscribeMessage('friendAccepted')
+  handlAccepted(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+    this.gameService.handlAccepted(this.server, client, data)
+  }
+
 }

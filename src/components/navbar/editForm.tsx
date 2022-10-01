@@ -5,6 +5,7 @@ import UsernameField from '../inputForm/usernameField';
 import axios from 'axios';
 
 import { getData } from '../getData';
+import Router from 'next/router';
 
 const EditForm = ({ handleCloseModal }: any) => {
 	const { userInfo, setUserInfo }: any = useContext(UserContext);
@@ -20,16 +21,17 @@ const EditForm = ({ handleCloseModal }: any) => {
 			},
 		};
 		try {
+			const data = new FormData();
+			data.append('user_name', username ? username : userInfo.user_name);
+			data.append('avatar', file);
 			const res = await axios.post(
 				'http://localhost:8080/api/user/setup',
-				{
-					user_name: username ? username : userInfo.user_name,
-					image_url: file,
-				},
+				data,
 				config
 			);
 			if (res.status === 200) {
 				setUserInfo(await getData('http://localhost:8080/api/user'));
+				Router.reload();
 				handleCloseModal();
 			}
 		} catch (error: any) {
