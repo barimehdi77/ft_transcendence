@@ -12,7 +12,6 @@ export const getAllUsers = () =>
 
 export const getUsersNotInConversation = (conversationId: string | undefined) =>
   new Promise((resolve, reject) => {
-    console.log("conversationId", conversationId);
     Api()
       .get(`/user/findConversation/${conversationId}`)
       .then((response) => {

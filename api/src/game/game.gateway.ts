@@ -8,11 +8,6 @@ import {
 import { GameService } from './game.service';
 import { Server, Socket } from 'socket.io';
 
-// @WebSocketGateway({
-//   cors: {
-//     origin: '*',
-//   },
-// })
 @WebSocketGateway({
   cors: {
     origin: 'http://localhost',
@@ -26,33 +21,15 @@ export class GameGateway {
   server: Server;
   constructor(private readonly gameService: GameService) { }
 
-  // afterInit() {
-  //   console.log('Websocket Server Started,Listening on Port:8080');
-  // }
-
-  // handleConnection(client: Socket) {
-  //   console.log(
-  //     `Client game connected: ${client.id}`,
-  //     ' length: ',
-  //     this.server.engine.clientsCount,
-  //   );
-  // }
-
   handleDisconnect(client: Socket) {
-    // console.log(`Client disconnected: ${client.id}`);
     const roomName = this.gameService.clientRooms[client.id];
-    // console.log(client.id, this.gameService.state);
     if (this.gameService.state[roomName]) {
-      // console.log("disco ", this.gameService.roomName, " ", this.gameService.gameActive[this.gameService.roomName]);
-
       this.gameService.waitlist = false;
       this.gameService.gameActive[roomName] = false;
       if (client.id === this.gameService.state[roomName].playerOne.id) {
-        // console.log("disconne ", 1);
         this.gameService.playerDisconnected[roomName] = 1;
       }
       else if (client.id === this.gameService.state[roomName].playerTwo.id) {
-        // console.log("disconne ", 2);
         this.gameService.playerDisconnected[roomName] = 2;
       }
     }
@@ -66,24 +43,6 @@ export class GameGateway {
     const ret = this.gameService.handleKeyDown(keyCode);
     this.gameService.updatePlayer(client, this.gameService.state, ret);
   }
-
-  // @SubscribeMessage('newGame')
-  // handleNewGame(
-  //   @ConnectedSocket() client: Socket,
-  //   @MessageBody() name: string,
-  // ) {
-  //   this.gameService.handleNewGame(client, name, 0);
-  // }
-
-  // @SubscribeMessage('joinGame')
-  // handleJoinGame(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
-  //   this.gameService.handleJoinGame(
-  //     this.server,
-  //     client,
-  //     data.gameCode,
-  //     data.name,
-  //   );
-  // }
 
   @SubscribeMessage('spectateGame')
   handleSpectateGame(
@@ -102,7 +61,6 @@ export class GameGateway {
   @SubscribeMessage('listOfPlayersPlaying')
   handleListOfPlayersPlaying() {
     return (this.gameService.ListOfPlayersPlaying());
-    // return (this.gameService.playersPlaying);
   }
   @SubscribeMessage('stop')
   stop(@ConnectedSocket() client: Socket) {

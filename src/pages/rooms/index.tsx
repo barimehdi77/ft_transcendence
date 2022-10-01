@@ -121,7 +121,6 @@ const rooms = () => {
 
   useEffect(() => {
     socket.on("receiveMessage", (data: any) => {
-      console.log("data received from socket", data);
       if (userInfo.blockedUsers.includes(data.sent_by.intra_id)) {
         return;
       } else {
@@ -522,7 +521,6 @@ const rooms = () => {
         toast.error("Invalid duration: must be between 1 and 43800");
       else {
         setDurationLoader(true);
-        console.log("duration", duration);
         const res: any = await banUser(
           selectedUser?.intra_id,
           selectedConversation?.conversation_id,

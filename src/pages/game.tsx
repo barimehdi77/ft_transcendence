@@ -11,9 +11,6 @@ const Game = () => {
 	const canvasRef = useRef(null);
 	let canvas: HTMLCanvasElement;
 	let ctx: any;
-
-	// const [gameCodeInput, setGameCodeInput] = useState('');
-	// const [gameCodeDisplay, setGameCodeDisplay] = useState('');
 	const [gameActive, setGameActive] = useState(false);
 	const [playerNamber, setPlayerNamber] = useState(0);
 	const [randomColor, setRandomColor] = useState(0);
@@ -32,7 +29,6 @@ const Game = () => {
 	};
 
 	if (typeof window !== 'undefined') {
-		// console.log(window.innerWidth, ' ', window.innerHeight);
 		window.onresize = () => {
 			if (gameActive) {
 				if (canvasRef.current) {
@@ -71,7 +67,6 @@ const Game = () => {
 			socket.emit('playGame', { userInfo, type: "random" }, (ret: number) => setRandomColor(ret));
 		}
 		else {
-			// console.log("friend: ", type);
 			socket.emit('playGame', { userInfo, type: "friend" }, (ret: number) => setRandomColor(ret));
 		}
 		setGameActive(true);
@@ -82,41 +77,9 @@ const Game = () => {
 			playGame("friend");
 		else
 		{
-			// console.log("button random");
-			
 			playGame("random");
 		}
-		// window.onhashchange = function() {
-		// 	console.log("ana tbdlt");
-			
-		//    }
-		// socket.close();
-		// console.log("withRouter: ", );// withRouter.name);
-		// setRandomColor(Math.floor(Math.random() * 4));
 	}, []);
-
-	
-
-	// const spectateGame = () => {
-	// 	// setinitialScreen(true);
-	// 	socket.emit('spectateGame', gameCodeInput.toString());
-	// 	init(0);
-	// };
-
-	// const handlSpectateState = (state: string) => {
-	// 	if (canvasRef.current) {
-	// 		if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
-	// 		drawRect(ctx, 0, 0, canvas.width, canvas.height, 'black');
-	// 		if (!gameActive) {
-	// 			return;
-	// 		}
-	// 		let StateTemp = JSON.parse(state);
-	// 		requestAnimationFrame(() =>
-	// 			paintGame(ctx, StateTemp, canvas.width, canvas.height)
-	// 		);
-	// 	}
-	// };
-	// socket.off('spectateState').on('spectateState', handlSpectateState);
 
 	// PAGE GAME
 	const keydown = (e: any) => {
@@ -132,7 +95,6 @@ const Game = () => {
 	const handlGameState = (gameState: string) => {
 		if (canvasRef.current) {
 			if (ctx?.clearRect) ctx?.clearRect(0, 0, canvas.width, canvas.height);
-			// drawRect(ctx, 0, 0, canvas.width, canvas.height, '#2ec4b6');
 			document.addEventListener('keydown', keydown);
 			if (!gameActive) {
 				return;
@@ -146,13 +108,10 @@ const Game = () => {
 	socket.off('gameState').on('gameState', handlGameState);
 
 	const handleGameOver = (data: any) => {
-		// console.log('gameA: ', gameActive);
 		if (!gameActive) return;
 		data = JSON.parse(data);
 		setGameActive(false);
 		if (playerNamber == 0) {
-			// alert('Game Over');
-			// paintGameOver(ctx, "Game Over", data.stateRoom, canvas.width, canvas.height)
 			let temp = 3;
 			const interval = setInterval(() => {
 				temp--;
@@ -165,7 +124,6 @@ const Game = () => {
 			}, 500);
 		} else {
 			if (data.winner == playerNamber) {
-				// paintGameOver(ctx, "You Win!", data.stateRoom, canvas.width, canvas.height);
 				let temp = 3;
 				const interval = setInterval(() => {
 					paintGameOver(ctx, "You Win", data.stateRoom, canvas.width, canvas.height);
@@ -175,10 +133,8 @@ const Game = () => {
 						Router.push('/');
 					}
 				}, 1000);
-				// alert('You Win!');
 			}
 			if (data.winner != playerNamber) {
-				// paintGameOver(ctx, "You Lose", data.stateRoom, canvas.width, canvas.height)
 				let temp = 3;
 				const interval = setInterval(() => {
 					paintGameOver(ctx, "You Lose", data.stateRoom, canvas.width, canvas.height)
@@ -188,36 +144,26 @@ const Game = () => {
 						Router.push('/');
 					}
 				}, 1000);
-				// alert('You Lose :(');
 			}
 		}
 	};
 	socket.off('gameOver').on('gameOver', handleGameOver);
 
 	const handlePlayerDisconnected = (player: any) => {
-		// console.log(player, " !== ", playerNamber);
 		player = JSON.parse(player);
 		if (player.winner !== playerNamber) {
 			let temp = 3;
 			const interval = setInterval(() => {
 				temp--;
-					// paintGameOver(ctx, "Your opponent disconnected. You win!", player.stateRoom, canvas.width, canvas.height);
 					paintGameOver(ctx, "You win!", player.stateRoom, canvas.width, canvas.height);
 				if (temp === 0) {
 					clearInterval(interval);
 					Router.push('/');
 				}
 			}, 1000);
-			// alert('Your opponent disconnected. You win!');
-			// Router.push('/');
 		}
 	};
 	socket.off('playerDisconnected').on('playerDisconnected', handlePlayerDisconnected);
-
-	// const handleGameCode = (gameCode: string) => {
-	// 	setGameCodeDisplay(gameCode);
-	// };
-	// socket.off('gameCode').on('gameCode', handleGameCode);
 
 	let x = 0;
 	const handleWaiting = () => {

@@ -48,10 +48,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 			socket.emit('connected', userInfo);
 	}, [userInfo])
 
-	const handleInvitation = (sender: string) => {
+	const handleInvitation = (sender: any) => {
 		Router.push({
 			pathname: "/invite",
-			query: { name: userInfo.user_name, sender: sender, img: userInfo.image_url }
+			query: { name: userInfo.user_name, img: sender.data.image_url, sender:  sender.data.name }
 		})
 	}
 	socket.off('invitation').on('invitation', handleInvitation);

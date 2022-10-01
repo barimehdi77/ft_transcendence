@@ -51,9 +51,7 @@ const dm = () => {
   }, []);
 
   useEffect(() => {
-    console.log("userInfo: ", userInfo);
     socket.on("receiveMessage", (data) => {
-      console.log("data received from socket", data);
       if (data.conversation_id === selectedConversation?.conversation_id) {
         setMessages((prevMessages: IMessage[]) => [...prevMessages, data]);
       }
@@ -100,7 +98,6 @@ const dm = () => {
         toast.error("user not found");
       }
     } catch (error) {
-      console.log("user not found");
       toast.error("user not found");
     }
   };

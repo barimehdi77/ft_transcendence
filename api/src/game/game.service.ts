@@ -10,7 +10,7 @@ export class GameService {
 
   users: any = {}
 
-  FRAMERATE = 35;
+  FRAMERATE = 69;
   state: any = {};
   clientRooms: any = {};
   clientSpectating: any = {};
@@ -198,7 +198,6 @@ export class GameService {
       if (count === 0) {
         clearInterval(interval);
         server.emit('listOfPlayersPlaying', JSON.stringify(this.playersPlaying))
-        // this.updateplayers(server, roomName);
         this.startGameInterval(server, state, roomName);
       }
     }, 1500);
@@ -215,18 +214,15 @@ export class GameService {
         } else {
           clearInterval(interval);
           this.gameActive[roomName] = false;
-          // console.log("winner: ", winner);
           this.emitGameOver(server, roomName, winner, stateRoom);
           return;
         }
       } else {
-        // console.log("emit disconn");
-
         this.emitPlayerDesconnected(server, roomName, this.playerDisconnected[roomName], stateRoom);
         if (this.playerDisconnected[roomName] === 1)
-          this.prismaUpdate(roomName, 0, 10, true);
+          this.prismaUpdate(roomName, 0, 5, true);
         else if (this.playerDisconnected[roomName] === 2)
-          this.prismaUpdate(roomName, 10, 0, true);
+          this.prismaUpdate(roomName, 5, 0, true);
         clearInterval(interval);
         return;
       }
@@ -236,11 +232,8 @@ export class GameService {
   handleNewGame(client: Socket, userInfo: any) {
     const roomName = Math.floor(Math.random() * 1000000);
     this.clientRooms[client.id] = roomName;
-    // this.roomName = roomName;
     client.emit('gameCode', roomName);
-
     this.state[roomName] = this.createGameState();
-
     this.state[roomName].playerOne.id = client.id;
     this.state[roomName].playerOne.name = userInfo.login;
     this.state[roomName].playerOne.displayName = userInfo.user_name;
@@ -250,39 +243,16 @@ export class GameService {
   }
 
   handleJoinGame = async (server: Server, client: Socket, gameCode: string, userInfo: any) => {
-    // let room: string;
     if (!gameCode) return;
     this.gameActive[gameCode] = true;
-    // server.sockets.adapter.rooms
-    //   .get(gameCode)
-    //   .forEach((value) => (room = value));
-    // let allUsers;
-    // if (room) {
-    //   allUsers = server.sockets;
-    // }
-
-    // let numClients = 0;
-    // if (allUsers) {
-    //   // numClients = Object.keys(allUsers).length;
-    //   numClients = server.engine.clientsCount;
-    //   // console.log("length: ", numClients, " length2: ", server.engine.length);
-    // }
-
-    // if (numClients === 0) {
-    //   client.emit('unknownGame');
-    //   return;
-    // }
     this.clientRooms[client.id] = gameCode;
-
     client.join(gameCode);
     this.state[gameCode].playerTwo.id = client.id;
     this.state[gameCode].playerTwo.name = userInfo.login;
     this.state[gameCode].playerTwo.displayName = userInfo.user_name;
     this.playersPlaying[gameCode] = { p1: this.state[gameCode].playerOne.name, p2: this.state[gameCode].playerTwo.name };
-    // client.in(gameCode).emit('init', 2);
     client.emit('init', 2);
     const stateRoom = this.state[gameCode];
-    // console.log("joinGame", this.state);
     this.idPrisma[gameCode] = await this.prisma.match.create({
       data: {
         player_one: stateRoom.playerOne.name,
@@ -326,9 +296,6 @@ export class GameService {
   roomNameFriend: number;
   handlePlayGame(server: Server, client: Socket, userInfo: any) {
     if (userInfo.type === "random") {
-      
-      // console.log(this.roomName, "=> ", !this.gameActive[this.roomName]);
-      // if (!this.gameActive[this.roomName]) {
         if (!this.waitlist) {
           this.name = userInfo.userInfo.login;
           this.waitlist = true;
@@ -344,15 +311,12 @@ export class GameService {
           this.wait = false;
         }
         return this.state[this.roomName].color;
-      // }
     }
     else if (userInfo.type === "friend") {
-      // if (!this.gameActive[this.roomNameFriend]) {
         if (!this.waitlistF) {
           this.name = userInfo.userInfo.login;
           this.waitlistF = true;
           this.roomNameFriend = this.handleNewGame(client, userInfo.userInfo)
-          // this.friendList[this.roomName.toString()] = 
           this.waitF = true;
           const interval = setInterval(() => {
             server.in(this.roomNameFriend.toString()).emit('waiting');
@@ -365,32 +329,18 @@ export class GameService {
         }
         return this.state[this.roomNameFriend].color;
       }
-    // }
   }
 
   start = {};
   handleSpectateGame(server: Server, client: Socket, gameCode: string) {
     if (this.start[client.id] === true) {
-      // console.log("start ", client.id, "    ", this.start);
-
-      // let room: string;
       if (!gameCode) return;
-      // server.sockets.adapter.rooms
-      //   .get(gameCode)
-      //   .forEach((value) => (room = value));
-      // console.log("clientSpectating: ", this.clientSpectating[client.id]);
-
-      // if (!this.clientSpectating[client.id]) {
-      // this.clientSpectating[client.id] = gameCode;
-      // client.join(client.id);
       const interval = setInterval(() => {
         const state = this.state[gameCode];
-        // server.in(gameCode).emit('spectateState', JSON.stringify(state));
         server.to(client.id).emit('spectateState', JSON.stringify(state));
         if (!this.gameActive[gameCode] || !this.start[client.id])
           clearInterval(interval);
       }, 1000 / this.FRAMERATE);
-      // }
       return true;
     }
   }
@@ -549,25 +499,14 @@ export class GameService {
   }
 
   handlQuestion = (server: Server, data: any) => {
-    // console.log(data.to.name, "  ", this.users[data.to.name], this.users);
     if (this.users[data.to.name]) {
-      // console.log(data.to.name, "  ", this.users[data.to.name]);
-      server.to(this.users[data.to.name]).emit('invitation', data.sender.name);
+      server.to(this.users[data.to.name]).emit('invitation', {data: data.sender});
     }
-    // else
-      // console.log("ur friend not exist");
   }
 
   handlAccepted = async (server: Server, client: Socket, data: any) => {
-    // console.log("user: ", this.users);
-    // console.log("data: ", data);
-    // console.log("this.users[data.sender]: ", this.users[data.data.sender]);
-
     if (this.users[data.data.sender]) {
-      // console.log(data.to.name, "  ", this.users[data.to.name]);
       server.to(this.users[data.data.sender]).emit('urFriendAccepted', data.data.user);
     }
-    // else
-    //   console.log("ur friend not exist");
   }
 }
