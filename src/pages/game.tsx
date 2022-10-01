@@ -221,26 +221,28 @@ const Game = () => {
 
 	let x = 0;
 	const handleWaiting = () => {
-		drawText(
-			ctx,
-			'. ',
-			canvas.width / 2 - 12 + x,
-			canvas.height / 2,
-			color[randomColor].front,
-			600 / canvas.width,
-			45
-		);
+		drawText( ctx, '. ', canvas.width / 2 - 12 + x, canvas.height / 2,
+		color[randomColor].front, 600 / canvas.width, 45);
+
+		drawText(ctx, "W: up", 10, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
+		
+		drawText(ctx, "S: down", canvas.width / 3.3, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
+
+		drawText(ctx, "first to 5 wins", canvas.width / 1.55, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
 		x += 10;
 		if (x === 40) {
 			x = 0;
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.clearRect(0, 0, canvas.width, canvas.height - 50);
 		}
 	};
 	socket.off('waiting').on('waiting', handleWaiting);
 
 	let countDown = 3;
 	const handleStarting = () => {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height - 50);
 		drawText(
 			ctx,
 			countDown.toString(),
@@ -250,10 +252,18 @@ const Game = () => {
 			600 / canvas.width,
 			45
 		);
+		drawText(ctx, "W: up", 10, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
+		
+		drawText(ctx, "S: down", canvas.width / 3.3, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
+
+		drawText(ctx, "first to 5 wins", canvas.width / 1.55, canvas.height - 10,
+		color[randomColor].front, 600 / canvas.width, 35)
 		countDown--;
 	};
 	socket.off('start').on('start', handleStarting);
-	
+
 	return (
 		<div className='min-h-screen flex justify-center items-center'>
 			<Head>
