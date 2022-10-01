@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -58,17 +59,13 @@ export class UserController {
   ) {
     try {
       data.avatar = file;
+      console.log("in controller: ", data);
       const user = await this.userService.accountSetup(data, auth);
 
       if (user === null) {
         return res.status(409).json({
           status: 'failure',
           message: 'Username already taken',
-        });
-      } else if (user === 'NOTVALID') {
-        return res.status(409).json({
-          status: 'failure',
-          message: 'Username Not Valid',
         });
       } else {
         return res.status(200).json({

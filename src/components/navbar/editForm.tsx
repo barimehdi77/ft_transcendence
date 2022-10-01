@@ -22,7 +22,7 @@ const EditForm = ({ handleCloseModal }: any) => {
 		};
 		try {
 			const data = new FormData();
-			data.append('username', username ? username : userInfo.user_name);
+			data.append('user_name', username ? username : userInfo.user_name);
 			data.append('avatar', file);
 			const res = await axios.post(
 				'http://localhost:8080/api/user/setup',

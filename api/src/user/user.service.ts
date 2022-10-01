@@ -175,11 +175,15 @@ export class UserService {
   }
 
   async accountSetup(data: UpdateUserInfo, auth: string) {
-    if(data.user_name.match(/[!@#$%^&*()+\=\[\]{}; ':"\\|,.<>\/?]+/)) {
-      return ('NOTVALID')
-    }
+    // if(data.user_name.match(/[!@#$%^&*()+\=\[\]{}; ':"\\|,.<>\/?]+/)) {
+    //   return ('NOTVALID')
+    // }
+    console.log("in service: ", data);
     const User = await this.findUserName(data.user_name as string);
-    if (User !== null) return null;
+    if (User) {
+      if (User.user_name !== data.user_name)
+        return null;
+    }
 
     if (data.avatar === undefined) {
       return await this.prisma.user.update({
