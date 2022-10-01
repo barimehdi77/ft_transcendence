@@ -35,8 +35,9 @@ const MyFriends = ({
   if (friendsList) friendsList.data?.length !== 1 ? (plural = "s") : null;
 
 	const playGame = (user: any) => {
+    
 		socket.emit('question', {
-			sender: { name: userInfo.user_name },
+			sender: { name: userInfo.user_name, image_url: userInfo.image_url },
 			to: { name: user.user_name },
 			// roomName: Math.floor(Math.random() * 1000000)
 			// }, (ret: string) => {

@@ -16,7 +16,18 @@ const Invite = ({ img, sender, name }) => {
   // state
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOutClose = () =>{
+    if (!invite)
+
+    useRouter.back();
+
+    setOpen(false);
+  } 
+  const handleClose = () =>{
+
+
+    setOpen(false);
+  } 
   const [invite, setInvite] = useState(false);
 
   return (
@@ -31,7 +42,7 @@ const Invite = ({ img, sender, name }) => {
         },
       }}
       open={open}
-      onClose={handleClose}
+      onClose={handleOutClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -62,7 +73,7 @@ const Invite = ({ img, sender, name }) => {
           variant="outlined"
           color="error"
           onClick={() => {
-              useRouter.back();
+            useRouter.back();
             handleClose();
             return "rejected";
           }}
@@ -74,6 +85,7 @@ const Invite = ({ img, sender, name }) => {
           variant="outlined"
           color="success"
           onClick={() => {
+            setInvite(true);
             socket.emit("friendAccepted", {
               data: { user: name, sender: sender },
             });

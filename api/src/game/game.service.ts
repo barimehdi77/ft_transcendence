@@ -10,7 +10,7 @@ export class GameService {
 
   users: any = {}
 
-  FRAMERATE = 35;
+  FRAMERATE = 69;
   state: any = {};
   clientRooms: any = {};
   clientSpectating: any = {};
@@ -224,9 +224,9 @@ export class GameService {
 
         this.emitPlayerDesconnected(server, roomName, this.playerDisconnected[roomName], stateRoom);
         if (this.playerDisconnected[roomName] === 1)
-          this.prismaUpdate(roomName, 0, 10, true);
+          this.prismaUpdate(roomName, 0, 5, true);
         else if (this.playerDisconnected[roomName] === 2)
-          this.prismaUpdate(roomName, 10, 0, true);
+          this.prismaUpdate(roomName, 5, 0, true);
         clearInterval(interval);
         return;
       }
@@ -550,9 +550,11 @@ export class GameService {
 
   handlQuestion = (server: Server, data: any) => {
     // console.log(data.to.name, "  ", this.users[data.to.name], this.users);
+    console.log("data:", data);
+    
     if (this.users[data.to.name]) {
       // console.log(data.to.name, "  ", this.users[data.to.name]);
-      server.to(this.users[data.to.name]).emit('invitation', data.sender.name);
+      server.to(this.users[data.to.name]).emit('invitation', {data: data.sender});
     }
     // else
       // console.log("ur friend not exist");
