@@ -26,7 +26,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy) {
       login,
       first_name,
       last_name,
-      image_url,
+      image: {link: image_url},
       email,
       id: intra_id,
     } = profile._json;
